@@ -24,3 +24,62 @@
 		include 'lista.php';
 	?>
 </div>
+<script type="text/javascript">
+	$(document).on('keypress','#prod_bus',function(e){
+		if(e.which == 13) {
+			e.preventDefault();
+			e.stopPropagation();
+			buscar();
+		}
+	});
+	$(document).on('click','#buscar_producto',function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		buscar();
+	});
+
+	function buscar(){
+		var texto=$("#prod_bus").val();
+		if(texto.length>=2){
+			$.ajax({
+				data:  {
+					"texto":texto,
+					"function":"busca_producto"
+				},
+				url:   "a_compras/db_.php",
+				type:  'post',
+				beforeSend: function () {
+					$("#resultadosx").html("buscando...");
+				},
+				success:  function (response) {
+					$("#resultadosx").html(response);
+				}
+			});
+		}
+	}
+
+	$(document).on('click','#producto_sel',function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		var id_invent = $(this).closest(".edit-t").attr("id");
+		var cantidad = $("#cantidad_"+id_invent).val();
+		var idcompra = $("#id").val();
+		$.ajax({
+			data:  {
+				"id_invent":id_invent,
+				"idcompra":idcompra,
+				"cantidad":cantidad,
+				"function":"agregar_producto"
+			},
+			url:   "a_compras/db_.php",
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+				alert(response);
+			}
+		});
+	});
+
+	</script>

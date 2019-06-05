@@ -6,15 +6,17 @@
 	$compra = $bdd->compra($id);
 	$pedido = $bdd->compras_pedido($id);
 	if($estado=="Activa"){
-		echo "<button type='button' class='btn btn-outline-secondary btn-sm'><i class='fas fa-plus'></i> Productos</button>";
+		echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_compras/form_producto'><i class='fas fa-plus'></i> Productos</button>";
+
 	}
 	echo "<table class='table'>";
 	echo "<tr>
+	<th>-</th>
 	<th>Codigo</th>
 	<th>Nombre</th>
 	<th><center>Cantidad</center></th>
 	<th>Unidad</th>
-	<th>--</th></tr>";
+	</tr>";
 	$gtotal=0;
 	$idpaquete=0;
 	$contar=1;
