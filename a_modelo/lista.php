@@ -1,16 +1,16 @@
-<?php 
+<?php
 	require_once("db_modelo.php");
 	$bdd = new Modelo();
 	$pd = $bdd->modelo_lista();
 
-	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
+	echo "<div class='container' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
 ?>
 	<table class="table table-hover table-striped" id="x_lista">
 	<thead>
 	<th>#</th>
 	<th>Modelo</th>
-	
+
 	</thead>
 	<tbody>
 		<?php
@@ -33,7 +33,5 @@
 <script>
 	$(document).ready( function () {
 		lista("x_lista");
-	});	
+	});
 </script>
-
-		

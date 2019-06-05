@@ -28,7 +28,7 @@
 			<tr id="<?php echo $pd[$i]['id_invent']; ?>" class="edit-t">
 				<td class="edit">
 					<div class="btn-group">
-					<button class="btn btn-outline-secondary btn-sm" id='edit_persona' data-lugar='a_productos/editar'><i class="fa fa-edit"></i> Editar</button>
+					<button class="btn btn-outline-secondary btn-sm" id='edit_persona' data-lugar='a_productos/editar'><i class="fas fa-pencil-alt"></i></button>
 				</div></td>
 				<td><?php
 					if ($pd[$i]["unico"]==0){ echo "Almacén";}

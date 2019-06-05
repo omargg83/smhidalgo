@@ -1,8 +1,8 @@
-<?php 
+<?php
 	require_once("db_.php");
 	$bdd = new Usuario();
 	$pd = $bdd->usuario_lista();
-	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
+	echo "<div class='container' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
 ?>
 
@@ -18,7 +18,7 @@
 	<tbody>
 		<?php
 			for($i=0;$i<count($pd);$i++){
-		
+
 				echo '<tr id="'.$pd[$i]['idusuario'].'" class="edit-t">';
 
 					echo "<td>";
@@ -32,7 +32,7 @@
 				echo '<td>'.$pd[$i]['pass'].'</td>';
 				echo '<td>'.$pd[$i]['nivel'].'</td>';
 				echo '<td>'.$pd[$i]['tienda'].'</td>';
-			
+
 				echo '</tr>';
 			}
 		?>
@@ -43,8 +43,5 @@
 <script>
 	$(document).ready( function () {
 		lista("x_lista");
-	});	
+	});
 </script>
-
-
-		

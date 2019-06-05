@@ -1,8 +1,8 @@
-<?php 
+<?php
 	require_once("db_marca.php");
 	$bdd = new Marca();
 	$pd = $bdd->marca_lista();
-	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
+	echo "<div class='container' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
 ?>
 
@@ -31,8 +31,5 @@
 <script>
 	$(document).ready( function () {
 		lista("x_lista");
-	});	
+	});
 </script>
-
-
-		

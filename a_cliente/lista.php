@@ -1,8 +1,8 @@
-<?php 
+<?php
 	require_once("db_cliente.php");
 	$bdd = new Cliente();
 	$pd = $bdd->clientes_lista();
-	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
+	echo "<div class='container' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
 ?>
 
@@ -18,7 +18,7 @@
 		<?php
 			for($i=0;$i<count($pd);$i++){
 				echo "<tr id='".$pd[$i]['idcliente']."'' class='edit-t'>";
-					echo "<td>".$pd[$i]["idcliente"];
+					echo "<td>";
 					echo "<div class='btn-group'>";
 					echo "<button class='btn btn-outline-secondary btn-sm' id='edit_persona' title='Editar' data-lugar='a_cliente/editar'><i class='fas fa-pencil-alt'></i></button>";
 					echo "</div>";
@@ -30,9 +30,9 @@
 				echo "</tr>";
 			}
 		?>
-		
-		
-		
+
+
+
 	</div>
 	</tbody>
 	</table>
@@ -40,6 +40,5 @@
 <script>
 	$(document).ready( function () {
 		lista("x_lista");
-	});	
+	});
 </script>
-

@@ -18,14 +18,17 @@
 	<title>SAGYC</title>
 </head>
 <body>
-	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top barra">
-	<div class='container'>
-	  <a class="navbar-brand home" id='menu_home'><img src='img/sagyc.png' width='20px'>SMHIDALGO</a>
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	  </button>
-	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav mr-auto">
+
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark nav-principal">
+    <img src='img/sagyc.png' width='40' height='30' alt=''>
+		<a class="navbar-brand" href="#">SMHIDALGO</a>
+
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample06" aria-controls="navbarsExample06" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse collapse" id="navbarsExample06" style="">
+      <ul class="navbar-nav mr-auto">
 
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class='fas fa-shopping-cart'></i>
@@ -47,7 +50,7 @@
 					<a class="dropdown-item" href="#a_compras/index" ><i class='fas fa-money-check-alt'></i> Lista de compras</a>
 				  <a class="dropdown-item" href="#a_entrada/index" ><i class="fas fa-chalkboard-teacher"></i> Entrada</a>
 					<br>
-				  <a class="dropdown-item" href="#a_inventario/index"  ><i class='fas fa-boxes'></i> Productos</a>
+				  <a class="dropdown-item" href="#a_inventario/index"  ><i class='fas fa-boxes'></i> Inventario</a>
 				  <a class="dropdown-item" href="#" id='menu_traspaso' ><i class="fas fa-arrows-alt-h"></i> Traspasos</a>
 				</div>
 			</li>
@@ -71,7 +74,10 @@
 			</li>
 		</ul>
 
+			<ul class="nav navbar-nav navbar-right" id="chatx">chat</ul>
+			<ul class="nav navbar-nav navbar-right" id="fondo">fondo</ul>
 		  <ul class='nav navbar-nav navbar-right'>
+
 		  <li class="nav-item">
 		  <a class="nav-link pull-left" href="acceso/salir.php">
 			<i class='fas fa-sign-out-alt'></i> Salir

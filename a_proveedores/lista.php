@@ -1,8 +1,8 @@
-<?php 
+<?php
 	require_once("db_prove.php");
 	$bdd = new Prove();
 	$pd = $bdd->proveedores_lista();
-	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
+	echo "<div class='container' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
 ?>
 
@@ -30,14 +30,12 @@
 					echo "</tr>";
 				}
 			?>
-			   
+
 			</tbody>
 			</table>
 	</div>
 <script>
 	$(document).ready( function () {
 		lista("x_lista");
-	});	
+	});
 </script>
-
-						
