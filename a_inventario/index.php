@@ -1,7 +1,6 @@
 <?php
 	require_once("db_.php");
-	$bdd = new Inventario();
-	$tiendas = $bdd->tiendas_lista();
+	$tiendas = $db->tiendas_lista();
 
 	echo "<nav class='navbar navbar-expand-lg navbar-light bg-light '>
 	<a class='navbar-brand' ><i class='fas fa-user-check'></i> Inventario</a>

@@ -19,7 +19,7 @@ echo "
 </nav>";
 
 echo "<div id='trabajo'>";
-	include 'lista.php';
+include 'lista.php';
 echo "</div>";
 ?>
 <script type="text/javascript">
@@ -55,36 +55,40 @@ function buscar(){
 		});
 	}
 }
-$(document).on('click','#producto_entra',function(e){
-	e.preventDefault();
-	e.stopPropagation();
-	var id_invent = $(this).closest(".edit-t").attr("id");
+
+function agregaprod(id_invent){
 	var cantidad = $("#cantidad_"+id_invent).val();
 	var precio = $("#precio_"+id_invent).val();
+	var clave = $("#clave_"+id_invent).val();
+	var descripcion = $("#descripcion_"+id_invent).val();
 	var identrada = $("#id").val();
 	$.ajax({
-		data:  {
-			"id_invent":id_invent,
-			"identrada":identrada,
-			"cantidad":cantidad,
-			"precio":precio,
-			"function":"agregar_producto"
-		},
-		url:   "a_entrada/db_.php",
-		type:  'post',
-		beforeSend: function () {
+	  data: {
+	    "id_invent":id_invent,
+	    "identrada":identrada,
+	    "cantidad":cantidad,
+	    "precio":precio,
+	    "descripcion":descripcion,
+	    "clave":clave,
+	    "function":"agregar_producto"
+	  },
+	  url:   "a_entrada/db_.php",
+	  type:  'post',
+	  beforeSend: function () {
 
-		},
-		success:  function (response) {
-			$("#pedidos").load("a_entrada/form_pedido.php?id="+identrada);
-			Swal.fire({
-				type: 'success',
-				title: "Se agregó correctamente",
-				showConfirmButton: false,
-				timer: 1000
-			});
-		}
+	  },
+	  success: function (response) {
+	    if (!isNaN(response)){
+	      $("#pedidos").load("a_entrada/form_pedido.php?id="+identrada);
+	      Swal.fire({
+	        type: 'success',
+	        title: "Se agregó correctamente..",
+	        showConfirmButton: false,
+	        timer: 1000
+	      });
+	    }
+	  }
 	});
-});
+}
 
 </script>

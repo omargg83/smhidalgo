@@ -1,12 +1,10 @@
 <?php
 	require_once("db_.php");
-	$bdd = new Inventario();
 	$idtienda=$_REQUEST['id'];
-
 	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
 
-	$pd = $bdd->inventario_lista($idtienda);
+	$pd = $db->inventario_lista($idtienda);
 ?>
 	<table class="table table-hover table-striped" id="x_lista">
 	<thead>
@@ -31,7 +29,7 @@
 			<tr id="<?php echo $pd[$i]['id_invent']; ?>" class="edit-t">
 				<td class="edit">
 					<div class="btn-group">
-					<button class="btn btn-outline-secondary btn-sm" ata-lugar='a_cliente/detalle'><i class="fas fa-arrow-circle-right"></i> Detalle</button>
+					<button class="btn btn-outline-secondary btn-sm" id='edit_inventario' data-lugar='a_inventario/form_detalle' data-valor='idtienda'><i class="fas fa-arrow-circle-right"></i> Detalle</button>
 				</div></td>
 				<td><?php
 					if ($pd[$i]["unico"]==0){ echo "Almacén";}

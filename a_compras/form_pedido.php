@@ -5,7 +5,7 @@
 	$id = $_REQUEST['id'];
 	$pedido = $bdd->compras_pedido($id);
 
-	echo "<table class='table table_sm'>";
+	echo "<table class='table table-sm'>";
 	echo "<tr>
 	<th>-</th>
 	<th>Codigo</th>

@@ -114,7 +114,7 @@ class Entrada extends Sagyc{
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_invent where activo=1 and (nombre like :texto OR codigo like :nombre) ";
+			$sql="SELECT * FROM et_invent where activo=1 and (nombre like :texto OR codigo like :nombre) and (unico=0 or unico=1)";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->bindValue(":nombre","%$texto%");
@@ -145,7 +145,7 @@ class Entrada extends Sagyc{
 					$x.= "</td>";
 
 					$x.= "<td>";
-					$x.= $key["nombre"];
+					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='descripcion_".$id_invent."' value='".$key["nombre"]."' readonly>";
 					$x.= "</td>";
 
 					$unico="";
@@ -192,7 +192,7 @@ class Entrada extends Sagyc{
 
 					$x.= "<td>";
 					$x.= "<div class='btn-group'>";
-					$x.= "<button class='btn btn-outline-secondary btn-sm' id='producto_entra' title='Agregar producto a la compra'><i class='fas fa-plus'></i></button>";
+					$x.= "<button type='button' class='btn btn-outline-secondary btn-sm entradaprod' title='Agregar producto a la compra' onclick='agregaprod($id_invent)'><i class='fas fa-plus'></i></button>";
 					$x.= "</div>";
 					$x.= "</td>";
 					$x.= "</tr>";
@@ -226,6 +226,12 @@ class Entrada extends Sagyc{
 		}
 		if (isset($_REQUEST['identrada'])){
 			$arreglo+=array('identrada'=>$_REQUEST['identrada']);
+		}
+		if (isset($_REQUEST['clave'])){
+			$arreglo+=array('clave'=>$_REQUEST['clave']);
+		}
+		if (isset($_REQUEST['descripcion'])){
+			$arreglo+=array('descripcion'=>$_REQUEST['descripcion']);
 		}
 		$arreglo+=array('idtienda'=>1);
 		$x.=$this->insert('et_bodega', $arreglo);

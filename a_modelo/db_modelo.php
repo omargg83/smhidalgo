@@ -1,18 +1,18 @@
 <?php
 require_once("../control_db.php");
 if (isset($_REQUEST['function'])){$function=$_REQUEST['function'];}	else{ $function="";}
-	
+
 class Modelo extends Sagyc{
-	
+
 	public $nivel_personal;
 	public $nivel_captura;
-	
+
 	public function __construct(){
 		parent::__construct();
 		$this->doc="a_clientes/papeles/";
 
 		if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
-			
+
 		}
 		else{
 			include "../error.php";
@@ -48,7 +48,7 @@ class Modelo extends Sagyc{
 		if (isset($_REQUEST['modelo'])){
 			$arreglo+=array('modelo'=>$_REQUEST['modelo']);
 		}
-		
+
 		if($id==0){
 			$x.=$this->insert('et_modelo', $arreglo);
 		}
@@ -63,5 +63,3 @@ if(strlen($function)>0){
 	$db = new Modelo();
 	echo $db->$function();
 }
-
-

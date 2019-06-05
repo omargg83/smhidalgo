@@ -119,7 +119,7 @@ class Compra extends Sagyc{
 
 					$x.= "<td>";
 					$x.= "<div class='btn-group'>";
-					$x.= "<button class='btn btn-outline-secondary btn-sm' id='producto_sel' title='Agregar producto a la compra'><i class='fas fa-plus'></i></button>";
+					$x.= "<button class='btn btn-outline-secondary btn-sm' id='compraprod' title='Agregar producto a la compra'><i class='fas fa-plus'></i></button>";
 					$x.= "</div>";
 					$x.= "</td>";
 					$x.= "</tr>";
