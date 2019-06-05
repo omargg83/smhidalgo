@@ -213,37 +213,7 @@ class Venta{
 	}
 
 
-	public function entrada($id){
-		self::set_names();
-		$sql="select * from et_entrada where identrada='$id'";
-		 foreach ($this->dbh->query($sql) as $res){
-            $this->inventario=$res;
-        }
-        return $this->inventario;
-        $this->dbh=null;
-	}
-	public function entrada_lista(){
-		self::set_names();
-		$sql="select et_entrada.identrada, et_entrada.numero, et_prove.razon_social_prove, et_compra.numero as cnumero, et_entrada.estado, et_entrada.total from et_entrada
-			left outer join et_prove on et_prove.id_prove=et_entrada.id_prove
-			left outer join et_compra on et_compra.idcompra=et_entrada.idcompra
-			order by identrada desc";
-        foreach ($this->dbh->query($sql) as $res){
-            $this->ventas[]=$res;
-        }
-        return $this->ventas;
-        $this->dbh=null;
-	}
-	public function entrada_pedido($id){
-        self::set_names();
-        $sql="select et_bodega.id, et_invent.codigo, et_invent.nombre, et_invent.unidad, abs(et_bodega.cantidad) as cantidad, et_bodega.total, et_bodega.clave, et_bodega.precio, et_bodega.gtotal, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.gtotal, et_bodega.id_invent, et_bodega.observaciones, et_bodega.color, et_bodega.tipo from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id' order by et_bodega.id desc";
 
-        foreach ($this->dbh->query($sql) as $res){
-            $this->ventasp[]=$res;
-        }
-        return $this->ventasp;
-        $this->dbh=null;
-    }
 
 	public function venta($id){
 		self::set_names();

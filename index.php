@@ -44,8 +44,8 @@
 				<i class='fas fa-boxes'></i> Productos
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					<a class="dropdown-item" href="#a_compras/index" id='menu_compras' ><i class='fas fa-money-check-alt'></i> Lista de compras</a>
-				  <a class="dropdown-item" href="#" id='menu_entrada'><i class="fas fa-chalkboard-teacher"></i> Entrada</a>
+					<a class="dropdown-item" href="#a_compras/index" ><i class='fas fa-money-check-alt'></i> Lista de compras</a>
+				  <a class="dropdown-item" href="#a_entrada/index" ><i class="fas fa-chalkboard-teacher"></i> Entrada</a>
 					<br>
 				  <a class="dropdown-item" href="#a_inventario/index"  ><i class='fas fa-boxes'></i> Productos</a>
 				  <a class="dropdown-item" href="#" id='menu_traspaso' ><i class="fas fa-arrows-alt-h"></i> Traspasos</a>
