@@ -21,19 +21,20 @@
 			for($i=0;$i<count($pd);$i++){
 		?>
 			<tr id="<?php echo $pd[$i]['identrada']; ?>" class="edit-t">
-				<div class="btn-group">
-					<button class="btn btn-info btn-fill pull-left btn-sm" id="edit_entrada"><i class="fa fa-edit"></i>Editar</button>
-					<button class="btn btn-info btn-fill pull-left btn-sm" id="deta_entrada"><i class="fas fa-box-open"></i>Articulos</button>
-				</div>
-
+				<td>
+					<div class="btn-group">
+						<button class="btn btn-info btn-fill pull-left btn-sm" id="edit_entrada"><i class="fa fa-edit"></i>Editar</button>
+						<button class="btn btn-info btn-fill pull-left btn-sm" id="deta_entrada"><i class="fas fa-box-open"></i>Articulos</button>
+					</div>
+				</td>
 				<td><?php echo $pd[$i]["identrada"]; ?></td>
 				<td><?php echo $pd[$i]["razon_social_prove"]; ?></td>
 				<td><?php echo $pd[$i]["numero"]; ?></td>
 				<td><?php echo $pd[$i]["estado"]; ?></td>
 				<td align="right"><?php echo number_format($pd[$i]["total"],2); ?></td>
-				<td>
+			
 
-				</td>
+
 			</tr>
 		<?php
 			}
