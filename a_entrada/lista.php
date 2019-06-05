@@ -23,8 +23,7 @@
 			<tr id="<?php echo $pd[$i]['identrada']; ?>" class="edit-t">
 				<td>
 					<div class="btn-group">
-						<button class="btn btn-info btn-fill pull-left btn-sm" id="edit_entrada"><i class="fa fa-edit"></i>Editar</button>
-						<button class="btn btn-info btn-fill pull-left btn-sm" id="deta_entrada"><i class="fas fa-box-open"></i>Articulos</button>
+						<button class='btn btn-outline-secondary btn-sm' id='edit_persona' title='Editar' data-lugar='a_entrada/editar'><i class='fas fa-pencil-alt'></i></button>
 					</div>
 				</td>
 				<td><?php echo $pd[$i]["identrada"]; ?></td>
@@ -32,7 +31,7 @@
 				<td><?php echo $pd[$i]["numero"]; ?></td>
 				<td><?php echo $pd[$i]["estado"]; ?></td>
 				<td align="right"><?php echo number_format($pd[$i]["total"],2); ?></td>
-			
+
 
 
 			</tr>

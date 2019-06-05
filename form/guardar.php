@@ -4,22 +4,7 @@
 
 	$tipo=$_POST['tipo'];
 
-	if($tipo=="entrada"){		//////////////Guarda datos de factura de entrada
-		if (isset($_POST['id'])){$id=$_POST['id'];}
-		if (isset($_POST['numero'])){$numero=$_POST['numero'];}
-		if (isset($_POST['id_prove'])){$id_prove=$_POST['id_prove'];}
-		if (isset($_POST['idcompra'])){$idcompra=$_POST['idcompra'];}
-		if (isset($_POST['estado'])){$estado=$_POST['estado'];}
-		if (isset($_POST['unico'])){$unico=$_POST['unico'];}
 
-		$values = array('numero'=>$numero, 'id_prove'=>$id_prove, 'idcompra'=>$idcompra, 'estado'=>$estado );
-		if($id==0){
-			echo $bdd->insert('et_entrada', $values);
-		}
-		else{
-			echo $bdd->update('et_entrada',array('identrada'=>$id), $values);
-		}
-	}
 	if($tipo=="traspaso"){		//////////////Guarda datos de factura de entrada
 		if (isset($_POST['id'])){$id=$_POST['id'];}
 		if (isset($_POST['nombre'])){$nombre=$_POST['nombre'];}
@@ -64,7 +49,7 @@
 	}
 
 
-	
+
 	if($tipo=="bodega"){		//////////////Guarda datos de bodega
 		if (isset($_POST['id'])){$id=$_POST['id'];}
 		if (isset($_POST['clave'])){$clave=$_POST['clave'];}
