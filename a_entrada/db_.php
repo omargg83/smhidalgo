@@ -114,7 +114,7 @@ class Entrada extends Sagyc{
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_invent where nombre like :texto OR codigo like :nombre";
+			$sql="SELECT * FROM et_invent where activo=1 and (nombre like :texto OR codigo like :nombre) ";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->bindValue(":nombre","%$texto%");
@@ -123,7 +123,20 @@ class Entrada extends Sagyc{
 			$x.="<div class='row'>";
 			if(count($res)>0){
 				$x.="<table class='table table-sm'>";
-				$x.="<tr><th>Código</th><th>Nombre</th><th>Cantidad</th><th>+</th></tr>";
+
+				$x.= "<tr>";
+				$x.= "<th>Código</th>";
+				$x.= "<th>Descripción</th>";
+				$x.= "<th><span class='pull-right'>Cantidad</span></th>";
+
+
+				$x.= "<th><span class='pull-right'>Precio</span></th>";
+				$x.= "<th><span class='pull-right'>Material</span></th>";
+				$x.= "<th><span class='pull-right'>Color</span></th>";
+				$x.= "<th><span class='pull-right'>Clave/IMEI</span></th>";
+				$x.= "<th><span class='pull-right'></span></th>";
+				$x.="</tr>";
+
 				foreach ($res as $key) {
 					$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
 					$x.= "<td>";
@@ -133,6 +146,10 @@ class Entrada extends Sagyc{
 					$x.= "<td>";
 					$x.= $key["nombre"];
 					$x.= "</td>";
+
+
+
+
 
 					$x.= "<td>";
 					$x.= "<input id='cantidad_".$key['id_invent']."' name='cantidad_".$key['id_invent']."' value='1' class='form-control'>";
