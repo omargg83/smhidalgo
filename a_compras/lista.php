@@ -1,4 +1,4 @@
-<?php 
+<?php
 	require_once("db_.php");
 	$bdd = new Compra();
 	$pd = $bdd->compras_lista();
@@ -31,7 +31,7 @@
 					echo '</tr>';
 				}
 			?>
-		
+
 			</tbody>
 			</table>
 		</div>
@@ -39,6 +39,5 @@
 		<script>
 	$(document).ready( function () {
 		lista("x_lista");
-	});	
+	});
 </script>
-

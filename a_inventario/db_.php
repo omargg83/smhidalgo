@@ -1,18 +1,18 @@
 <?php
 require_once("../control_db.php");
 if (isset($_REQUEST['function'])){$function=$_REQUEST['function'];}	else{ $function="";}
-	
+
 class Inventario extends Sagyc{
-	
+
 	public $nivel_personal;
 	public $nivel_captura;
-	
+
 	public function __construct(){
 		parent::__construct();
 		$this->doc="a_clientes/papeles/";
 
 		if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
-			
+
 		}
 		else{
 			include "../error.php";
@@ -21,7 +21,7 @@ class Inventario extends Sagyc{
 	}
     public function tiendas_lista(){
 		self::set_names();
-		
+
 		$sql="SELECT * FROM et_tienda";
 		foreach ($this->dbh->query($sql) as $res){
             $this->tiendas[]=$res;
@@ -31,7 +31,7 @@ class Inventario extends Sagyc{
 	}
 	public function inventario($id){
 		self::set_names();
-		$sql="select * from et_invent where id_invent='$id' 
+		$sql="select * from et_invent where id_invent='$id'
 		order by id_invent asc";
 		 foreach ($this->dbh->query($sql) as $res){
             $this->inventario=$res;
@@ -50,12 +50,13 @@ class Inventario extends Sagyc{
 	}
 	public function inventario_lista($idtienda){
 		self::set_names();
-		
-		$sql="select inven.id_invent, inven.codigo, inven.unico, inven.nombre, inven.pvgeneral, (select COALESCE(sum(cantidad),0) as total from et_bodega where et_bodega.id_invent=inven.id_invent and et_bodega.idtienda='$idtienda') as conteo, inven.preciocompra, inven.pvpromo, inven.pvdistr, et_marca.marca, et_modelo.modelo from et_invent inven 
+
+		$sql="select inven.id_invent, inven.codigo, inven.unico, inven.nombre, inven.pvgeneral, (select COALESCE(sum(cantidad),0) as total from et_bodega where et_bodega.id_invent=inven.id_invent and et_bodega.idtienda='$idtienda') as conteo, inven.preciocompra, inven.pvpromo, inven.pvdistr, et_marca.marca, et_modelo.modelo from et_invent inven
 		left outer join et_marca on et_marca.idmarca=inven.idmarca
 		left outer join et_modelo on et_modelo.idmodelo=inven.idmodelo
+		where activo=1
 		order by id_invent ,unico desc";
-				
+
         foreach ($this->dbh->query($sql) as $res){
             $this->ventas[]=$res;
         }
@@ -85,9 +86,9 @@ class Inventario extends Sagyc{
 		if (isset($_REQUEST['nivel'])){
 			$arreglo+=array('nivel'=>$_REQUEST['nivel']);
 		}
-		
+
 		if($id==0){
-			
+
 			$x.=$this->insert('et_usuario', $arreglo);
 		}
 		else{
@@ -101,5 +102,3 @@ if(strlen($function)>0){
 	$db = new Usuario();
 	echo $db->$function();
 }
-
-

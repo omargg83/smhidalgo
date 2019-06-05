@@ -1,11 +1,11 @@
-<?php 
+<?php
 	require_once("db_.php");
 	$bdd = new Inventario();
 	$idtienda=$_REQUEST['id'];
-	
+
 	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
-	
+
 	$pd = $bdd->inventario_lista($idtienda);
 ?>
 	<table class="table table-hover table-striped" id="x_lista">
@@ -16,13 +16,13 @@
 	<th>Nombre</th>
 	<th>Marca</th>
 	<th>Modelo</th>
-	
+
 	<th>Existencia</th>
 	<th>$ Compra</th>
 	<th>$ Venta</th>
 	<th>$ Promo</th>
 	<th>$ Distribuidor</th>
-	
+
 	</thead>
 	<tbody>
 		<?php
@@ -31,10 +31,9 @@
 			<tr id="<?php echo $pd[$i]['id_invent']; ?>" class="edit-t">
 				<td class="edit">
 					<div class="btn-group">
-					<button class="btn btn-outline-secondary btn-sm" data-lugar='a_cliente/editar'><i class="fa fa-edit"></i> Editar</button>
 					<button class="btn btn-outline-secondary btn-sm" ata-lugar='a_cliente/detalle'><i class="fas fa-arrow-circle-right"></i> Detalle</button>
 				</div></td>
-				<td><?php 
+				<td><?php
 					if ($pd[$i]["unico"]==0){ echo "Almacén";}
 					if ($pd[$i]["unico"]==1){ echo "Unico";}
 					if ($pd[$i]["unico"]==2){ echo "Registro";}
@@ -45,24 +44,24 @@
 				<td><?php echo $pd[$i]["nombre"]; ?></td>
 				<td><?php echo $pd[$i]["marca"]; ?></td>
 				<td><?php echo $pd[$i]["modelo"]; ?></td>
-				
+
 				<td><?php echo $pd[$i]["conteo"]; ?></td>
 				<td><?php echo $pd[$i]["preciocompra"]; ?></td>
 				<td><?php echo $pd[$i]["pvgeneral"]; ?></td>
 				<td><?php echo $pd[$i]["pvpromo"]; ?></td>
 				<td><?php echo $pd[$i]["pvdistr"]; ?></td>
-				
+
 			</tr>
 		<?php
 			}
 		?>
 	</tbody>
 	</table>
-	
+
 	</div>
-	
+
 <script>
 	$(document).ready( function () {
 		lista("x_lista");
-	});	
+	});
 </script>

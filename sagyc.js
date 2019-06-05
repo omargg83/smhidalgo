@@ -2,13 +2,13 @@
 	var intvalx="";
 	var chatx="";
 	var cuenta="";
-	
+
 	$(window).on('hashchange',function(){
 		loadContent(location.hash.slice(1));
 	});
 	var url=window.location.href;
 	var hash=url.substring(url.indexOf("#")+1);
-	
+
 	if(hash===url || hash===''){
 		hash='escritorio/dashboard';
 	}
@@ -19,7 +19,7 @@
 			hash= 'escritorio/dashboard';
 		}
 		$('html, body').animate({strollTop:0},'600','swing');
-		
+
 		var destino=hash + '.php';
 		$.ajax({
 			data:  {"algo":"algo"},
@@ -32,7 +32,7 @@
 				$("#contenido").html(response);
 			}
 		});
-		
+
 		$("#cargando").removeClass("is-active");
 	}
 
@@ -47,7 +47,7 @@
 			$("#contenido").html(response);
 		}
 	});
-	
+
 	$(function(){
 		var parametros={
 			"function":"leerfondo"
@@ -65,7 +65,7 @@
 		$("#cargando").removeClass("is-active");
 		setTimeout(fondos, 5000);
 	});
-	
+
 	function fondos(){
 		var parametros={
 			"function":"fondo_carga"
@@ -104,7 +104,7 @@
 	function fechas () {
 		$.datepicker.regional['es'] = {
 			 closeText: 'Cerrar',
-			 yearRange: '1910:2040',		 
+			 yearRange: '1910:2040',
 			 prevText: '<Ant',
 			 nextText: 'Sig>',
 			 currentText: 'Hoy',
@@ -120,15 +120,15 @@
 			 showMonthAfterYear: false,
 			 yearSuffix: ''
 		 };
-		 
+
 		$.datepicker.setDefaults($.datepicker.regional['es']);
 		$(".fechaclass").datepicker();
-	};	
-	
+	};
+
 	//////////////////////subir archivos
 	$(document).on("click","[id^='fileup_']",function(e){
 		e.preventDefault();
-		
+
 		var id = $(this).data('id');
 		var ruta = $(this).data('ruta');
 		var tipo = $(this).data('tipo');
@@ -142,14 +142,14 @@
 		if ( $(this).data('proceso') ) {
 			proceso=$(this).data('proceso');
 		}
-		
+
 		$("#modal_form").load("archivo.php?id="+id+"&ruta="+ruta+"&ext="+ext+"&tipo="+tipo+"&tabla="+tabla+"&campo="+campo+"&keyt="+keyt+"&destino="+destino+"&iddest="+iddest+"&proceso="+proceso);
 	});
 	$(document).on('change',"#prefile",function(e){
 		e.preventDefault();
 		var control=$(this).attr('id');
 		var accept=$(this).attr('accept');
-		
+
 		var fileSelect = document.getElementById(control);
 		var files = fileSelect.files;
 		var formData = new FormData();
@@ -162,10 +162,10 @@
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST','acceso_db.php?function=subir_file');
 			xhr.onload = function() {
-				
+
 			};
 			xhr.upload.onprogress = function (event) {
-				var complete = Math.round(event.loaded / event.total * 100);				
+				var complete = Math.round(event.loaded / event.total * 100);
 				if (event.lengthComputable) {
 					btnfile.style.display="none";
 					progress_file.style.display="block";
@@ -174,7 +174,7 @@
 				}
 			};
 			xhr.onreadystatechange = function(){
-				if(xhr.readyState === 4 && xhr.status === 200){ 
+				if(xhr.readyState === 4 && xhr.status === 200){
 					progress_file.style.display="none";
 					btnfile.style.display="block";
 					try {
@@ -202,7 +202,7 @@
 		var destino = $("#destino").val();
 		var iddest = $("#iddest").val();
 		var proceso="acceso_db.php";
-		
+
 		if ( $("#direccion").length ) {
 			var dataString = $(this).serialize()+"&function="+funcion;
 			$.ajax({
@@ -210,7 +210,7 @@
 				url: proceso,
 				type: "post",
 				beforeSend: function () {
-						
+
 				},
 				success:  function (response) {
 					if (!isNaN(response)){
@@ -233,9 +233,9 @@
 		else{
 			$.alert('Debe seleccionar un archivo');
 		}
-		
+
 	});
-	
+
 	$(document).on('click','.sidebar a', function() {
        $(".sidebar a").removeClass("activeside");
        $(this).addClass("activeside");
@@ -243,7 +243,7 @@
 	$(document).on("click","#fondocambia",function(e){
 		e.preventDefault();
 		var imagen=$("img", this).attr("src");
-		
+
 		var lugar='acceso_db.php';
 		$.ajax({
 			data:  {
@@ -253,13 +253,13 @@
 			url:   lugar,
 			type:  'post',
 			beforeSend: function () {
-				
+
 			},
 			success:  function (response) {
 				$("body").css("background-image","url('"+imagen+"')");
 			}
 		});
-	});	
+	});
 	$(document).on('click','#sidebarCollapse', function () {
 		$('#navx').toggleClass('sidenav');
         $('#contenido').toggleClass('fijaproceso');
@@ -267,7 +267,7 @@
     });
 	$(document).on("click","[id^='edit_'], [id^='lista_'], [id^='new_']",function(e){	//////////// para ir a alguna opcion
 		e.preventDefault();
-		
+
 		var id=$(this).attr('id');
 		var funcion="";
 		if ( $(this).data('funcion') ) {
@@ -280,19 +280,19 @@
 		padre=id.split("_")[0]
 		opcion=id.split("_")[1];
 		$("#cargando").addClass("is-active");
-		
+
 		if ( $(this).data('valor')!=undefined ) {
 			valor=$("#"+$(this).data('valor')).val();
 		}
-		
+
 		if ( $(this).data('div')!=undefined ) {
 			contenido="#"+$(this).data('div');
 		}
-		
+
 		if(padre=="edit" || padre=="new" || padre=="lista"){
 			lugar = $("#"+id).data('lugar')+".php";
 			if(padre=="edit"){
-				lugar=$(this).attr("data-lugar")+".php";	
+				lugar=$(this).attr("data-lugar")+".php";
 				if ( $(this).closest(".edit-t").attr("id")){
 					xyId = $(this).closest(".edit-t").attr("id");
 				}
@@ -336,13 +336,13 @@
 			url:   lugar,
 			type:  'post',
 			beforeSend: function () {
-				
+
 			},
 			success:  function (response) {
 				$("#"+div).html(response);
 			}
 		});
-		
+
 	});
 	$(document).on("click","[id^='imprimir_'], [id^='imprime_']",function(e){
 		e.preventDefault();
@@ -351,34 +351,34 @@
 		var opcion=id.split("_")[1];
 		var valor=0;
 		var xyId;
-		
+
 		if ( $(this).data('valor') ) {
 			var control=$(this).data('valor');
 			valor = $("#"+control).val();
 		}
-		
+
 		if(padre=="imprimir"){
 			xyId = $(this).closest(".edit-t").attr("id");
 		}
 		if(padre=="imprime"){
 			xyId= $("#id").val();
 		}
-		
+
 		if( $("#"+id).data('select') ){
 			var select=$("#"+id).data('select');
 			xyId=$("#"+select).val();
 		}
 		else{
-			
+
 		}
 		var lugar = $("#"+id).data('lugar')+".php";
 		var tipo = $("#"+id).data('tipo');
-		VentanaCentrada(lugar+'?id='+xyId+'&tipo='+tipo+'&valor='+valor,'Impresion','','1024','768','true');  
+		VentanaCentrada(lugar+'?id='+xyId+'&tipo='+tipo+'&valor='+valor,'Impresion','','1024','768','true');
 	});
-	
+
 	$(document).on('submit',"[id^='form_']",function(e){
 		e.preventDefault();
-	
+
 		var id=$(this).attr('id');
 		var lugar = $(this).data('lugar')+".php";
 		var destino = $(this).data('destino');
@@ -398,14 +398,14 @@
 		if ( $(this).data('cmodal') ) {
 			cerrar=$(this).data('cmodal');
 		}
-		
+
 		var dataString = $(this).serialize()+"&function="+funcion;
 		$.ajax({
 			data:  dataString,
 			url: lugar,
 			type: "post",
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 				if (!isNaN(response)){
@@ -417,7 +417,7 @@
 							url:   lugar,
 							type:  'post',
 							beforeSend: function () {
-								
+
 							},
 							success:  function (response) {
 								$("#"+div).html(response);
@@ -440,28 +440,28 @@
 			}
 		});
 	});
-	
-	
-	
+
+
+
 	$(document).on('submit',"[id^='consulta_']",function(e){
 		e.preventDefault();
 		var dataString = $(this).serialize();
 		var div = $(this).data('div');
 		var funcion = $(this).data('funcion');
-		
+
 		var destino = $(this).data('destino')+".php?funcion="+funcion;
 		$.ajax({
 			data:  dataString,
 			url: destino,
 			type: "post",
 			beforeSend: function () {
-					
+
 			},
 			success:  function (response) {
 				$("#"+div).html(response);
 			}
 		});
-	});	
+	});
 	$(document).on("click","[id^='eliminar_']",function(e){
 		e.preventDefault();
 		var id = $(this).data('id');
@@ -469,7 +469,7 @@
 		var destino = $(this).data('destino')+".php";
 		var iddest = $(this).data('iddest');
 		var div;
-		
+
 		if ( $(this).data('funcion') ) {
 			var funcion = $(this).data('funcion');
 		}
@@ -477,7 +477,7 @@
 			console.log("error");
 			return;
 		}
-		
+
 		if ( $(this).data('div') ) {
 			div = $(this).data('div');
 		}
@@ -499,7 +499,7 @@
 						url: lugar,
 						type:  'post',
 						beforeSend: function () {
-							
+
 						},
 						success:  function (response) {
 							if (!isNaN(response)){
@@ -510,7 +510,7 @@
 										url:   destino,
 										type:  'post',
 										beforeSend: function () {
-											
+
 										},
 										success:  function (response) {
 											$("#"+div).html(response);
@@ -523,7 +523,7 @@
 								  showConfirmButton: false,
 								  timer: 700
 								});
-								
+
 							}
 							else{
 								alert(response);
@@ -535,7 +535,7 @@
 					$.alert('Canceled!');
 				}
 			}
-		});		
+		});
 	});
 	$(document).on("change","#yearx_val",function(e){
 		e.preventDefault();
@@ -573,8 +573,8 @@
 		if ( $(this).data('borrafile') ) {
 			borrafile=$(this).data('borrafile');
 		}
-		
-		
+
+
 		var parametros={
 			"ruta":ruta,
 			"keyt":keyt,
@@ -584,8 +584,8 @@
 			"tipo":tipo,
 			"borrafile":borrafile,
 			"function":"eliminar_file"
-		}; 
-		
+		};
+
 		$.confirm({
 			title: 'Eliminar',
 			content: '¿Desea eliminar el archivo?',
@@ -596,7 +596,7 @@
 						type: "POST",
 						data: parametros
 					}).done(function(echo){
-						
+
 						if (!isNaN(echo)){
 							$("#"+divdest).load(dest+iddest);
 							Swal.fire({
@@ -615,7 +615,7 @@
 					$.alert('Canceled!');
 				}
 			}
-		});	
+		});
 	});
 	$(document).on("click","[id^='winmodal_']",function(e){
 		e.preventDefault();
@@ -625,14 +625,14 @@
 		var id2 = "0";
 		var id3 = "0";
 		var lugar = $(this).data('lugar');
-		
-		if ( $(this).data('id') ) {	
+
+		if ( $(this).data('id') ) {
 			id = $(this).data('id');
 		}
-		if ( $(this).data('id2') ) {	
+		if ( $(this).data('id2') ) {
 			id2 = $(this).data('id2');
 		}
-		if ( $(this).data('id3') ) {	
+		if ( $(this).data('id3') ) {
 			id3 = $(this).data('id3');
 		}
 		$.ajax({
@@ -647,21 +647,21 @@
 			}
 		});
 	});
-	
-	
+
+
 	$(document).on('submit','#acceso',function(e){
 		e.preventDefault();
 		var tipo=1;
 		var userAcceso=document.getElementById("userAcceso").value;
 		var passAcceso=$.md5(document.getElementById("passAcceso").value);
-		
+
 		var parametros={
 			"tipo":tipo,
 			"function":"acceso",
 			"userAcceso":userAcceso,
 			"passAcceso":passAcceso
-		}; 
-		
+		};
+
 		var btn=$(this).find(':submit');
 		$(btn).attr('disabled', 'disabled');
 		var tmp=$(btn).children("i").attr('class');
@@ -712,13 +712,13 @@
 				var tmp=$(btn).children("i").attr('class');
 				$(btn).children("i").removeClass();
 				$(btn).children("i").addClass("fas fa-spinner fa-pulse");
-				
+
 				var tipo=2;
 				var parametros={
 					"function":"recuperar",
 					"tipo":tipo,
 					"telefono":telefono
-				}; 
+				};
 				$.ajax({
 					url: "acceso_db.php",
 					type: "post",
@@ -734,7 +734,7 @@
 							  showConfirmButton: false,
 							  timer: 1000
 							});
-							
+
 						} else {
 							Swal.fire({
 							  type: 'success',
@@ -742,7 +742,7 @@
 							  showConfirmButton: false,
 							  timer: 3000
 							});
-						}	
+						}
 						$(btn).children("i").removeClass();
 						$(btn).children("i").addClass(tmp);
 						$(btn).prop('disabled', false);
@@ -754,6 +754,3 @@
 				$( "#telefono" ).val("");
 			}
 		});
-	
-	
-	

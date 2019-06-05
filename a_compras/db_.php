@@ -1,18 +1,18 @@
 <?php
 require_once("../control_db.php");
 if (isset($_REQUEST['function'])){$function=$_REQUEST['function'];}	else{ $function="";}
-	
+
 class Compra extends Sagyc{
-	
+
 	public $nivel_personal;
 	public $nivel_captura;
-	
+
 	public function __construct(){
 		parent::__construct();
 		$this->doc="a_clientes/papeles/";
 
 		if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
-			
+
 		}
 		else{
 			include "../error.php";
@@ -41,7 +41,7 @@ class Compra extends Sagyc{
 	public function compras_pedido($id){
         self::set_names();
         $sql="select * from et_comprapedido left outer join et_invent on et_invent.id_invent=et_comprapedido.id_invent where idcompra='$id' order by id desc";
-		
+
         foreach ($this->dbh->query($sql) as $res){
             $this->ventasp[]=$res;
         }
@@ -93,5 +93,3 @@ if(strlen($function)>0){
 	$db = new Compra();
 	echo $db->$function();
 }
-
-
