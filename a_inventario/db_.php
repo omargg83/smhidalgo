@@ -50,7 +50,10 @@ class Inventario extends Sagyc{
 	}
 	public function inventario($id){
 		self::set_names();
-		$sql="select * from et_invent where id_invent='$id'
+		$sql="select * from et_invent
+		left outer join et_marca on et_marca.idmarca=et_invent.idmarca
+		left outer join et_modelo on et_modelo.idmodelo=et_invent.idmodelo
+		where id_invent='$id'
 		order by id_invent asc";
 		foreach ($this->dbh->query($sql) as $res){
 			$this->inventario=$res;

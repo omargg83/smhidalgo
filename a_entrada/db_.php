@@ -120,6 +120,7 @@ class Entrada extends Sagyc{
 			$sth->bindValue(":nombre","%$texto%");
 			$sth->execute();
 			$res=$sth->fetchAll();
+
 			$x.="<div class='row'>";
 			if(count($res)>0){
 				$x.="<table class='table table-sm'>";
@@ -128,8 +129,79 @@ class Entrada extends Sagyc{
 				$x.= "<th>Código</th>";
 				$x.= "<th>Descripción</th>";
 				$x.= "<th><span class='pull-right'>Cantidad</span></th>";
+				$x.= "<th><span class='pull-right'>Precio</span></th>";
+				$x.= "<th><span class='pull-right'>Material</span></th>";
+				$x.= "<th><span class='pull-right'>Color</span></th>";
+				$x.= "<th><span class='pull-right'>Clave/IMEI</span></th>";
+				$x.= "<th><span class='pull-right'></span></th>";
+				$x.="</tr>";
+				foreach ($res as $key) {
+					$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
+
+					$x.= "<td>";
+					$x.= "<div class='btn-group'>";
+					$x.= "<button type='button' id='entradasel' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+					$x.= "</div>";
+					$x.= "</td>";
+
+					$x.= "<td>";
+					$x.= $key["codigo"];
+					$x.= "</td>";
+
+					$x.= "<td>";
+					$x.= $key["nombre"];
+					$x.= "</td>";
+
+					$x.= "</tr>";
+				}
+				$x.= "</table>";
+			}
+			else{
+				$x="<div class='alert alert-primary' role='alert'>No se encontró: $texto</div>";
+			}
+			$x.="</div>";
+			return $x;
+		}
+		catch(PDOException $e){
+			return "Database access FAILED! ".$e->getMessage();
+		}
+		return $texto;
+	}
+	function pre_sel(){
+		$x="";
+		$id=$texto=$_REQUEST['texto'];
+		$x.="hola mundo $id";
 
 
+		$x.="<div class='card-footer'>
+			<div class='btn-group'>
+				<button class='btn btn-outline-secondary btn-sm' type='button' id='buscar_prodentra'><i class='fas fa-search'></i>Buscar</button>
+				<button type='button' class='btn btn-outline-secondary btn-sm' data-dismiss='modal'><i class='fas fa-sign-out-alt'></i>Cerrar</button>
+			</div>
+		</div>";
+		return $x;
+	}
+
+	function sel_producto(){
+		try{
+			$x="";
+			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
+			parent::set_names();
+
+			$sql="SELECT * FROM et_invent where activo=1 and (nombre like :texto OR codigo like :nombre) and (unico=0 or unico=1)";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":texto","%$texto%");
+			$sth->bindValue(":nombre","%$texto%");
+			$sth->execute();
+			$res=$sth->fetchAll();
+			$x.="<div class='row'>";
+			if(count($res)>0){
+				$x.="<table class='table table-sm'>";
+
+				$x.= "<tr>";
+				$x.= "<th>Código</th>";
+				$x.= "<th>Descripción</th>";
+				$x.= "<th><span class='pull-right'>Cantidad</span></th>";
 				$x.= "<th><span class='pull-right'>Precio</span></th>";
 				$x.= "<th><span class='pull-right'>Material</span></th>";
 				$x.= "<th><span class='pull-right'>Color</span></th>";
@@ -146,6 +218,14 @@ class Entrada extends Sagyc{
 
 					$x.= "<td>";
 					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='descripcion_".$id_invent."' value='".$key["nombre"]."' readonly>";
+					$x.= "</td>";
+
+					$x.= "<td >";
+					if($key["unico"]==1){
+						$x.= "<div class='pull-right'>
+							<input type='text' class='form-control input-sm' id='color_".$id_invent."'  value='' placeholder='Color'>
+						</div>";
+					}
 					$x.= "</td>";
 
 					$unico="";
@@ -174,13 +254,7 @@ class Entrada extends Sagyc{
 						$x.= "</select>";
 					$x.= "</td>";
 
-					$x.= "<td >";
-					if($key["unico"]==1){
-						$x.= "<div class='pull-right'>
-							<input type='text' class='form-control input-sm' id='color_".$id_invent."'  value='' placeholder='Color'>
-						</div>";
-					}
-					$x.= "</td>";
+
 
 					$x.= "<td>";
 					if($key["unico"]==1){
@@ -210,6 +284,10 @@ class Entrada extends Sagyc{
 		}
 		return $texto;
 	}
+
+
+
+
 
 	function agregar_producto(){
 		$x="";

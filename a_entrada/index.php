@@ -56,6 +56,26 @@ function buscar(){
 	}
 }
 
+$(document).on('click','#entradasel',function(e){
+	e.preventDefault();
+	e.stopPropagation();
+	var id=$(this).closest(".edit-t").attr("id");
+	$.ajax({
+	  data: {
+	    "id":id,
+	    "function":"pre_sel"
+	  },
+	  url:   "a_entrada/db_.php",
+	  type:  'post',
+	  beforeSend: function () {
+
+	  },
+	  success: function (response) {
+	      $("#modal_form").html(response);
+	  }
+	});
+});
+
 function agregaprod(id_invent){
 	var cantidad = $("#cantidad_"+id_invent).val();
 	var precio = $("#precio_"+id_invent).val();

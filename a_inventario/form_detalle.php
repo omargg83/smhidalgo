@@ -5,11 +5,11 @@
 	$pd = $db->inventario($id);
 	$nombre=$pd['nombre'];
 
-	$marca = $db->marca($pd['idmarca']);
-	$marca=$marca['marca'];
 
-	$modelo = $db->modelo($pd['idmodelo']);
-	$modelo=$modelo['modelo'];
+	$marca=$pd['marca'];
+
+
+	$modelo=$pd['modelo'];
 ?>
 <div class='container'>
 	<div class='card'>
@@ -26,11 +26,11 @@
 				</div>
 				<div class='col-4'>
 					<label >Marca:</label>
-					<input type="text" class="form-control" name="marca" id="marca" value="<?php echo $marca; ?>" placeholder="Nombre" readonly>
+					<input type="text" class="form-control" name="marca" id="marca" value="<?php echo $marca; ?>" placeholder="Marca" readonly>
 				</div>
 				<div class='col-4'>
 					<label >Modelo:</label>
-					<input type="text" class="form-control" name="modelo" id="modelo" value="<?php echo $modelo; ?>" placeholder="Nombre" readonly>
+					<input type="text" class="form-control" name="modelo" id="modelo" value="<?php echo $modelo; ?>" placeholder="Modelo" readonly>
 				</div>
 
 			</div>
@@ -41,7 +41,7 @@
 
 				echo "<table class='table'>";
 				echo "<tr>
-				
+
 				<th>Clave</th>
 				<th>Nombre</th>
 				<th>Color</th>
