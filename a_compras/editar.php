@@ -1,7 +1,7 @@
 <?php
 	require_once("db_.php");
 	$bdd = new Compra();
-	if (isset($_POST['id'])){$id=$_POST['id'];} else{ $id=0;}
+	$id=$_REQUEST['id'];
 
 	$i=0;
 	$proveedores = $bdd->proveedores_lista();
@@ -72,6 +72,12 @@
 				<div class="col-sm-12">
 					<div class="btn-group">
 					<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
+					<?php
+						if($id>0 and $estado=="Activa"){
+								echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_compras/form_producto'><i class='fas fa-plus'></i> Productos</button>";
+						}
+					?>
+
 					<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_compras/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
 					</div>
 				</div>

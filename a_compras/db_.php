@@ -50,7 +50,7 @@ class Compra extends Sagyc{
     }
 
     public function proveedores_lista(){
-		self::set_names();
+			self::set_names();
 		$sql="SELECT * FROM et_prove";
 		 foreach ($this->dbh->query($sql) as $res){
             $this->clientes[]=$res;
@@ -157,6 +157,11 @@ class Compra extends Sagyc{
 			$x.=$this->insert('et_comprapedido', $arreglo);
 
 			return $x;
+		}
+		public function borrar_producto(){
+			self::set_names();
+			if (isset($_POST['id'])){$id=$_POST['id'];}
+			return $this->borrar('et_comprapedido',"id",$id);
 		}
 }
 

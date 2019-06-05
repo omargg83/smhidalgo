@@ -5,11 +5,8 @@
 	$id = $_REQUEST['id'];
 	$compra = $bdd->compra($id);
 	$pedido = $bdd->compras_pedido($id);
-	if($estado=="Activa"){
-		echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_compras/form_producto'><i class='fas fa-plus'></i> Productos</button>";
 
-	}
-	echo "<table class='table'>";
+	echo "<table class='table table_sm'>";
 	echo "<tr>
 	<th>-</th>
 	<th>Codigo</th>
@@ -26,7 +23,7 @@
 		echo "<tr id='".$pedido[$i]['id']."' class='edit-t'>";
 		echo "<td>";
 		if($estado=="Activa"){
-			echo '<div class="btn-group"><a id="remove" class="btn btn-outline-secondary btn-sm"><i class="fas fa-trash-alt"></i></a>';
+			echo "<button class='btn btn-outline-secondary btn-sm' id='eliminar_comision' data-lugar='a_compras/db_' data-destino='a_compras/form_pedido' data-id='".$pedido[$i]['id']."' data-iddest='$id' data-funcion='borrar_producto' data-div='pedidos'><i class='far fa-trash-alt'></i></i></button>";
 		}
 		echo "</td>";
 		echo "<td>".$pedido[$i]['codigo']."</td>";

@@ -77,7 +77,13 @@
 
 			},
 			success:  function (response) {
-				alert(response);
+				$("#pedidos").load("a_compras/form_pedido.php?id="+idcompra);
+				Swal.fire({
+					type: 'success',
+					title: "Se agregó correctamente",
+					showConfirmButton: false,
+					timer: 1000
+				});
 			}
 		});
 	});
