@@ -138,6 +138,7 @@ class Entrada extends Sagyc{
 				$x.="</tr>";
 
 				foreach ($res as $key) {
+					$id_invent=$key['id_invent'];
 					$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
 					$x.= "<td>";
 					$x.= $key["codigo"];
@@ -147,17 +148,51 @@ class Entrada extends Sagyc{
 					$x.= $key["nombre"];
 					$x.= "</td>";
 
-
-
-
+					$unico="";
+					if($key["unico"]==1){
+						$unico="readonly";
+					}
 
 					$x.= "<td>";
-					$x.= "<input id='cantidad_".$key['id_invent']."' name='cantidad_".$key['id_invent']."' value='1' class='form-control'>";
+					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='cantidad_".$id_invent."' value='1' $unico>";
+					$x.= "</td>";
+
+					$x.= "<td>
+						<div class='pull-right'>
+							<input type='text' class='form-control input-sm' style='text-align:right' id='precio_".$id_invent."'  value='".$key['preciocompra']."' >
+						</div>
+					</td>";
+
+					$x.= "<td >";
+						$x.= "<select class='form-control' name='material_".$id_invent."' id='material_".$id_invent."'>";
+							$x.= "<option value=''></option>";
+							$x.= "<option value='PREPAGO'>PREPAGO</option>";
+							$x.= "<option value='TARIFARIO'>TARIFARIO</option>";
+							$x.= "<option value='AMIGO CHIP'>AMIGO CHIP</option>";
+							$x.= "<option value='LIBRES'>LIBRES</option>";
+							$x.= "<option value='CONSIGNA'>CONSIGNA</option>";
+						$x.= "</select>";
+					$x.= "</td>";
+
+					$x.= "<td >";
+					if($key["unico"]==1){
+						$x.= "<div class='pull-right'>
+							<input type='text' class='form-control input-sm' id='color_".$id_invent."'  value='' placeholder='Color'>
+						</div>";
+					}
+					$x.= "</td>";
+
+					$x.= "<td>";
+					if($key["unico"]==1){
+						$x.= "<div class='pull-right'>
+							<input type='text' class='form-control input-sm' id='clave_".$id_invent."'  value='' placeholder='Clave'>
+						</div>";
+					}
 					$x.= "</td>";
 
 					$x.= "<td>";
 					$x.= "<div class='btn-group'>";
-					$x.= "<button class='btn btn-outline-secondary btn-sm' id='producto_sel' title='Agregar producto a la compra'><i class='fas fa-plus'></i></button>";
+					$x.= "<button class='btn btn-outline-secondary btn-sm' id='producto_entra' title='Agregar producto a la compra'><i class='fas fa-plus'></i></button>";
 					$x.= "</div>";
 					$x.= "</td>";
 					$x.= "</tr>";
@@ -176,41 +211,27 @@ class Entrada extends Sagyc{
 		return $texto;
 	}
 
-
-
-
-
-
-	/////////////////////////////////////
-
-
-
-
-
-
-
 	function agregar_producto(){
 		$x="";
 		parent::set_names();
 		$arreglo =array();
-
 		if (isset($_REQUEST['id_invent'])){
 			$arreglo+=array('id_invent'=>$_REQUEST['id_invent']);
 		}
-
 		if (isset($_REQUEST['cantidad'])){
-			$arreglo+=array('cantidad_oc'=>$_REQUEST['cantidad']);
+			$arreglo+=array('cantidad'=>$_REQUEST['cantidad']);
 		}
-
-		if (isset($_REQUEST['idcompra'])){
-			$arreglo+=array('idcompra'=>$_REQUEST['idcompra']);
+		if (isset($_REQUEST['precio'])){
+			$arreglo+=array('precio'=>$_REQUEST['precio']);
 		}
-
-		$x.=$this->insert('et_comprapedido', $arreglo);
+		if (isset($_REQUEST['identrada'])){
+			$arreglo+=array('identrada'=>$_REQUEST['identrada']);
+		}
+		$arreglo+=array('idtienda'=>1);
+		$x.=$this->insert('et_bodega', $arreglo);
 
 		return $x;
 	}
-
 }
 
 $db = new Entrada();

@@ -17,14 +17,11 @@ echo "</ul>";
 echo "
 </div>
 </nav>";
-?>
 
-<div id='trabajo'>
-	<?php
+echo "<div id='trabajo'>";
 	include 'lista.php';
-	?>
-</div>
-
+echo "</div>";
+?>
 <script type="text/javascript">
 $(document).on('keypress','#prod_entra',function(e){
 	if(e.which == 13) {
@@ -41,7 +38,7 @@ $(document).on('click','#buscar_prodentra',function(e){
 
 function buscar(){
 	var texto=$("#prod_entra").val();
-	if(texto.length>=2){
+	if(texto.length>=-1){
 		$.ajax({
 			data:  {
 				"texto":texto,
@@ -58,5 +55,36 @@ function buscar(){
 		});
 	}
 }
+$(document).on('click','#producto_entra',function(e){
+	e.preventDefault();
+	e.stopPropagation();
+	var id_invent = $(this).closest(".edit-t").attr("id");
+	var cantidad = $("#cantidad_"+id_invent).val();
+	var precio = $("#precio_"+id_invent).val();
+	var identrada = $("#id").val();
+	$.ajax({
+		data:  {
+			"id_invent":id_invent,
+			"identrada":identrada,
+			"cantidad":cantidad,
+			"precio":precio,
+			"function":"agregar_producto"
+		},
+		url:   "a_entrada/db_.php",
+		type:  'post',
+		beforeSend: function () {
+
+		},
+		success:  function (response) {
+			$("#pedidos").load("a_entrada/form_pedido.php?id="+identrada);
+			Swal.fire({
+				type: 'success',
+				title: "Se agregó correctamente",
+				showConfirmButton: false,
+				timer: 1000
+			});
+		}
+	});
+});
 
 </script>
