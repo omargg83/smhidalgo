@@ -150,6 +150,6 @@ class Inventario extends Sagyc{
 }
 
 if(strlen($function)>0){
-	$db = new Usuario();
+	$db = new Inventario();
 	echo $db->$function();
 }
