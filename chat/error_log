@@ -1,0 +1,14 @@
+[31-May-2019 14:26:21 America/Chicago] PHP Notice:  Undefined index: servidor in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php on line 13
+[31-May-2019 14:26:21 America/Chicago] PHP Notice:  Undefined index: bdd in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php on line 13
+[31-May-2019 14:26:21 America/Chicago] PHP Notice:  Undefined index: mysqluser in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php on line 13
+[31-May-2019 14:26:21 America/Chicago] PHP Notice:  Undefined index: mysqlpass in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php on line 13
+[31-May-2019 14:26:21 America/Chicago] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[28000] [1045] Access denied for user 'sagyce18'@'localhost' (using password: NO)' in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php:13
+Stack trace:
+#0 /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php(13): PDO->__construct('mysql:host=;dbn...', NULL, NULL)
+#1 /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php(279): Chat->__construct()
+#2 /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php(75): nuevos()
+#3 {main}
+  thrown in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php on line 13
+[31-May-2019 15:13:38 America/Chicago] PHP Notice:  Undefined index: carga in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php on line 281
+[31-May-2019 15:13:38 America/Chicago] PHP Notice:  Undefined index: idpersona in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php on line 286
+[31-May-2019 15:13:38 America/Chicago] PHP Notice:  Undefined index: tchat in /home1/sagyce18/empresas.sagyc2.com.mx/chat/chat.php on line 286
