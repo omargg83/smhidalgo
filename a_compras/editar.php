@@ -20,10 +20,11 @@
 		$comentarios=$pd['comentarios'];
 		$estado=$pd['estado'];
 	}
-
 ?>
-<form action="" id="form_cliente" data-lugar="a_compras/db_" data-funcion="guardar_compra" data-destino='a_compras/editar'>
+
 <div class="container">
+	<form action="" id="form_cliente" data-lugar="a_compras/db_" data-funcion="guardar_compra" data-destino='a_compras/editar'>
+
 	<div class='card'>
 		<div class='card-header'>Compra #<?php echo $id; ?></div>
 		<div class='card-body'>
@@ -76,6 +77,15 @@
 				</div>
 			</div>
 		</div>
-		</div>
+			<?php
+
+				if($id>0){
+					echo "<div class='card-body' id='pedidos'>";
+						include 'form_pedido.php';
+					echo "</div>";
+				}
+
+			?>
 	</div>
+	</form>
 </div>
