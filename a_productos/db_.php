@@ -135,7 +135,6 @@ class Inventario extends Sagyc{
 		if (isset($_REQUEST['activo'])){
 			$arreglo+=array('activo'=>$_REQUEST['activo']);
 		}
-
 		if($id==0){
 				$fecha=date("Y-m-d H:i:s");
 				$arreglo+=array('fechamod'=>$fecha);
