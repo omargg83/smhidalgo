@@ -75,8 +75,8 @@
 			</li>
 		</ul>
 
-			<ul class="nav navbar-nav navbar-right" id="chatx">chat</ul>
-			<ul class="nav navbar-nav navbar-right" id="fondo">fondo</ul>
+			<ul class="nav navbar-nav navbar-right" id="chatx"></ul>
+			<ul class="nav navbar-nav navbar-right" id="fondo"></ul>
 		  <ul class='nav navbar-nav navbar-right'>
 
 		  <li class="nav-item">

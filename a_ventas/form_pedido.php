@@ -58,7 +58,7 @@
 
 	$subtotal=$gtotal/1.16;
 	$iva=$gtotal-$subtotal;
-	$descuento=1+($desc['cantidad']/100);
+	$descuento=1+($desc[0]['cantidad']/100);
 	$ttotal=$gtotal/$descuento;
 
 	$values = array('subtotal'=>$subtotal, 'iva'=>$iva, 'total'=>$gtotal, 'descuento'=>$descuento, 'gtotal'=>$ttotal );

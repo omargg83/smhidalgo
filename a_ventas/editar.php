@@ -1,37 +1,37 @@
 <?php
-	require_once("db_.php");
-	$id=$_REQUEST['id'];
+require_once("db_.php");
+$id=$_REQUEST['id'];
 
-	$clientes = $db->clientes_lista();
-	$tiendas = $db->tiendas_lista();
-	$descuento = $db->descuento_lista();
+$clientes = $db->clientes_lista();
+$tiendas = $db->tiendas_lista();
+$descuento = $db->descuento_lista();
 
-	if($id==0){
-		$idtienda=$_SESSION['idtienda'];
-		$idcliente=0;
-		$iddescuento=0;
-		$factura="";
-		$lugar="";
-		$dentrega=date("Y-m-d H:i:s");
-		$entregar=0;
-		$estado="Activa";
-	}
-	else{
-		$pd = $db->venta($id);
-		$id=$pd['idventa'];
-		$idcliente=$pd['idcliente'];
-		$idtienda=$pd['idtienda'];
-		$iddescuento=$pd['iddescuento'];
-		$lugar=$pd['lugar'];
-		$entregar=$pd['entregar'];
-		$dentrega=$pd['dentrega'];
-		$estado=$pd['estado'];
-		$factura=$pd['factura'];
-	}
+if($id==0){
+	$idtienda=$_SESSION['idtienda'];
+	$idcliente=0;
+	$iddescuento=0;
+	$factura="";
+	$lugar="";
+	$dentrega=date("Y-m-d H:i:s");
+	$entregar=0;
+	$estado="Activa";
+}
+else{
+	$pd = $db->venta($id);
+	$id=$pd['idventa'];
+	$idcliente=$pd['idcliente'];
+	$idtienda=$pd['idtienda'];
+	$iddescuento=$pd['iddescuento'];
+	$lugar=$pd['lugar'];
+	$entregar=$pd['entregar'];
+	$dentrega=$pd['dentrega'];
+	$estado=$pd['estado'];
+	$factura=$pd['factura'];
+}
 ?>
-<form action="" id="form_venta" data-lugar="a_ventas/db_" data-funcion="guardar_venta" data-destino='a_venta/editar'>
 <div class="container">
 	<div class='card'>
+		<form action="" id="form_venta" data-lugar="a_ventas/db_" data-funcion="guardar_venta" data-destino='a_ventas/editar'>
 			<div class='card-header'>Venta <?php echo $id; ?></div>
 			<div class='card-body'>
 				<div class='row'>
@@ -42,30 +42,30 @@
 					<div class='col-4'>
 						<label >Cliente:</label>
 						<?php
-							echo "<select class='form-control' name='idcliente' id='idcliente'>";
-							echo '<option disabled>Seleccione el cliente</option>';
-							for($i=0;$i<count($clientes);$i++){
-								echo '<option value="'.$clientes[$i]['idcliente'].'"';
-								if($clientes[$i]['idcliente']==$idcliente){
-									echo " selected";
-								}
-								echo '>'.$clientes[$i]["razon_social_prove"].'</option>';
+						echo "<select class='form-control' name='idcliente' id='idcliente'>";
+						echo '<option disabled>Seleccione el cliente</option>';
+						for($i=0;$i<count($clientes);$i++){
+							echo '<option value="'.$clientes[$i]['idcliente'].'"';
+							if($clientes[$i]['idcliente']==$idcliente){
+								echo " selected";
 							}
-							echo "</select>";
+							echo '>'.$clientes[$i]["razon_social_prove"].'</option>';
+						}
+						echo "</select>";
 						?>
 					</div>
 					<div class='col-3'>
 						<label >Tienda:</label>
 						<?php
-						  echo "<select class='form-control' name='idtienda' id='idtienda' disabled>";
-							for($i=0;$i<count($tiendas);$i++){
-								echo '<option value="'.$tiendas[$i]['id'].'"';
-								if($tiendas[$i]['id']==$idtienda){
-									echo " selected";
-								}
-								echo '>'.$tiendas[$i]["nombre"].'</option>';
+						echo "<select class='form-control' name='idtienda' id='idtienda'>";
+						for($i=0;$i<count($tiendas);$i++){
+							echo '<option value="'.$tiendas[$i]['id'].'"';
+							if($tiendas[$i]['id']==$idtienda){
+								echo " selected";
 							}
-						  echo "</select>";
+							echo '>'.$tiendas[$i]["nombre"].'</option>';
+						}
+						echo "</select>";
 						?>
 					</div>
 					<div class='col-3'>
@@ -76,16 +76,16 @@
 					<div class='col-3'>
 						<label>Forma de pago:</label>
 						<?php
-						  echo "<select class='form-control' name='iddescuento' id='iddescuento' required>";
-							echo '<option>Seleccione tipo de pago</option>';
-							for($i=0;$i<count($descuento);$i++){
-								echo '<option value="'.$descuento[$i]['iddescuento'].'"';
-								if($descuento[$i]['iddescuento']==$iddescuento){
-									echo " selected";
-								}
-								echo '>'.$descuento[$i]["nombre"].' ('.$descuento[$i]['cantidad'].'%)</option>';
+						echo "<select class='form-control' name='iddescuento' id='iddescuento' required>";
+						echo '<option>Seleccione tipo de pago</option>';
+						for($i=0;$i<count($descuento);$i++){
+							echo '<option value="'.$descuento[$i]['iddescuento'].'"';
+							if($descuento[$i]['iddescuento']==$iddescuento){
+								echo " selected";
 							}
-						  echo "</select>";
+							echo '>'.$descuento[$i]["nombre"].' ('.$descuento[$i]['cantidad'].'%)</option>';
+						}
+						echo "</select>";
 						?>
 					</div>
 
@@ -102,12 +102,12 @@
 					<div class='col-3'>
 						<label>Estado:</label>
 						<?php
-							echo "<select class='form-control' name='estado' id='estado' required>";
-							echo '<option disabled>Seleccione un descuento</option>';
-								echo '<option value="Activa"'; if($estado=="Activa"){ echo " selected"; } echo '>Activa</option>';
-								echo '<option value="Pagada"'; if($estado=="Pagada"){ echo " selected"; } echo '>Pagada</option>';
-								echo '<option value="Cerrada"'; if($estado=="Cerrada"){ echo " selected"; } echo '>Cerrada</option>';
-							echo "</select>";
+						echo "<select class='form-control' name='estado' id='estado' required>";
+						echo '<option disabled>Seleccione un descuento</option>';
+						echo '<option value="Activa"'; if($estado=="Activa"){ echo " selected"; } echo '>Activa</option>';
+						echo '<option value="Pagada"'; if($estado=="Pagada"){ echo " selected"; } echo '>Pagada</option>';
+						echo '<option value="Cerrada"'; if($estado=="Cerrada"){ echo " selected"; } echo '>Cerrada</option>';
+						echo "</select>";
 						?>
 					</div>
 				</div>
@@ -115,19 +115,26 @@
 			<div class='card-footer'>
 				<div class="row">
 					<div class="col-sm-12">
-						<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
+						<div class='btn-group'>
+							<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
+							<?php
+                if($id>0 and $estado=="Activa"){
+                    echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i> Productos</button>";
+                }
+              ?>
+							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_ventas/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</form>
-<?php
+		</form>
 
-	if($id>0){
-		echo "<div class='card-body' id='pedidos'>";
+		<?php
+		if($id>0){
+			echo "<div class='card-body' id='pedidos'>";
 			include 'form_pedido.php';
-		echo "</div>";
-	}
-
-?>
+			echo "</div>";
+		}
+		?>
+	</div>
+</div>

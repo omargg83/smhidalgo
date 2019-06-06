@@ -24,3 +24,66 @@
 		include 'lista.php';
 	?>
 </div>
+
+<script type="text/javascript">
+$(document).on('keypress','#prod_venta',function(e){
+	if(e.which == 13) {
+		e.preventDefault();
+		e.stopPropagation();
+		buscar_venta();
+	}
+});
+
+$(document).on('click','#buscar_prodventa',function(e){
+	e.preventDefault();
+	e.stopPropagation();
+	buscar_venta();
+});
+
+function buscar_venta(){
+	var texto=$("#prod_venta").val();
+	var idtienda=$("#idtienda").val();
+	if(texto.length>=-1){
+		$.ajax({
+			data:  {
+				"texto":texto,
+				"idtienda":idtienda,
+				"function":"busca_producto"
+			},
+			url:   "a_ventas/db_.php",
+			type:  'post',
+			beforeSend: function () {
+				$("#resultadosx").html("buscando...");
+			},
+			success:  function (response) {
+				$("#resultadosx").html(response);
+			}
+		});
+	}
+}
+
+$(document).on('click','#entradasel',function(e){
+	e.preventDefault();
+	e.stopPropagation();
+	var id=$(this).closest(".edit-t").attr("id");
+	var identrada = $("#id").val();
+	$.ajax({
+	  data: {
+	    "id":id,
+	    "identrada":identrada,
+	    "function":"pre_sel"
+	  },
+	  url:   "a_ventas/db_.php",
+	  type:  'post',
+	  beforeSend: function () {
+
+	  },
+	  success: function (response) {
+	      $("#resultadosx").html(response);
+	  }
+	});
+});
+
+
+
+</script>

@@ -231,7 +231,7 @@ class Entrada extends Sagyc{
 
 				$x.="<div class='col-4'>";
 					$x.="<label>Clave/IMEI</label>";
-					$x.="<input type='text' class='form-control input-sm' id='clave'  value='' placeholder='Clave' >";
+					$x.="<input type='text' class='form-control input-sm' id='clave' name='clave' value='' placeholder='Clave' >";
 				$x.="</div>";
 
 			$x.="</div>";

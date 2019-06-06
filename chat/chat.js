@@ -1,59 +1,53 @@
 		var chatx="";
 		var newx="";
-		
+
 		$(document).ready(function(){
 			setTimeout(inicia, 5000);
-						
 		});
-
-		
 		function inicia(){
-
 			if(chatx==""){
 				chatx=window.setInterval("conectados()",60000);
 			}
 			if(newx==""){
 				newx=window.setInterval("nuevos()",2000);
 			}
-
-
 			var parametros={
 				"function":"inicia"
-			}; 
+			};
 			$.ajax({
 			data: parametros,
 			url: "chat/chat.php",
 			type: "post",
 			beforeSend: function () {
-					
+
 				},
 				success:  function (response) {
-					$("#chatx").html(response);					
+					$("#chatx").html(response);
 				}
 			});
 			conectados();
 		}
-		
+
 		function conectados(){
 			var parametros={
 				"function":"conectados"
-			}; 
+			};
 			$.ajax({
 			data: parametros,
 			url: "chat/chat.php",
 			type: "post",
 			beforeSend: function () {
-					
+
 				},
 				success:  function (response) {
-					$("#conecta_x").html(response);					
+					$("#conecta_x").html(response);
 				}
 			});
-		}	
+		}
 		function carga(id){
 			var parametros={
 			"function":"carga",
-			"id":id}; 
+			"id":id};
 			$.ajax({
 			data: parametros,
 			url: "chat/chat.php",
@@ -65,12 +59,12 @@
 					scroll("contenido"+id);
 				}
 			});
-		}	
-		
+		}
+
 		function nuevos(){
 			var parametros={
 				"function":"nuevos",
-			}; 
+			};
 			$.ajax({
 			data: parametros,
 			url: "chat/chat.php",
@@ -94,40 +88,40 @@
 			var parametros={
 				"function":"leido",
 				"id":id
-			}; 
+			};
 			$.ajax({
 			data: parametros,
 			url: "chat/chat.php",
 			type: "post",
 			beforeSend: function () {
-					
+
 				},
 				success:  function (response) {
 				}
 			});
 			$("#head"+id).removeClass("brilla");
 		}
-		
-		$(document).on("keyup",".mensaje_chat",function(e){	
+
+		$(document).on("keyup",".mensaje_chat",function(e){
 			e.preventDefault();
 			var textarea=$(this).attr('id');
-			
+
 			if ( e.which == 13 ) {
 				var id= $(this).data('para');
 				var texto=$(this).html();
-				
+
 				var parametros={
 					"function":"manda",
 					"id":id,
 					"texto":texto
-				}; 
-				
+				};
+
 				$.ajax({
 				data: parametros,
 				url: "chat/chat.php",
 				type: "post",
 				beforeSend: function () {
-						
+
 					},
 					success:  function (response) {
 						$("#"+textarea).empty();
@@ -136,11 +130,11 @@
 						document.getElementById("mensaje_"+id).value="";
 					}
 				});
-			
-				 
+
+
 			}
 		});
-		$(document).on("keyup","#myInput",function(e){	
+		$(document).on("keyup","#myInput",function(e){
 			var value = $(this).val().toLowerCase();
 			$("#myUL a").filter(function() {
 				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
@@ -160,23 +154,23 @@
 			   var file = files[i];
 			   formData.append('photos'+i, file, file.name);
 			}
-			
+
 			$("#contenido"+id).append("<div class='b2' id='carga_f'>Cargando...<br><progress value='22' max='100' class='progress-bar progress-bar-danger' id='progress' name='progress' style='width:100%'></progress><br></div>");
 			scroll("contenido"+id);
-			
+
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST','chat/chat.php?function=subir_archivo&id='+id+'&ruta='+ruta);
 			xhr.onload = function() {
 			};
-			
+
 			xhr.upload.onprogress = function (event) {
-				var complete = Math.round(event.loaded / event.total * 100);				
+				var complete = Math.round(event.loaded / event.total * 100);
 				if (event.lengthComputable) {
 					progress.value = progress.innerHTML = complete;
 				}
 			};
 			xhr.onreadystatechange = function(){
-				if(xhr.readyState === 4 && xhr.status === 200){ 
+				if(xhr.readyState === 4 && xhr.status === 200){
 					var data = JSON.parse(xhr.response);
 					for (i = 0; i < data.length; i++) {
 						var parametros={
@@ -184,13 +178,13 @@
 							"function":funcion,
 							"archivo":data[i].archivo,
 							"original":data[i].original
-						}; 
+						};
 						$.ajax({
 							data: parametros,
 							url: urlx,
 							type: "post",
 							beforeSend: function () {
-								
+
 							},
 							success:  function (response) {
 								Swal.fire({
@@ -199,11 +193,11 @@
 								  showConfirmButton: false,
 								  timer: 1000
 								})
-				
+
 								$("#contenido"+id).append(response);
 								scroll("contenido"+id);
 								$("#carga_f").remove();
-								
+
 							}
 						});
 					}
@@ -211,35 +205,35 @@
 			}
 			xhr.send(formData);
 		});
-		$(document).on("click",".emoji",function(e){	
+		$(document).on("click",".emoji",function(e){
 			var id= $(this).data('id');
 			$("#opcion_"+id).toggleClass('optionvisible');
 		});
-		$(document).on("click",".emojiimg",function(e){	
+		$(document).on("click",".emojiimg",function(e){
 			var id= $(this).data('id');
 			var lugar= $(this).data('lugar');
 			$("#mensaje_"+id).append("<img src='"+lugar+"' width='16px'>");
 			$("#opcion_"+id).toggleClass('optionvisible');
 			$("#mensaje_"+id).focus();
 		});
-		
+
 		var tempo="";
 		var ints="";
 		var dis_val="";
-		
+
 		//this function can remove a array element.
 		Array.remove = function(array, from, to) {
 			var rest = array.slice((to || from) + 1 || array.length);
 			array.length = from < 0 ? array.length + from : from;
 			return array.push.apply(array, rest);
 		};
-	
+
 		//this variable represents the total number of popups can be displayed according to the viewport width
 		var total_popups = 0;
-	  
+
 		//arrays of popups ids
 		var popups = [];
-	
+
 		//this is used to close a popup
 		function close_popup(id){
 			for(var iii = 0; iii < popups.length; iii++)
@@ -251,7 +245,7 @@
 					calculate_popups();
 					return;
 				}
-			}   
+			}
 		}
 		//displays the popups. Displays based on the maximum number of popups that can be displayed on the current viewport width
 		function display_popups(){
@@ -272,14 +266,14 @@
 				var element = document.getElementById(popups[jjj]);
 				element.style.display = "none";
 			}
-			
+
 		}
-		
+
 		//creates markup for a new popup. Adds the id to popups array.
 		function register_popup(id){
 			showIsActive(1,id);
 			for(var iii = 0; iii < popups.length; iii++)
-			{   
+			{
 				//already registered. Bring it to front.
 				if(id == popups[iii])
 				{
@@ -297,7 +291,7 @@
 					calculate_popups();
 					return;
 				}
-			}              		
+			}
 			$('body').append('<div class="card bg-dark popup-box text-white" id="chat_'+ id +'"></div>');
 			popups.unshift(id);
 			calculate_popups();
@@ -318,18 +312,18 @@
 			}
 			display_popups();
 		}
-		function existe(id,desde){	
+		function existe(id,desde){
 			for(var iii = 0; iii < popups.length; iii++)
-			{   
+			{
 				//already registered. Bring it to front.
 				if(id == popups[iii])
 				{
 					return;
 				}
-			}   
+			}
 			xajax_conversar(id,desde,1);
 		}
-		function scroll(id){	
+		function scroll(id){
 			if ( $("#"+id).length ) {
 				document.getElementById(id).scrollTop=document.getElementById(id).scrollHeight;
 			}
@@ -337,8 +331,8 @@
 		function enfoque(id){
 			document.getElementById(id).focus();
 		}
-		
-		var html5_audiotypes={ 
+
+		var html5_audiotypes={
 			"mp3": "audio/mpeg",
 			"mp4": "audio/mp4",
 			"ogg": "audio/ogg",
@@ -368,7 +362,7 @@
 			}
 		}
 		//Inicializar sonidos
-		
+
 		var hover2 = createsoundbite('chat/newmsg.mp3');
 		var hover3 = createsoundbite('chat/010762485_prev.mp3');
 
@@ -378,7 +372,7 @@
 			document.getElementById("mensajex" + nombre_capa).style.display="none";
 			document.getElementById("min" + nombre_capa).style.display="none";
 			document.getElementById("max" + nombre_capa).style.display="block";
-			
+
 		}
 		function maximizar(nombre_capa){
 			document.getElementById("chat_"+nombre_capa).style.height="450px";
@@ -392,7 +386,7 @@
 		//recalculate when window is loaded and also when window is resized.
 		window.addEventListener("resize", calculate_popups);
 		window.addEventListener("load", calculate_popups);
-		
+
 		$(function() {
 			window.isActive = true;
 			$(window).focus(function() { this.isActive = true; });
@@ -426,14 +420,14 @@
 		function order_sound(){
 			hover3.playclip();
 		}
-		
+
 		/////////////////////
-		
-		
+
+
 		function enter(e) {
 			var id = e.target.id; // Elemento sobre el que se arrastra
 			if (id){
-				e.target.style.border = '1px dotted #555'; 
+				e.target.style.border = '1px dotted #555';
 				$("#"+id).children().hide();
 			}
 		}
@@ -441,7 +435,7 @@
 			var id = e.target.id; // Elemento sobre el que se arrastra
 			if (id){
 				e.target.style.border = '';
-				$("#"+id).children().show();				
+				$("#"+id).children().show();
 			}
 		}
 		function over(e) {
@@ -454,49 +448,49 @@
 		function drop(e,idorden){
 			e.stopPropagation(); // Stops some browsers from redirecting.
 			e.preventDefault();
-			
+
 			var ruta="tmp";
 			var funcion="carga_archivo";
 			var urlx='chat/chat.php';
-			
+
 			var div = e.target.id; // Elemento sobre el que se arrastra
-			e.target.style.border = ''; 
+			e.target.style.border = '';
 			$("#"+div).children().show();
-			
-			
+
+
 			var xhr = new XMLHttpRequest();
 			var archivosn="";
-			
+
 			var adicional=0;
 			adicional=(idorden*100)+Math.floor((Math.random() * 100) + 1);
-			
-					
+
+
 
 			var files = e.dataTransfer.files;
 			var formData = new FormData();
-			
+
 			for(i=0; i<files.length; i++){
 				formData.append('file'+i, files[i]);
 				archivosn=archivosn+files[i].name;
 			}
-			
+
 			$("#contenido"+idorden).append("<div class='b2' id='carga_f'>Cargando...<br><progress value='22' max='100' class='progress-bar progress-bar-danger' id='progress' name='progress' style='width:100%'></progress><br></div>");
 			scroll("contenido"+idorden);
-			
+
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST','chat/chat.php?function=subir_archivo&id='+idorden+'&ruta='+ruta);
 			xhr.onload = function() {
 			};
-			
+
 			xhr.upload.onprogress = function (event) {
-				var complete = Math.round(event.loaded / event.total * 100);				
+				var complete = Math.round(event.loaded / event.total * 100);
 				if (event.lengthComputable) {
 					progress.value = progress.innerHTML = complete;
-					
+
 				}
 			};
 			xhr.onreadystatechange = function(){
-				if(xhr.readyState === 4 && xhr.status === 200){ 
+				if(xhr.readyState === 4 && xhr.status === 200){
 					var data = JSON.parse(xhr.response);
 					for (i = 0; i < data.length; i++) {
 						var parametros={
@@ -504,13 +498,13 @@
 							"function":funcion,
 							"archivo":data[i].archivo,
 							"original":data[i].original
-						}; 
+						};
 						$.ajax({
 							data: parametros,
 							url: urlx,
 							type: "post",
 							beforeSend: function () {
-								
+
 							},
 							success:  function (response) {
 								Swal.fire({
@@ -519,11 +513,11 @@
 								  showConfirmButton: false,
 								  timer: 1000
 								})
-				
+
 								$("#contenido"+idorden).append(response);
 								scroll("contenido"+idorden);
 								$("#carga_f").remove();
-								
+
 							}
 						});
 					}
@@ -531,23 +525,23 @@
 			}
 			xhr.send(formData);
 		}
-		
+
 		function mensaje_manda(texto,id){
-			
-			
-			
+
+
+
 			var parametros={
 				"function":"manda",
 				"id":id,
 				"texto":texto
-			}; 
-			
+			};
+
 			$.ajax({
 			data: parametros,
 			url: "chat/chat.php",
 			type: "post",
 			beforeSend: function () {
-					
+
 				},
 				success:  function (response) {
 					$("#contenido"+id).append(response);

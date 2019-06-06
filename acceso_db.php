@@ -10,34 +10,33 @@
 		$x="";
 		$salud = new Sagyc();
 		if (isset($_REQUEST['imagen'])){$imagen=$_REQUEST['imagen'];}
-		
 		$arreglo=array('idfondo'=>$imagen);
-		$x=$salud->update('personal',array('idpersona'=>$_SESSION['idpersona']), $arreglo);
+		$x=$salud->update('et_usuario',array('idusuario'=>$_SESSION['idpersona']), $arreglo);
 	}
 	function leerfondo(){
 		return $_SESSION['idfondo'];
-	}	
+	}
 	function acceso(){
 		$bdd = new Sagyc();
 		//Obtenemos los datos del formulario de acceso
-		$userPOST = htmlspecialchars($_REQUEST["userAcceso"]); 
+		$userPOST = htmlspecialchars($_REQUEST["userAcceso"]);
 		$passPOST = $_REQUEST["passAcceso"];
-	
+
 		$CLAVE = $bdd->acceso2($userPOST, $passPOST);
 		if(is_array($CLAVE)){
 			if($userPOST == $CLAVE['user'] and strtoupper($passPOST)==strtoupper($CLAVE['pass'])){
 				$_SESSION['autoriza']=1;
-				$_SESSION['nombre']=$CLAVE['nombre'];			
+				$_SESSION['nombre']=$CLAVE['nombre'];
 
 				$_SESSION['idfondo']=$CLAVE['idfondo'];
 				$_SESSION['nick']=$CLAVE['user'];
 				$_SESSION['idpersona']=$CLAVE['idusuario'];
 				$_SESSION['foto']=$CLAVE['file_foto'];
 				$_SESSION['idtienda']=$CLAVE['idtienda'];
-		
-				
+
+
 				$fecha=date("Y-m-d");
-				list($anyo,$mes,$dia) = explode("-",$fecha);	
+				list($anyo,$mes,$dia) = explode("-",$fecha);
 				$_SESSION['n_sistema']="J&D";
 
 				$_SESSION['cfondo']="white";
@@ -46,7 +45,7 @@
 				$_SESSION['cfondo']="white";
 
 				return "1";
-			} 
+			}
 		}
 		else {
 			return "Usuario o Contraseña incorrecta";
@@ -90,7 +89,7 @@
 		if (isset($_REQUEST['borrafile'])){$borrafile=$_REQUEST['borrafile'];}
 
 		if($borrafile==1){
-			if ( file_exists($_REQUEST['ruta']) ) { 
+			if ( file_exists($_REQUEST['ruta']) ) {
 				unlink($_REQUEST['ruta']);
 			}
 			else{
@@ -118,23 +117,23 @@
 
 		foreach ($_FILES as $key){
 			$extension = pathinfo($key['name'], PATHINFO_EXTENSION);
-			$n = $key['name']; 
-			$s = $key['size']; 
-			$string = trim($n); 
-			$string = str_replace( $extension,"", $string); 
-			$string = str_replace( array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'), array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'), $string ); 
-			$string = str_replace( array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'), array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'), $string ); 
-			$string = str_replace( array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'), array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'), $string ); 
-			$string = str_replace( array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'), array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'), $string ); 
-			$string = str_replace( array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'), array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'), $string ); 
-			$string = str_replace( array('ñ', 'Ñ', 'ç', 'Ç'), array('n', 'N', 'c', 'C',), $string ); 
-			$string = str_replace( array(' '), array('_'), $string); 
-			$string = str_replace(array("\\","¨","º","-","~","#","@","|","!","\"","·","$","%","&","/","(",")","?","'","¡","¿","[","^","`","]","+","}","{","¨","´",">","<",";",",",":","."),'', $string ); 
+			$n = $key['name'];
+			$s = $key['size'];
+			$string = trim($n);
+			$string = str_replace( $extension,"", $string);
+			$string = str_replace( array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'), array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'), $string );
+			$string = str_replace( array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'), array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'), $string );
+			$string = str_replace( array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'), array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'), $string );
+			$string = str_replace( array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'), array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'), $string );
+			$string = str_replace( array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'), array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'), $string );
+			$string = str_replace( array('ñ', 'Ñ', 'ç', 'Ç'), array('n', 'N', 'c', 'C',), $string );
+			$string = str_replace( array(' '), array('_'), $string);
+			$string = str_replace(array("\\","¨","º","-","~","#","@","|","!","\"","·","$","%","&","/","(",")","?","'","¡","¿","[","^","`","]","+","}","{","¨","´",">","<",";",",",":","."),'', $string );
 			$string.=".".$extension;
-			
+
 			$n_nombre=date("YmdHis")."_".$contarx."_".rand(1,1983).".".$extension;
 			$destino="historial/".$n_nombre;
-			
+
 			if(move_uploaded_file($key['tmp_name'],$destino)){
 				chmod($destino,0666);
 				$arr[$contarx] = array("archivo" => $n_nombre);
@@ -206,7 +205,7 @@
 			else{
 				return "no tiene correo registrado en la plantilla";
 			}
-			
+
 		}
 		else{
 			return 0;
