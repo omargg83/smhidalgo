@@ -19,34 +19,57 @@ class Inventario extends Sagyc{
 			die();
 		}
 	}
-    public function tiendas_lista(){
+	public function marca($id){
+		self::set_names();
+		$this->marca="";
+		$sql="select * from et_marca where idmarca='$id'";
+		foreach ($this->dbh->query($sql) as $res){
+			$this->marca=$res;
+		}
+		return $this->marca;
+		$this->dbh=null;
+	}
+	public function modelo($id){
+		self::set_names();
+		$sql="select * from et_modelo where idmodelo='$id'";
+		foreach ($this->dbh->query($sql) as $res){
+			$this->ventas=$res;
+		}
+		return $this->ventas;
+		$this->dbh=null;
+	}
+	public function tiendas_lista(){
 		self::set_names();
 
 		$sql="SELECT * FROM et_tienda";
 		foreach ($this->dbh->query($sql) as $res){
-            $this->tiendas[]=$res;
-        }
-        return $this->tiendas;
-        $this->dbh=null;
+			$this->tiendas[]=$res;
+		}
+		return $this->tiendas;
+		$this->dbh=null;
 	}
 	public function inventario($id){
 		self::set_names();
-		$sql="select * from et_invent where id_invent='$id'
+		$sql="select * from et_invent
+		left outer join et_marca on et_marca.idmarca=et_invent.idmarca
+		left outer join et_modelo on et_modelo.idmodelo=et_invent.idmodelo
+		where id_invent='$id'
 		order by id_invent asc";
-		 foreach ($this->dbh->query($sql) as $res){
-            $this->inventario=$res;
-        }
-        return $this->inventario;
-        $this->dbh=null;
+		foreach ($this->dbh->query($sql) as $res){
+			$this->inventario=$res;
+		}
+		return $this->inventario;
+		$this->dbh=null;
 	}
 	public function inventario_detalle($id){
 		self::set_names();
 		$sql="select * from et_bodega where id_invent='$id'";
-		 foreach ($this->dbh->query($sql) as $res){
-            $this->inventario[]=$res;
-        }
-        return $this->inventario;
-        $this->dbh=null;
+		$this->inventario=array();
+		foreach ($this->dbh->query($sql) as $res){
+			$this->inventario[]=$res;
+		}
+		return $this->inventario;
+		$this->dbh=null;
 	}
 	public function inventario_lista($idtienda){
 		self::set_names();
@@ -54,14 +77,13 @@ class Inventario extends Sagyc{
 		$sql="select inven.id_invent, inven.codigo, inven.unico, inven.nombre, inven.pvgeneral, (select COALESCE(sum(cantidad),0) as total from et_bodega where et_bodega.id_invent=inven.id_invent and et_bodega.idtienda='$idtienda') as conteo, inven.preciocompra, inven.pvpromo, inven.pvdistr, et_marca.marca, et_modelo.modelo from et_invent inven
 		left outer join et_marca on et_marca.idmarca=inven.idmarca
 		left outer join et_modelo on et_modelo.idmodelo=inven.idmodelo
-		where activo=1
-		order by id_invent ,unico desc";
+		where activo=1 order by id_invent ,unico desc";
 
-        foreach ($this->dbh->query($sql) as $res){
-            $this->ventas[]=$res;
-        }
-        return $this->ventas;
-        $this->dbh=null;
+		foreach ($this->dbh->query($sql) as $res){
+			$this->ventas[]=$res;
+		}
+		return $this->ventas;
+		$this->dbh=null;
 	}
 	public function guardar_usuario(){
 		$x="";
@@ -98,7 +120,7 @@ class Inventario extends Sagyc{
 	}
 }
 
+$db = new Inventario();
 if(strlen($function)>0){
-	$db = new Usuario();
 	echo $db->$function();
 }

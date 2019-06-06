@@ -58,9 +58,9 @@
 		}
 	}
 
-	$(document).on('click','#producto_sel',function(e){
+	$(document).one('click','#compraprod',function(e){
 		e.preventDefault();
-		e.stopPropagation();
+		e.stopImmediatePropagation();
 		var id_invent = $(this).closest(".edit-t").attr("id");
 		var cantidad = $("#cantidad_"+id_invent).val();
 		var idcompra = $("#id").val();

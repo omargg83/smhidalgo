@@ -5,10 +5,11 @@
   $pd = $db->entrada($id);
 	$pedido = $db->entrada_pedido($id);
 
-	echo "<table class='table table_sm'>";
+	echo "<table class='table table-sm'>";
 	echo "<tr>
 	<th>-</th>
 	<th>Codigo</th>
+	<th>Clave/IMEI</th>
 	<th>Nombre</th>
 	<th><center>Cantidad</center></th>
 	<th>Unidad</th>
@@ -27,10 +28,11 @@
 		}
 		echo "</td>";
 		echo "<td>".$pedido[$i]['codigo']."</td>";
+		echo "<td>".$pedido[$i]['clave']."</td>";
 		echo "<td>".$pedido[$i]['nombre']."</td>";
 		echo "<td align='center'>".$pedido[$i]['cantidad']."</td>";
 		echo "<td align='center'>".$pedido[$i]['unidad']."</td>";
-			echo "<td align='center'>".$pedido[$i]['precio']."</td>";
+		echo "<td align='center'>".$pedido[$i]['precio']."</td>";
 		echo "</tr>";
 	}
 ?>
