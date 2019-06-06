@@ -1,12 +1,9 @@
 <?php
-	require_once("control_db.php");
-	$bdd = new Venta();
-	
-	$id = $_REQUEST['id'];
+	require_once("db_.php");
 
-	$venta = $bdd->venta($id);
-	$pedido = $bdd->ventas_pedido($id);
-	
+	$venta = $db->venta($id);
+	$pedido = $db->ventas_pedido($id);
+
 	$estado=$venta['estado'];
 	$adelanto=$venta['adelanto'];
 	$restan=$venta['restan'];
@@ -24,7 +21,7 @@
 	$gtotal=0;
 	$idpaquete=0;
 	$contar=1;
-	
+
 	for($i=0;$i<count($pedido);$i++){
 		echo "<tr id='".$pedido[$i]['id']."' class='edit-t' unico='".$pedido[$i]['unico']."'>";
 		echo "<td>".$pedido[$i]['codigo']."</td>";
@@ -38,34 +35,34 @@
 		echo "<td align='center'>".$pedido[$i]['cantidad']."</td>";
 		echo "<td align='center'>".number_format($pedido[$i]['total'])."</td>";
 		echo "<td align='right'>".number_format($pedido[$i]['pventa'],2)."</td>";
-		
+
 			$total=$pedido[$i]['gtotalv'];
 			echo "<td align='right'>";
 				echo number_format($total,2);
 			echo "</td>";
 			$gtotal+=$total;
-			
+
 			echo "<td class=edit>";
 			if($estado=="Activa"){
 				echo '<div class="btn-group"><a id="remove" class="btn btn-info btn-fill btn-sm"><i class="fas fa-trash-alt"></i></a>';
 				echo '<div class="btn-group"><a id="observaciones" class="btn btn-info btn-fill btn-sm" title="Agregar notas"><i class="far fa-file-alt"></i></a>';
-			
+
 			}
 			echo "</td>";
 		echo "</tr>";
 	}
-	
-	
+
+
 	$sql="select et_descuento.cantidad from et_descuento left outer join et_venta on et_venta.iddescuento=et_descuento.iddescuento where idventa='$id'";
-	$desc = $bdd->general($sql);
-	
+	$desc = $db->general($sql);
+
 	$subtotal=$gtotal/1.16;
 	$iva=$gtotal-$subtotal;
 	$descuento=1+($desc['cantidad']/100);
 	$ttotal=$gtotal/$descuento;
-	
+
 	$values = array('subtotal'=>$subtotal, 'iva'=>$iva, 'total'=>$gtotal, 'descuento'=>$descuento, 'gtotal'=>$ttotal );
-	$bdd->update('et_venta',array('idventa'=>$id), $values);
+	$db->update('et_venta',array('idventa'=>$id), $values);
 ?>
 <div class='col-md-12'>
    <table style="float: right;margin-right: 70px;">
@@ -85,8 +82,7 @@
          <td></td>
       </tr>
 
-	 
-	  
+
+
    </table>
 </div>
-

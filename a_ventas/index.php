@@ -1,33 +1,26 @@
 <?php
-	require_once("../form/control_db.php");
-	$bdd = new Venta();
+	require_once("db_.php");
+
+	echo "<nav class='navbar navbar-expand-lg navbar-light bg-light '>
+	<a class='navbar-brand' ><i class='fas fa-user-check'></i> Ventas</a>
+	  <button class='navbar-toggler navbar-toggler-right' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='principal' aria-expanded='false' aria-label='Toggle navigation'>
+		<span class='navbar-toggler-icon'></span>
+	  </button>
+		  <div class='collapse navbar-collapse' id='navbarSupportedContent'>
+			<ul class='navbar-nav mr-auto'>";
+			echo"<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_ventas/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
+
+
+			echo"<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_ventas/editar'><i class='fas fa-plus'></i><span>Nuevo</span></a></li>";
+
+			echo "</ul>";
+		echo "
+	  </div>
+	</nav>";
+
 ?>
-<div class="row">
-	<div class="col-md-12">
-
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		  </button>
-			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active">
-						<div class='btn-group'>
-						<button class="btn btn-outline-secondary" id='new_ventas' type="button"><i class='fas fa-plus-circle'></i> Nueva</button>
-						<button class="btn btn-outline-secondary" id='lista_ventas' type="button"><i class='fas fas fa-list-ol'></i> Lista</button>
-						</div>
-					</li>
-				</ul>
-				
-			</div>
-		</nav>
-		</div>
-		<hr>
-		<div id='trabajo'>
-			<?php
-				include 'lista.php';
-			?>
-		</div>
-	</div>
+<div id='trabajo'>
+	<?php
+		include 'lista.php';
+	?>
 </div>
-

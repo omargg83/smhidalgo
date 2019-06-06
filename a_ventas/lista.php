@@ -1,13 +1,16 @@
-<?php 
-	require_once("../form/control_db.php");
-	$bdd = new Venta();
-	$pd = $bdd->ventas_lista($_SESSION['idtienda']);
+<?php
+	require_once("db_.php");
+	$pd = $db->ventas_lista($_SESSION['idtienda']);
+
+	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
+	echo "<br>";
 ?>
 
 <div class="content table-responsive table-full-width">
-	<table class="table table-hover table-striped" id="myTable">
+	<table class="table table-hover table-striped" id="x_lista">
 		<thead>
 		<tr>
+		<th>-</th>
 		<th>Numero</th>
 		<th>Fecha</th>
 		<th>Cliente</th>
@@ -17,7 +20,6 @@
 		<th>Total</th>
 		<th>Gran total</th>
 		<th>Estado</th>
-		<th><input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" onkeyup="myFunction()" id="myInput">
 		</tr>
 		</thead>
 		<tbody>
@@ -25,6 +27,11 @@
 			for($i=0;$i<count($pd);$i++){
 		?>
 					<tr id="<?php echo $pd[$i]['idventa']; ?>" class="edit-t">
+						<td>
+							<div class="btn-group">
+								<button class='btn btn-outline-secondary btn-sm'  id='edit_persona' title='Editar' data-lugar='a_ventas/editar'><i class="fas fa-pencil-alt"></i></button>
+							</div>
+						</td>
 						<td  ><?php echo $pd[$i]["idventa"]; ?></td>
 						<td><?php echo $pd[$i]["fecha"]; ?></td>
 						<td><?php echo $pd[$i]["razon_social_prove"]; ?></td>
@@ -34,12 +41,7 @@
 						<td align="right"><?php echo number_format($pd[$i]["total"],2); ?></td>
 						<td align="right"><?php echo number_format($pd[$i]["gtotal"],2); ?></td>
 						<td><?php echo $pd[$i]["estado"]; ?></td>
-						<td>
-							<div class="btn-group">
-								<button class="btn btn-info btn-fill pull-left btn-sm" id="edit_ventas"><i class="fa fa-edit"></i>Editar</button>
-								<button class="btn btn-info btn-fill pull-left btn-sm" id="deta_ventas"><i class="fas fa-box-open"></i>Articulos</button>
-							</div>
-						</td>
+
 					</tr>
 		<?php
 			}
@@ -47,3 +49,10 @@
 		</tbody>
 	</table>
 </div>
+
+
+<script>
+	$(document).ready( function () {
+		lista("x_lista");
+	});
+</script>

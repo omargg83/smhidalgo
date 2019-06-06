@@ -24,32 +24,6 @@
 	}
 
 
-
-	if($tipo=="ventas"){		//////////////Guarda datos de la venta
-		if (isset($_POST['id'])){$id=$_POST['id'];}
-		if (isset($_POST['idcliente'])){$idcliente=$_POST['idcliente'];}
-		if (isset($_POST['idtienda'])){$idtienda=$_POST['idtienda'];}
-		if (isset($_POST['iddescuento'])){$iddescuento=$_POST['iddescuento'];}
-		if (isset($_POST['lugar'])){$lugar=$_POST['lugar'];}
-		if (isset($_POST['entregarp'])){$entregarp=$_POST['entregarp'];} else{$entregarp=0;}
-		if (isset($_POST['estado'])){$estado=$_POST['estado'];}
-		if (isset($_POST['factura'])){$factura=$_POST['factura'];}
-		$date=date("Y-m-d H:i:s");
-
-		$values = array('idcliente'=>$idcliente, 'idtienda'=>$idtienda,'iddescuento'=>$iddescuento,'lugar'=>$lugar, 'estado'=>$estado,'entregar'=>$entregarp, 'factura'=>$factura, 'fecha'=>$date);
-
-		if($id==0){
-			echo $bdd->insert('et_venta',$values);
-
-		}
-		else{
-			echo $bdd->update('et_venta',array('idventa'=>$id), $values);
-		}
-
-	}
-
-
-
 	if($tipo=="bodega"){		//////////////Guarda datos de bodega
 		if (isset($_POST['id'])){$id=$_POST['id'];}
 		if (isset($_POST['clave'])){$clave=$_POST['clave'];}
