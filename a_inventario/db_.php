@@ -181,7 +181,7 @@ class Inventario extends Sagyc{
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_bodega where descripcion like :texto";
+			$sql="SELECT * FROM et_bodega where descripcion like :texto or clave like :texto";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
