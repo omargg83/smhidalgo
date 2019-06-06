@@ -1,9 +1,9 @@
-<?php 
+<?php
 	require_once("control_db.php");
 	$bdd = new Venta();
-	if (isset($_POST['id'])){$id=$_POST['id'];} else{ $id=0;}
+	$id=$_REQUEST['id'];
 	$i=0;
-	
+
 	$categoria = $bdd->categoria_lista();
 	$marca = $bdd->marca_lista();
 	$modelo = $bdd->modelo_lista();
@@ -33,7 +33,7 @@
 	else{
 		$id =0;
 		$codigo=$bdd->numero("et_invent","id_invent");
-		$codigo="9".str_pad($codigo, 6, "0", STR_PAD_LEFT); 
+		$codigo="9".str_pad($codigo, 6, "0", STR_PAD_LEFT);
 		$categoria="";
 		$nombre="";
 		$unidad="";
@@ -65,7 +65,7 @@
 					<input type="hidden" name="id" id="id" value="<?php echo $id?>">
 					<hr>
 				</div>
-				
+
 				<div class="form-group row">
 				 <label class="control-label col-sm-2" for="">Tipo de insumo:</label>
 				  <div class="col-sm-10">
@@ -78,31 +78,31 @@
 					</select>
 				  </div>
 				</div>
-				
+
 				<div class="form-group row">
 					<label class="control-label col-sm-2">Código de Producto:</label>
 					<div class="col-sm-10">
-						
+
 						<input type="text" class="form-control" name="codigo" id="codigo" value="<?php echo $codigo ;?>" placeholder="Código de Producto">
 					</div>
 				</div>
-				
+
 				<div class="form-group row">
 					<label class="control-label col-sm-2">Nombre de Producto:</label>
 					<div class="col-sm-10">
 						<input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $nombre ;?>" placeholder="Nombre de Producto" required>
 					</div>
 				</div>
-				
+
 				<div class="form-group row">
 				 <label class="control-label col-sm-2" for="">Descripción:</label>
 				  <div class="col-sm-10">
 					<input type="text" class="form-control" name="descripcion" id="descripcion" value="<?php echo $descripcion ;?>" placeholder="<?php echo $descripcion ;?>">
 				  </div>
 				</div>
-				
+
 				<hr>
-				
+
 				<div class='row'>
 					<div class="form-group col-sm-6">
 						<label class="control-label" for="">Marca:</label>
@@ -119,7 +119,7 @@
 							?>
 						</select>
 					</div>
-					
+
 					<div class="form-group col-sm-6">
 						<label class="control-label" for="">Modelo:</label>
 						<select class="form-control" id="idmodelo" name="idmodelo">
@@ -136,8 +136,8 @@
 						</select>
 					</div>
 				</div>
-	
-				
+
+
 				<div class='row'>
 					<div class="form-group col-sm-6">
 					 <label class="control-label">Unidad de Medida:</label>
@@ -147,12 +147,12 @@
 							?>
 						</select>
 					</div>
-				
-				
+
+
 					<div class="form-group col-sm-3">
 						<label class="control-label " for="">Stock Minimo:</label>
 						<input type="number" class="form-control" name="stockmin" id="stockmin" value="<?php echo $stockmin ;?>" placeholder="Stock Minimo" required>
-					</div> 
+					</div>
 
 					<div class="form-group col-sm-3">
 						<label class="control-label" for="">Stock Maximo:</label>
@@ -181,7 +181,7 @@
 						<input type="number" class="form-control" name="pvpromo" id="pvpromo" value="<?php echo $pvpromo ;?>" placeholder="$ <?php echo $pvpromo ;?>">
 					</div>
 				</div>
-				
+
 				<div class='row'>
 					<div class="form-group col-sm-3">
 						<label class="control-label" for="">Activo:</label>
@@ -190,7 +190,7 @@
 						  <option value="0"<?php if($activo=="0") echo "selected"; ?> >No</option>
 						</select>
 					</div>
-					
+
 					<div class="form-group col-sm-3">
 						<label class="control-label" for="">Seguimiento:</label>
 						<select class="form-control" name="seguimiento" id="seguimiento">
@@ -198,13 +198,13 @@
 						  <option value="0"<?php if($seguimiento=="0") echo "selected"; ?> >No</option>
 						</select>
 					</div>
-										
+
 				</div>
 
 				<div class="form-group row">
 					<div class="col-sm-12 btn-group">
 						<button class="btn btn-info btn-fill pull-left" id='guardar_inventario'><i class="far fa-save"></i> Guardar</button>
-						
+
 					</div>
 				</div>
 			</form>

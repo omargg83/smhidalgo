@@ -11,9 +11,10 @@
 	<th>Codigo</th>
 	<th>Clave/IMEI</th>
 	<th>Nombre</th>
+	<th>Color</th>
 	<th><center>Cantidad</center></th>
 	<th>Unidad</th>
-	<th>Precio</th>
+	<th>Precio entrada</th>
 	</tr>";
 	$gtotal=0;
 	$idpaquete=0;
@@ -30,9 +31,11 @@
 		echo "<td>".$pedido[$i]['codigo']."</td>";
 		echo "<td>".$pedido[$i]['clave']."</td>";
 		echo "<td>".$pedido[$i]['nombre']."</td>";
+		echo "<td>".$pedido[$i]['color']."</td>";
 		echo "<td align='center'>".$pedido[$i]['cantidad']."</td>";
 		echo "<td align='center'>".$pedido[$i]['unidad']."</td>";
 		echo "<td align='center'>".$pedido[$i]['precio']."</td>";
+
 		echo "</tr>";
 	}
 ?>

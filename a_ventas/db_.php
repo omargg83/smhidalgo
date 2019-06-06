@@ -19,7 +19,6 @@ class Venta extends Sagyc{
 			die();
 		}
 	}
-
 	public function venta($id){
 		self::set_names();
 		$sql="select * from et_venta where idventa='$id'";
@@ -55,7 +54,6 @@ class Venta extends Sagyc{
 		return $this->ventasp;
 		$this->dbh=null;
 	}
-
 	public function clientes_lista(){
 		self::set_names();
 		$sql="SELECT * FROM et_cliente";
@@ -76,7 +74,6 @@ class Venta extends Sagyc{
 		return $this->tiendas;
 		$this->dbh=null;
 	}
-
 	public function descuento_lista(){
 		self::set_names();
 		$sql="SELECT * FROM et_descuento";
@@ -130,12 +127,12 @@ class Venta extends Sagyc{
 			if (isset($_REQUEST['idtienda'])){$idtienda=$_REQUEST['idtienda'];}
 			parent::set_names();
 
-
 			$sql="SELECT * FROM et_invent
-				left outer join et_bodega on et_bodega.id_invent=et_invent.id_invent  where (et_invent.nombre like :texto OR et_invent.codigo like :nombre)";
+				left outer join et_bodega on et_bodega.id_invent=et_invent.id_invent
+				where et_invent.nombre like :texto OR et_invent.codigo like :texto or et_bodega.clave like :texto";
+
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
-			$sth->bindValue(":nombre","%$texto%");
 			$sth->execute();
 			$res=$sth->fetchAll();
 
@@ -144,13 +141,15 @@ class Venta extends Sagyc{
 				$x.="<table class='table table-sm'>";
 
 				$x.= "<tr>";
+				$x.= "<th>-</th>";
 				$x.= "<th>Código</th>";
 				$x.= "<th>Descripción</th>";
 				$x.= "<th><span class='pull-right'>Cantidad</span></th>";
+				$x.= "<th><span class='pull-right'>Clave/IMEI</span></th>";
 				$x.= "<th><span class='pull-right'>Precio</span></th>";
 				$x.= "<th><span class='pull-right'>Material</span></th>";
 				$x.= "<th><span class='pull-right'>Color</span></th>";
-				$x.= "<th><span class='pull-right'>Clave/IMEI</span></th>";
+
 				$x.= "<th><span class='pull-right'></span></th>";
 				$x.="</tr>";
 				foreach ($res as $key) {
@@ -158,7 +157,7 @@ class Venta extends Sagyc{
 
 					$x.= "<td>";
 					$x.= "<div class='btn-group'>";
-					$x.= "<button type='button' id='entradasel' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+					$x.= "<button type='button' id='ventasel' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
 					$x.= "</div>";
 					$x.= "</td>";
 
@@ -168,6 +167,10 @@ class Venta extends Sagyc{
 
 					$x.= "<td>";
 					$x.= $key["nombre"];
+					$x.= "</td>";
+
+					$x.= "<td>";
+					$x.= $key["clave"];
 					$x.= "</td>";
 
 					$x.= "</tr>";
@@ -189,7 +192,7 @@ class Venta extends Sagyc{
 		$x="";
 		$id=$_REQUEST['id'];
 		$identrada=$_REQUEST['identrada'];
-		$key=$this->inventario($id);
+		$key=$this->bodega($id);
 
 		$x.="<form action='' id='form_cliente' data-lugar='a_entrada/db_' data-funcion='agregar_producto' data-destino='a_entrada/editar'>";
 			$x.="<input type='hidden' class='form-control input-sm' style='text-align:right' id='id' name='id' value='$id' readonly>";
@@ -253,6 +256,9 @@ class Venta extends Sagyc{
 		$x.="</form>";
 		///////////////////////////////////////////////////////////////////////////
 		return $x;
+	}
+	function bodega(){
+		return "oal mundo";
 	}
 }
 

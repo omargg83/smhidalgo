@@ -5,23 +5,6 @@
 	$tipo=$_POST['tipo'];
 
 
-	if($tipo=="traspaso"){		//////////////Guarda datos de factura de entrada
-		if (isset($_POST['id'])){$id=$_POST['id'];}
-		if (isset($_POST['nombre'])){$nombre=$_POST['nombre'];}
-		if (isset($_POST['idde'])){$idde=$_POST['idde'];}
-		if (isset($_POST['idpara'])){$idpara=$_POST['idpara'];}
-		if (isset($_POST['estado'])){$estado=$_POST['estado'];}
-
-		$values = array('nombre'=>$nombre, 'estado'=>$estado, 'idde'=>$idde, 'idpara'=>$idpara );
-
-		if($id==0){
-			echo $bdd->insert('et_traspaso', $values);
-		}
-		else{
-			echo $bdd->update('et_traspaso',array('id'=>$id), $values);
-		}
-
-	}
 
 
 	if($tipo=="bodega"){		//////////////Guarda datos de bodega

@@ -62,7 +62,7 @@ function buscar_venta(){
 	}
 }
 
-$(document).on('click','#entradasel',function(e){
+$(document).on('click','#ventasel',function(e){
 	e.preventDefault();
 	e.stopPropagation();
 	var id=$(this).closest(".edit-t").attr("id");

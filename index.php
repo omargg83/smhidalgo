@@ -48,11 +48,11 @@
 				<i class='fas fa-boxes'></i> Productos
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href="#a_productos/index" ><i class="fas fa-mobile-alt"></i> Productos</a>
+					<a class="dropdown-item" href="#a_inventario/index"  ><i class='fas fa-boxes'></i> Inventario</a>
+					<hr>
 					<a class="dropdown-item" href="#a_compras/index" ><i class='fas fa-money-check-alt'></i> Lista de compras</a>
 				  <a class="dropdown-item" href="#a_entrada/index" ><i class="fas fa-chalkboard-teacher"></i> Entrada</a>
-					<br>
-				  <a class="dropdown-item" href="#a_inventario/index"  ><i class='fas fa-boxes'></i> Inventario</a>
-				  <a class="dropdown-item" href="#" id='menu_traspaso' ><i class="fas fa-arrows-alt-h"></i> Traspasos</a>
 				</div>
 			</li>
 
@@ -61,6 +61,7 @@
 				<i class="fas fa-clipboard-list"></i> Catalogos
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
 				  <a class="dropdown-item" href="#a_usuarios/index" ><i class="fas fa-user-astronaut"></i> Usuarios</a>
 				  <a class="dropdown-item" href="#" id='menu_acceso' ><i class="fas fa-user-clock"></i> Acceso</a>
 				  <a class="dropdown-item" href="#a_tienda/index"><i class="fas fa-shopping-basket"></i> Tiendas</a>
@@ -69,8 +70,8 @@
 				  <hr>
 				  <a class="dropdown-item" href="#a_marca/index" ><i class="fas fa-mobile-alt"></i> Marcas</a>
 				  <a class="dropdown-item" href="#a_modelo/index" ><i class="fab fa-android"></i> Modelos</a>
-				  <hr>
-				  <a class="dropdown-item" href="#a_productos/index" ><i class="fas fa-mobile-alt"></i> Productos</a>
+
+
 				</div>
 			</li>
 		</ul>
