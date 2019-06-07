@@ -21,11 +21,12 @@
 ?>
 <div id='trabajo'>
 	<?php
-		include 'lista.php';
+	include 'lista.php';
 	?>
 </div>
 
 <script type="text/javascript">
+
 $(document).on('keypress','#prod_venta',function(e){
 	if(e.which == 13) {
 		e.preventDefault();
@@ -62,65 +63,76 @@ function buscar_venta(){
 	}
 }
 
-$(document).on('click','#ventasel',function(e){
-	e.preventDefault();
-	e.stopPropagation();
-	var id=$(this).closest(".edit-t").attr("id");
-	var identrada = $("#id").val();
-	$.ajax({
-	  data: {
-	    "id":id,
-	    "identrada":identrada,
-	    "function":"pre_sel"
-	  },
-	  url:   "a_ventas/db_.php",
-	  type:  'post',
-	  beforeSend: function () {
-
-	  },
-	  success: function (response) {
-	      $("#resultadosx").html(response);
-	  }
-	});
-});
-
 function ventraprod(idbodega){
 	var idventa =$("#id").val();
+	var cantidad=parseInt($("#cantidad_"+idbodega).val());
+	var existencia=parseInt($("#existencia_"+idbodega).val());
+	var precio=parseInt($("#precio_"+idbodega).val());
+	var observa=$("#observa_"+idbodega).val();
 
-	$.confirm({
-		title: 'Agregar',
-		content: '¿Desea vender el articulo?',
-		buttons: {
-			Aceptar: function () {
-				$.ajax({
-					data:  {
-						"idventa":idventa,
-						"idbodega":idbodega,
-						"function":"agregaventa"
-					},
-					url:   "a_ventas/db_.php",
-					type:  'post',
-					beforeSend: function () {
+	if(cantidad<=existencia){
+			$.ajax({
+				data:  {
+					"idventa":idventa,
+					"idbodega":idbodega,
+					"cantidad":cantidad,
+					"precio":precio,
+					"observa":observa,
+					"function":"agregaventa"
+				},
+				url:   "a_ventas/db_.php",
+				type:  'post',
+				beforeSend: function () {
 
-					},
-					success:  function (response) {
-						if (isNaN(response)){
-							alert(response);
-						}
-						else{
-							$("#resultadosx").html("");
-							$("#compras").load("a_ventas/lista_pedido.php?id="+idventa);
-						}
+				},
+				success:  function (response) {
+					if (isNaN(response)){
+						alert(response);
 					}
-				});
-			},
-			Cancelar: function () {
+					else{
+						$("#resultadosx").html("");
+						$("#compras").load("a_ventas/lista_pedido.php?id="+idventa);
+						buscar_venta();
+					}
+				}
+			});
+	}
+	else{
+		alert("Confirmar existencias");
+	}
+}
 
+function ventaespecial(id_invent){
+	var idventa =$("#id").val();
+	var cantidad=parseInt($("#cantidad_"+id_invent).val());
+	var precio=parseInt($("#precio_"+id_invent).val());
+	var observa=$("#observa_"+id_invent).val();
+	$.ajax({
+		data:  {
+			"idventa":idventa,
+			"id_invent":id_invent,
+			"cantidad":cantidad,
+			"precio":precio,
+			"observa":observa,
+			"function":"agregaespecial"
+		},
+		url:   "a_ventas/db_.php",
+		type:  'post',
+		beforeSend: function () {
+
+		},
+		success:  function (response) {
+			if (isNaN(response)){
+				alert(response);
+			}
+			else{
+				$("#resultadosx").html("");
+				$("#compras").load("a_ventas/lista_pedido.php?id="+idventa);
+				buscar_venta();
 			}
 		}
 	});
 }
-
 
 
 </script>

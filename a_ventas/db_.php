@@ -127,170 +127,205 @@ class Venta extends Sagyc{
 			if (isset($_REQUEST['idtienda'])){$idtienda=$_REQUEST['idtienda'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_bodega where idtienda='".$_SESSION['idtienda']."' and cantidad>0 and (descripcion like :texto or clave like :texto) ";
+			$sql="SELECT sum(cantidad) as totalx,et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto)  group by et_bodega.llave";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
 			$res=$sth->fetchAll();
 
 			$x.="<div class='row'>";
+
+			$x.="<table class='table table-sm'>";
+			$x.= "<tr>";
+			$x.= "<th>Código</th>";
+			$x.= "<th>Descripción</th>";
+			$x.= "<th>Unidad</th>";
+			$x.= "<th>Existencias</th>";
+			$x.= "<th>Cantidad</th>";
+			$x.= "<th>Precio</th>";
+			$x.= "<th>Observaciones</th>";
+			$x.= "<th>-</th>";
+			$x.="</tr>";
 			if(count($res)>0){
-				$x.="<table class='table table-sm'>";
-
-				$x.= "<tr>";
-				$x.= "<th>-</th>";
-				$x.= "<th>Existencias</th>";
-				$x.= "<th>Código</th>";
-				$x.= "<th>Descripción</th>";
-				$x.= "<th>Unidad</th>";
-
-				$x.= "<th>Precio</th>";
-
-				$x.="</tr>";
 				foreach ($res as $key) {
-					$x.= "<tr id=".$key['id']." class='edit-t'>";
+					if($key["totalx"]>0){
+						$x.= "<tr id=".$key['id']." class='edit-t'>";
 
-					$x.= "<td>";
-					$x.= "<div class='btn-group'>";
-					$x.= "<button type='button' onclick='ventraprod(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i>+1</button>";
-					$x.= "</div>";
-					$x.= "</td>";
+						$x.= "<td>";
+						$x.= $key["clave"];
+						$x.= "</td>";
 
-					$x.= "<td><center>";
-					$x.= $key["cantidad"];
-					$x.= "</center></td>";
+						$x.= "<td>";
+						$x.= $key["descripcion"];
+						$x.= "</td>";
 
-					$x.= "<td>";
-					$x.= $key["clave"];
-					$x.= "</td>";
+						$x.= "<td>";
+						$x.= $key["unidad"];
+						$x.= "</td>";
 
-					$x.= "<td>";
-					$x.= $key["descripcion"];
-					$x.= "</td>";
+						$x.= "<td><center>";
+						$x.= "<input type='text' class='form-control' name='existencia_".$key['id']."' id='existencia_".$key['id']."' value='".$key["totalx"]."' placeholder='cantidad' readonly>";
+						$x.= "</center></td>";
 
-					$x.= "<td>";
-					$x.= $key["unidad"];
-					$x.= "</td>";
+						$cantidad=1;
+						$x.= "<td>";
+						$readonly="";
+						if($key["unico"]==1) {
+							$readonly="readonly";
+						}
+						$x.= "<input type='text' class='form-control' name='cantidad_".$key['id']."' id='cantidad_".$key['id']."' value='$cantidad' placeholder='cantidad' $readonly>";
+						$x.= "</td>";
 
+						$x.= "<td align='right'>";
+						$preciov=number_format($key["pventa"],2);
+						$x.= "<input type='text' class='form-control' name='precio_".$key['id']."' id='precio_".$key['id']."' value='$preciov' placeholder='cantidad' readonly>";
+						$x.= "</td>";
 
-					$x.= "<td align='right'>";
-					$x.= moneda($key["pventa"]);
-					$x.= "</td>";
+						$x.= "<td>";
+						$x.= "<input type='text' class='form-control' name='observa_".$key['id']."' id='observa_".$key['id']."' value='' placeholder='Observaciones'>";
+						$x.= "</td>";
 
-					$x.= "</tr>";
+						$x.= "<td>";
+						$x.= "<div class='btn-group'>";
+						$x.= "<button type='button' onclick='ventraprod(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+						$x.= "</div>";
+						$x.= "</td>";
+
+						$x.= "</tr>";
+					}
 				}
-				$x.= "</table>";
 			}
-			else{
-				$x="<div class='alert alert-primary' role='alert'>No se encontró: $texto</div>";
+
+			$sql="SELECT * from et_invent where unico>1 and (nombre like :texto or codigo like :texto)";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":texto","%$texto%");
+			$sth->execute();
+			$res=$sth->fetchAll();
+
+			foreach ($res as $key) {
+				$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
+
+				$x.= "<td>";
+				$x.= $key["codigo"];
+				$x.= "</td>";
+
+				$x.= "<td>";
+				$x.= $key["nombre"];
+				$x.= "</td>";
+
+				$x.= "<td>";
+				$x.= $key["unidad"];
+				$x.= "</td>";
+
+				$x.= "<td><center>";
+				$x.= "</center></td>";
+
+				$x.= "<td>";
+				$x.= "<input type='text' class='form-control' name='cantidad_".$key['id_invent']."' id='cantidad_".$key['id_invent']."' value='1' placeholder='cantidad'>";
+				$x.= "</td>";
+
+				$x.= "<td align='right'>";
+				$preciov=$key['pvgeneral'];
+				$x.= "<input type='text' class='form-control' name='precio_".$key['id_invent']."' id='precio_".$key['id_invent']."' value='$preciov' placeholder='Precio'>";
+				$x.= "</td>";
+
+				$x.= "<td>";
+				$x.= "<input type='text' class='form-control' name='observa_".$key['id_invent']."' id='observa_".$key['id_invent']."' value='' placeholder='Observaciones'>";
+				$x.= "</td>";
+
+				$x.= "<td>";
+				$x.= "<div class='btn-group'>";
+				$x.= "<button type='button' onclick='ventaespecial(".$key['id_invent'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+				$x.= "</div>";
+				$x.= "</td>";
+
+				$x.= "</tr>";
 			}
+
+			$x.= "</table>";
+
+
+
 			$x.="</div>";
 			return $x;
-			}
-			catch(PDOException $e){
+		}
+		catch(PDOException $e){
 			return "Database access FAILED! ".$e->getMessage();
-			}
-			return $texto;
+		}
+		return $texto;
 	}
-	function pre_sel(){
-		$x="";
-		$id=$_REQUEST['id'];
-		$identrada=$_REQUEST['identrada'];
-		$key=$this->bodega($id);
 
-		$x.="<form action='' id='form_cliente' data-lugar='a_entrada/db_' data-funcion='agregar_producto' data-destino='a_entrada/editar'>";
-			$x.="<input type='hidden' class='form-control input-sm' style='text-align:right' id='id' name='id' value='$id' readonly>";
-			$x.="<input type='hidden' class='form-control input-sm' style='text-align:right' id='identrada' name='identrada' value='$identrada' readonly>";
-			$x.="<div class='row'>";
-
-				$x.="<div class='col-2'>";
-					$x.="<label>Codigo</label>";
-					$x.="<input type='text' class='form-control input-sm' id='codigo' name='codigo' value='".$key["codigo"]."' readonly>";
-				$x.="</div>";
-
-				$x.="<div class='col-4'>";
-					$x.="<label>Descripción</label>";
-					$x.="<input type='text' class='form-control input-sm' id='descripcion' name='descripcion' value='".$key["nombre"]."' readonly>";
-				$x.="</div>";
-
-				$unico="";
-				if($key["unico"]==1){
-					$unico="readonly";
-				}
-				$x.="<div class='col-4'>";
-						$x.="<label>Color</label>";
-						$x.="<input type='text' class='form-control input-sm' id='color' name='color' value='' placeholder='Color'>";
-				$x.="</div>";
-
-				$x.="<div class='col-2'>";
-					$x.="<label>Material</label>";
-					$x.= "<select class='form-control' name='material' id='material'>";
-					$x.= "<option value=''></option>";
-					$x.= "<option value='PREPAGO'>PREPAGO</option>";
-					$x.= "<option value='TARIFARIO'>TARIFARIO</option>";
-					$x.= "<option value='AMIGO CHIP'>AMIGO CHIP</option>";
-					$x.= "<option value='LIBRES'>LIBRES</option>";
-					$x.= "<option value='CONSIGNA'>CONSIGNA</option>";
-					$x.= "</select>";
-				$x.="</div>";
-
-				$x.="<div class='col-4'>";
-					$x.="<label>Cantidad</label>";
-					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='cantidad' name='cantidad' value='1' $unico>";
-				$x.="</div>";
-
-				$x.="<div class='col-4'>";
-					$x.="<label>Precio de compra</label>";
-					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='precio'  name='precio' value='".$key['preciocompra']."'>";
-				$x.="</div>";
-
-				$x.="<div class='col-4'>";
-					$x.="<label>Clave/IMEI</label>";
-					$x.="<input type='text' class='form-control input-sm' id='clave'  value='' placeholder='Clave' >";
-				$x.="</div>";
-
-			$x.="</div>";
-			$x.="<div class='row'>";
-				$x.="<div class='col-12'>
-					<div class='btn-group'>
-						<button class='btn btn-outline-secondary btn-sm' title='Agregar producto a la compra' type='submit'><i class='fas fa-plus'></i>Agregar</button>
-					</div>
-				</div>";
-			$x.="</div>";
-		$x.="</form>";
-		///////////////////////////////////////////////////////////////////////////
-		return $x;
-	}
 	function agregaventa(){
 		parent::set_names();
 		$x="";
 		$idventa=$_REQUEST['idventa'];
 		$idbodega=$_REQUEST['idbodega'];
+		$cantidad=$_REQUEST['cantidad'];
+		$precio=$_REQUEST['precio'];
+		$observa=$_REQUEST['observa'];
 
-/*
-
-		if($unico=="0") echo "Almacén (Se controla el inventario por volúmen)</option>";--------------->POR VOLUMEN
-		if($unico=="1") echo "Unico (se controla inventario por pieza única)</option>";--------------->PIEZA UNICA
-		if($unico=="2") echo "Registro (solo registra ventas, no es necesario registrar entrada)</option>"; --------->NO SE REGISTRA EN BODEGA
-		if($unico=="3") echo "Pago de linea</option>"; --------->NO SE REGISTRA EN BODEGA
-		if($unico=="4") echo "Reparación</option>";  --------->NO SE REGISTRA EN BODEGA
-
-
-*/
 		$sql="select * from et_bodega where id=:texto";
 		$sth = $this->dbh->prepare($sql);
 		$sth->bindValue(":texto",$idbodega);
 		$sth->execute();
 		$res=$sth->fetch();
+		$arreglo =array();
+
 		if($res['unico']==0){
+			$arreglo+=array('observaciones'=>$observa);
+			$arreglo+=array('idventa'=>$idventa);
+			$arreglo+=array('cantidad'=>$cantidad*-1);
+			$arreglo+=array('pendiente'=>0);
+			$arreglo+=array('total'=>$cantidad);
+			$arreglo+=array('descripcion'=>$res['descripcion']);
+			$arreglo+=array('unico'=>$res['unico']);
+			$arreglo+=array('id_invent'=>$res['id_invent']);
+			$arreglo+=array('llave'=>$res['llave']);
+			$arreglo+=array('idtienda'=>$res['idtienda']);
+			$arreglo+=array('color'=>$res['color']);
+			$arreglo+=array('precio'=>$precio);
+			$arreglo+=array('pventa'=>$res['pventa']);
+			$arreglo+=array('gtotalv'=>$cantidad*$precio);
+			$x.=$this->insert('et_bodega', $arreglo);
 		}
 		if($res['unico']==1){
-			$arreglo =array();
 			$arreglo+=array('idventa'=>$idventa);
 			$arreglo+=array('cantidad'=>0);
 			$arreglo+=array('pendiente'=>0);
 			$arreglo+=array('total'=>1);
+			$arreglo+=array('gtotalv'=>$res['pventa']);
 			$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+		}
+		return $x;
+	}
+	function agregaespecial(){
+		parent::set_names();
+		$x="";
+		$idventa=$_REQUEST['idventa'];
+		$id_invent=$_REQUEST['id_invent'];
+		$cantidad=$_REQUEST['cantidad'];
+		$precio=$_REQUEST['precio'];
+		$observa=$_REQUEST['observa'];
+
+		$sql="select * from et_invent where id_invent=:texto";
+		$sth = $this->dbh->prepare($sql);
+		$sth->bindValue(":texto",$id_invent);
+		$sth->execute();
+		$res=$sth->fetch();
+		$arreglo =array();
+
+		if($res['unico']>1){
+			$arreglo+=array('observaciones'=>$observa);
+			$arreglo+=array('idventa'=>$idventa);
+			$arreglo+=array('id_invent'=>$id_invent);
+			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+			$arreglo+=array('unico'=>$res['unico']);
+			$arreglo+=array('descripcion'=>$res['nombre']);
+			$arreglo+=array('total'=>$cantidad);
+			$arreglo+=array('gtotalv'=>$cantidad*$precio);
+			$arreglo+=array('precio'=>$precio);
+			$arreglo+=array('pventa'=>$precio);
+			$x.=$this->insert('et_bodega', $arreglo);
 		}
 		return $x;
 	}
@@ -298,11 +333,26 @@ class Venta extends Sagyc{
 		self::set_names();
 		$arreglo =array();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
-		$arreglo+=array('idventa'=>null);
-		$arreglo+=array('cantidad'=>1);
-		$arreglo+=array('pendiente'=>0);
-		$arreglo+=array('total'=>0);
-		return $this->update('et_bodega',array('id'=>$id), $arreglo);
+
+		$sql="select * from et_bodega where id=:texto";
+		$sth = $this->dbh->prepare($sql);
+		$sth->bindValue(":texto",$id);
+		$sth->execute();
+		$res=$sth->fetch();
+		if($res['unico']==0){
+			return $this->borrar('et_bodega',"id",$id);
+		}
+		if($res['unico']>1){
+			return $this->borrar('et_bodega',"id",$id);
+		}
+		if($res['unico']==1){
+			$arreglo+=array('idventa'=>null);
+			$arreglo+=array('cantidad'=>1);
+			$arreglo+=array('pendiente'=>0);
+			$arreglo+=array('total'=>0);
+			$arreglo+=array('gtotalv'=>null);
+			return $this->update('et_bodega',array('id'=>$id), $arreglo);
+		}
 	}
 }
 

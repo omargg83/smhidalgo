@@ -40,8 +40,12 @@ class Inventario extends Sagyc{
 	}
 	public function tiendas_lista(){
 		self::set_names();
-
-		$sql="SELECT * FROM et_tienda";
+		if($_SESSION['nivel']==1){
+			$sql="SELECT * FROM et_tienda";
+		}
+		else{
+			$sql="SELECT * FROM et_tienda where id='".$_SESSION['idtienda']."'";
+		}
 		foreach ($this->dbh->query($sql) as $res){
 			$this->tiendas[]=$res;
 		}
@@ -118,6 +122,17 @@ class Inventario extends Sagyc{
 		}
 		return $x;
 	}
+	public function transito_lista(){
+		self::set_names();
+		$sql="select et_traspaso.id, et_traspaso.nombre, de.nombre as nde, para.nombre as npara, et_traspaso.idde, et_traspaso.fecha, et_traspaso.estado  from et_traspaso
+		left outer join et_tienda de on de.id=et_traspaso.idde
+		left outer join et_tienda para on para.id=et_traspaso.idpara where idde='".$_SESSION['idtienda']."' or idpara='".$_SESSION['idtienda']."' order by fecha desc";
+		foreach ($this->dbh->query($sql) as $res){
+			$this->traspaso[]=$res;
+		}
+		return $this->traspaso;
+		$this->dbh=null;
+	}
 
 	public function traspaso($id){
 		self::set_names();
@@ -189,7 +204,6 @@ class Inventario extends Sagyc{
 			$x.="<div class='row'>";
 			if(count($res)>0){
 				$x.="<table class='table table-sm'>";
-
 				$x.= "<tr>";
 				$x.= "<th>Código</th>";
 				$x.= "<th>Descripción</th>";
@@ -275,7 +289,6 @@ class Inventario extends Sagyc{
 			$arreglo+=array('total'=>$cantidad);
 			$arreglo+=array('descripcion'=>$res['descripcion']);
 			$arreglo+=array('unico'=>$res['unico']);
-			$arreglo+=array('cantidad'=>$cantidad);
 			$arreglo+=array('id_invent'=>$res['id_invent']);
 			$arreglo+=array('llave'=>$res['llave']);
 			$arreglo+=array('idtienda'=>$res['idtienda']);
@@ -300,7 +313,6 @@ class Inventario extends Sagyc{
 		$sth->execute();
 		$res=$sth->fetch();
 		if($res['unico']==0){
-
 			return $this->borrar('et_bodega',"id",$id);
 		}
 		if($res['unico']==1){

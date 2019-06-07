@@ -9,15 +9,18 @@
 	$restan=$venta['restan'];
 	echo "<table class='table'>";
 	echo "<tr>
+	<th>-</th>
 	<th>Codigo</th>
 	<th>Clave</th>
-	<th>Nombre</th>
+	<th>Nombre</th>";
+/*
 	<th><center>Pendientes X entregar</center></th>
 	<th><center>Entregados</center></th>
-	<th><center>Cantidad</center></th>
+	*/
+	echo "<th><center>Cantidad</center></th>
 	<th>Precio</th>
 	<th>Total</th>
-	<th>--</th></tr>";
+	</tr>";
 	$gtotal=0;
 	$idpaquete=0;
 	$contar=1;
@@ -44,8 +47,8 @@
 				echo "<br><span style='font-size:10px;font-weight: bold;'>".$pedido[$i]['observaciones']."</span>";
 			}
 		echo "</td>";
-		echo "<td align='center'>".$pedido[$i]['pendiente']."</td>";
-		echo "<td align='center'>".$pedido[$i]['cantidad']."</td>";
+	//	echo "<td align='center'>".$pedido[$i]['pendiente']."</td>";
+	//	echo "<td align='center'>".$pedido[$i]['cantidad']."</td>";
 		echo "<td align='center'>".number_format($pedido[$i]['total'])."</td>";
 		echo "<td align='right'>".number_format($pedido[$i]['pventa'],2)."</td>";
 

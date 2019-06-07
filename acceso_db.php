@@ -33,6 +33,7 @@
 				$_SESSION['idpersona']=$CLAVE['idusuario'];
 				$_SESSION['foto']=$CLAVE['file_foto'];
 				$_SESSION['idtienda']=$CLAVE['idtienda'];
+				$_SESSION['nivel']=$CLAVE['nivel'];
 
 
 				$fecha=date("Y-m-d");

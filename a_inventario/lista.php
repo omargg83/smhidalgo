@@ -1,9 +1,11 @@
 <?php
 	require_once("db_.php");
-	$idtienda=$_REQUEST['id'];
+	$idtienda="";
+	if (isset($_REQUEST['id'])){
+		$idtienda=$_REQUEST['id'];
+	}
 	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
-
 	$pd = $db->inventario_lista($idtienda);
 ?>
 	<table class="table table-hover table-striped" id="x_lista">
