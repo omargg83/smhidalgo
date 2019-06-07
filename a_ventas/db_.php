@@ -354,6 +354,13 @@ class Venta extends Sagyc{
 			return $this->update('et_bodega',array('id'=>$id), $arreglo);
 		}
 	}
+	function imprimir(){
+		if (isset($_POST['id'])){$id=$_POST['id'];}
+		$arreglo =array();
+		$arreglo+=array('imprimir'=>1);
+		$arreglo+=array('estado'=>"Pagada");
+		return $this->update('et_venta',array('idventa'=>$id), $arreglo);
+	}
 }
 
 $db = new Venta();

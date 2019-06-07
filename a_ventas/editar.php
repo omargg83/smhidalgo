@@ -115,12 +115,16 @@ else{
 				<div class="row">
 					<div class="col-sm-12">
 						<div class='btn-group'>
-							<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
 							<?php
+								if($id==0 and $estado=="Activa"){
+									echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
+								}
+
                 if($id>0 and $estado=="Activa"){
                     echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i> Productos</button>";
                 }
               ?>
+							<button type='button' class='btn btn-outline-secondary btn-sm' onclick='imprime(<?php  echo $id; ?>)'><i class="fas fa-print"></i>Imprimir</button>
 							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_ventas/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
 						</div>
 					</div>

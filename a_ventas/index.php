@@ -134,5 +134,22 @@ function ventaespecial(id_invent){
 	});
 }
 
+function imprime(id){
+	$.ajax({
+		data:  {
+			"id":id,
+			"function":"imprimir"
+		},
+		url:   "a_ventas/db_.php",
+		type:  'post',
+		beforeSend: function () {
 
+		},
+		success:  function (response) {
+			if (isNaN(response)){
+				alert(response);
+			}
+		}
+	});
+}
 </script>
