@@ -78,7 +78,7 @@ class Inventario extends Sagyc{
 		left outer join et_marca on et_marca.idmarca=inven.idmarca
 		left outer join et_modelo on et_modelo.idmodelo=inven.idmodelo
 		where activo=1 order by id_invent ,unico desc";
-
+		$this->ventas=array();
 		foreach ($this->dbh->query($sql) as $res){
 			$this->ventas[]=$res;
 		}
@@ -142,7 +142,7 @@ class Inventario extends Sagyc{
 	public function traspaso_pedido($id){
 		self::set_names();
 		$sql="select et_bodega.id, et_invent.codigo, et_bodega.clave, et_bodega.total, et_invent.nombre, et_invent.unidad, et_invent.unico, abs(et_bodega.cantidad) as cantidad, et_bodega.precio, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones, et_bodega.recibido, et_bodega.frecibido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idtraspaso='$id' order by et_bodega.id desc";
-
+		$this->ventasp=array();
 		foreach ($this->dbh->query($sql) as $res){
 			$this->ventasp[]=$res;
 		}
@@ -174,14 +174,13 @@ class Inventario extends Sagyc{
 		}
 		return $x;
 	}
-
 	function busca_producto(){
 		try{
 			$x="";
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_bodega where descripcion like :texto or clave like :texto";
+			$sql="SELECT * FROM et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto) ";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
@@ -204,7 +203,7 @@ class Inventario extends Sagyc{
 
 					$x.= "<td>";
 					$x.= "<div class='btn-group'>";
-					$x.= "<button type='button' id='entradasel' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i></button>";
+					$x.= "<button type='button' onclick='traspasosel(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i></button>";
 					$x.= "</div>";
 					$x.= "</td>";
 
@@ -242,6 +241,28 @@ class Inventario extends Sagyc{
 			return "Database access FAILED! ".$e->getMessage();
 		}
 		return $texto;
+	}
+	function agregatraspaso(){
+		parent::set_names();
+		$x="";
+
+		$idtraspaso=$_REQUEST['idtraspaso'];
+		$idbodega=$_REQUEST['idbodega'];
+
+		$arreglo =array();
+		$arreglo+=array('idtraspaso'=>$idtraspaso);
+		$arreglo+=array('idtienda'=>null);
+
+		$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+		return $x;
+	}
+	function borrar_traspaso(){
+		self::set_names();
+		$arreglo =array();
+		if (isset($_POST['id'])){$id=$_POST['id'];}
+		$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+		$arreglo+=array('idtraspaso'=>null);
+		return $this->update('et_bodega',array('id'=>$id), $arreglo);
 	}
 }
 

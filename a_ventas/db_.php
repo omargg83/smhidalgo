@@ -37,7 +37,7 @@ class Venta extends Sagyc{
 		left outer join et_descuento on et_descuento.iddescuento=et_venta.iddescuento
 		left outer join et_tienda on et_tienda.id=et_venta.idtienda where et_venta.idtienda='$idtienda' order by et_venta.fecha desc";
 
-
+		$this->ventas=array();
 		foreach ($this->dbh->query($sql) as $res){
 			$this->ventas[]=$res;
 		}
@@ -127,10 +127,7 @@ class Venta extends Sagyc{
 			if (isset($_REQUEST['idtienda'])){$idtienda=$_REQUEST['idtienda'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_invent
-				left outer join et_bodega on et_bodega.id_invent=et_invent.id_invent
-				where et_invent.nombre like :texto OR et_invent.codigo like :texto or et_bodega.clave like :texto";
-
+			$sql="SELECT * FROM et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto) ";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
@@ -144,33 +141,37 @@ class Venta extends Sagyc{
 				$x.= "<th>-</th>";
 				$x.= "<th>Código</th>";
 				$x.= "<th>Descripción</th>";
-				$x.= "<th><span class='pull-right'>Cantidad</span></th>";
-				$x.= "<th><span class='pull-right'>Clave/IMEI</span></th>";
-				$x.= "<th><span class='pull-right'>Precio</span></th>";
-				$x.= "<th><span class='pull-right'>Material</span></th>";
-				$x.= "<th><span class='pull-right'>Color</span></th>";
+				$x.= "<th>Unidad</th>";
+				$x.= "<th>Tipo</th>";
 
-				$x.= "<th><span class='pull-right'></span></th>";
 				$x.="</tr>";
 				foreach ($res as $key) {
-					$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
+					$x.= "<tr id=".$key['id']." class='edit-t'>";
 
 					$x.= "<td>";
 					$x.= "<div class='btn-group'>";
-					$x.= "<button type='button' id='ventasel' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+					$x.= "<button type='button' onclick='traspasosel(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i></button>";
 					$x.= "</div>";
 					$x.= "</td>";
 
 					$x.= "<td>";
-					$x.= $key["codigo"];
-					$x.= "</td>";
-
-					$x.= "<td>";
-					$x.= $key["nombre"];
-					$x.= "</td>";
-
-					$x.= "<td>";
 					$x.= $key["clave"];
+					$x.= "</td>";
+
+					$x.= "<td>";
+					$x.= $key["descripcion"];
+					$x.= "</td>";
+
+					$x.= "<td>";
+					$x.= $key["unidad"];
+					$x.= "</td>";
+
+					$x.= "<td>";
+						if($key["unico"]=="0") $x.= "Almacén (Se controla el inventario por volúmen)";
+						if($key["unico"]=="1") $x.= "Unico (se controla inventario por pieza única)";
+						if($key["unico"]=="2") $x.= "Registro (solo registra ventas, no es necesario registrar entrada)";
+						if($key["unico"]=="3") $x.= "Pago de linea";
+						if($key["unico"]=="4") $x.= "Reparación";
 					$x.= "</td>";
 
 					$x.= "</tr>";
@@ -182,11 +183,11 @@ class Venta extends Sagyc{
 			}
 			$x.="</div>";
 			return $x;
-		}
-		catch(PDOException $e){
+			}
+			catch(PDOException $e){
 			return "Database access FAILED! ".$e->getMessage();
-		}
-		return $texto;
+			}
+			return $texto;
 	}
 	function pre_sel(){
 		$x="";

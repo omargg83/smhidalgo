@@ -1,11 +1,11 @@
-<?php 
+<?php
 	require_once("control_db.php");
 	$bdd = new Venta();
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
-	
+
 	if (isset($_POST['id'])){$id=$_POST['id'];} else{ $id=0;}
-	
+
 	$pd = $bdd->traspaso($id);
 
 	$id=$pd['id'];
@@ -14,7 +14,7 @@
 	$nombre=$pd['nombre'];
 	$idde=$pd['idde'];
 	$idpara=$pd['idpara'];
-	
+
 	$tienda = $bdd->tienda($idde);
 	$tienda2 = $bdd->tienda($idpara);
 ?>
@@ -46,7 +46,7 @@
 						<input type="text" class="form-control" name="estado" id="estado" value="<?php echo $estado;?>" placeholder="estado" readonly>
 				   </div>
 			   </div>
-			</div>  
+			</div>
 			<div class='card-body'>
 				<div class='btn-group'>
 			   <?php
@@ -55,26 +55,26 @@
 					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
 					 <i class="fas fa-plus"></i> Productos
 					</button>
-					
+
 					<button type="button" class="btn btn-info" id='finalizar'>
 					 <i class="fas fa-check-double"></i> Finalizar
 					</button>
-				
+
 				<?php
 					}
 				?>
 				<button type="button" class="btn btn-info" id='imprimir_traspaso'>
 					<i class="fas fa-print"></i> Imprimir
 				</button>
-				</div>  	
-			</div>  	
-				
+				</div>
+			</div>
+
 			<div class='card-body' id='pedido'>
 
 			</div>
 		</div>
 	 </div>
-	 
+
 	  <!-- Modal -->
             <div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
               <div class="modal-dialog modal-lg" role="document">
@@ -96,7 +96,7 @@
 						</div>
                     <div id="loader" style="position: absolute; text-align: center; top: 55px;  width: 100%;display:none;"></div><!-- Carga gif animado -->
                     <div class="outer_div" style='height:350px; overflow:auto;'>
-					
+
 					</div>
                   </div>
                   <div class="modal-footer">
@@ -105,17 +105,12 @@
                 </div>
               </div>
             </div>
-			
-			
-<script type="text/javascript">		
+
+
+<script type="text/javascript">
 	$(document).ready(function(){
 		var id;
 		id=document.getElementById("id").value;
 		$("#pedido").load('form/traspasos_pedido.php?id='+id);
-	});
-	
-	
-	
-	
-	
+	});	
  </script>

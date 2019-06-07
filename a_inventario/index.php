@@ -9,7 +9,6 @@
 	  </button>
 		  <div class='collapse navbar-collapse' id='navbarSupportedContent'>
 			<ul class='navbar-nav mr-auto'>";
-			echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_inventario/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
 			echo "<li class='nav-item'>";
 			echo "<select class='form-control' name='idtienda' id='idtienda'>";
 				echo '<option disabled>Seleccione una tienda</option>';
@@ -22,8 +21,8 @@
 				}
 			  echo "</select>";
 			echo "</li>";
+			echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_inventario/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
 			echo "<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_inventario/bodega'><i class='fas fa-plus'></i><span>En tránsito</span></a></li>";
-
 			echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_traspaso' data-lugar='a_inventario/lista_traspasos'><i class='fas fa-random'></i><span>Traspasos</span></a></li>";
 			echo "</ul>";
 		echo "
@@ -31,10 +30,8 @@
 	</nav>";
 ?>
 
-
-		<div id='trabajo'>
-		</div>
-
+<div id='trabajo'>
+</div>
 
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -96,4 +93,37 @@
 			});
 		}
 	}
+
+	function traspasosel(idbodega){
+			var idtraspaso =$("#id").val();
+			$.confirm({
+				title: 'Agregar',
+				content: '¿Desea traspasar el articulo?',
+				buttons: {
+					Aceptar: function () {
+						$.ajax({
+							data:  {
+								"idtraspaso":idtraspaso,
+								"idbodega":idbodega,
+								"function":"agregatraspaso"
+							},
+							url:   "a_inventario/db_.php",
+							type:  'post',
+							beforeSend: function () {
+
+							},
+							success:  function (response) {
+								$("#resultadosx").html("");
+								$("#movimientos").load("a_inventario/lista_movimiento.php?id="+idtraspaso);
+							}
+						});
+					},
+					Cancelar: function () {
+
+					}
+				}
+			});
+
+	}
+
  </script>

@@ -94,5 +94,12 @@ else{
 				</div>
 			</div>
 		</form>
+			<?php
+			if($id>0){
+				echo "<div class='card-body' id='movimientos'>";
+				include 'lista_movimiento.php';
+				echo "</div>";
+			}
+			?>
 	</div>
 </div>
