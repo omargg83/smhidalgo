@@ -89,7 +89,7 @@ function ventraprod(idbodega){
 
 	$.confirm({
 		title: 'Agregar',
-		content: '¿Desea traspasar el articulo?',
+		content: '¿Desea vender el articulo?',
 		buttons: {
 			Aceptar: function () {
 				$.ajax({

@@ -209,13 +209,9 @@ class Entrada extends Sagyc{
 					$x.="<input type='text' class='form-control input-sm' id='descripcion' name='descripcion' value='".$key["nombre"]."' readonly>";
 				$x.="</div>";
 
-				$unico="";
-				if($key["unico"]==1){
-					$unico="readonly";
-				}
 				$x.="<div class='col-3'>";
-						$x.="<label>Color</label>";
-						$x.="<input type='text' class='form-control input-sm' id='color' name='color' value='' placeholder='Color'>";
+					$x.="<label>Unidad</label>";
+					$x.="<input type='text' class='form-control input-sm' id='unidad'  name='unidad' value='".$key['unidad']."' readonly>";
 				$x.="</div>";
 
 				$x.="<div class='col-3'>";
@@ -230,17 +226,22 @@ class Entrada extends Sagyc{
 					$x.= "</select>";
 				$x.="</div>";
 
-				$x.="<div class='col-4'>";
+				$unico="";
+				if($key["unico"]==1){
+					$unico="readonly";
+				}
+
+				$x.="<div class='col-2'>";
 					$x.="<label>Cantidad</label>";
 					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='cantidad' name='cantidad' value='1' $unico>";
 				$x.="</div>";
 
-				$x.="<div class='col-4'>";
+				$x.="<div class='col-3'>";
 					$x.="<label>Precio de compra</label>";
 					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='precio'  name='precio' value='".$key['preciocompra']."'>";
 				$x.="</div>";
 
-				$x.="<div class='col-4'>";
+				$x.="<div class='col-3'>";
 					$x.="<label>Precio de venta</label>";
 					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='pventa'  name='pventa' value='".$key['pvgeneral']."'>";
 				$x.="</div>";
@@ -248,6 +249,11 @@ class Entrada extends Sagyc{
 				$x.="<div class='col-4'>";
 					$x.="<label>Clave/IMEI</label>";
 					$x.="<input type='text' class='form-control input-sm' id='clave' name='clave' value='' placeholder='Clave' >";
+				$x.="</div>";
+
+				$x.="<div class='col-2'>";
+						$x.="<label>Color</label>";
+						$x.="<input type='text' class='form-control input-sm' id='color' name='color' value='' placeholder='Color'>";
 				$x.="</div>";
 			$x.="</div>";
 
@@ -286,6 +292,9 @@ class Entrada extends Sagyc{
 		if (isset($_REQUEST['clave'])){
 			$arreglo+=array('clave'=>$_REQUEST['clave']);
 		}
+		if (isset($_REQUEST['unidad'])){
+			$arreglo+=array('unidad'=>$_REQUEST['unidad']);
+		}
 		if (isset($_REQUEST['color'])){
 			$arreglo+=array('color'=>$_REQUEST['color']);
 		}
@@ -299,8 +308,13 @@ class Entrada extends Sagyc{
 			$arreglo+=array('material'=>$_REQUEST['material']);
 		}
 		$arreglo+=array('idtienda'=>1);
-		$x.=$this->insert('et_bodega', $arreglo);
-		return $idx;
+		$x=$this->insert('et_bodega', $arreglo);
+		if(is_numeric($x)){
+			return $idx;
+		}
+		else{
+			return $x;
+		}
 	}
 }
 

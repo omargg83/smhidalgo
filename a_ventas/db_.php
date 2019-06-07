@@ -139,10 +139,12 @@ class Venta extends Sagyc{
 
 				$x.= "<tr>";
 				$x.= "<th>-</th>";
+				$x.= "<th>Existencias</th>";
 				$x.= "<th>Código</th>";
 				$x.= "<th>Descripción</th>";
 				$x.= "<th>Unidad</th>";
-				$x.= "<th>Tipo</th>";
+
+				$x.= "<th>Precio</th>";
 
 				$x.="</tr>";
 				foreach ($res as $key) {
@@ -150,9 +152,13 @@ class Venta extends Sagyc{
 
 					$x.= "<td>";
 					$x.= "<div class='btn-group'>";
-					$x.= "<button type='button' onclick='ventraprod(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i></button>";
+					$x.= "<button type='button' onclick='ventraprod(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i>+1</button>";
 					$x.= "</div>";
 					$x.= "</td>";
+
+					$x.= "<td><center>";
+					$x.= $key["cantidad"];
+					$x.= "</center></td>";
 
 					$x.= "<td>";
 					$x.= $key["clave"];
@@ -166,12 +172,9 @@ class Venta extends Sagyc{
 					$x.= $key["unidad"];
 					$x.= "</td>";
 
-					$x.= "<td>";
-						if($key["unico"]=="0") $x.= "Almacén (Se controla el inventario por volúmen)";
-						if($key["unico"]=="1") $x.= "Unico (se controla inventario por pieza única)";
-						if($key["unico"]=="2") $x.= "Registro (solo registra ventas, no es necesario registrar entrada)";
-						if($key["unico"]=="3") $x.= "Pago de linea";
-						if($key["unico"]=="4") $x.= "Reparación";
+
+					$x.= "<td align='right'>";
+					$x.= moneda($key["pventa"]);
 					$x.= "</td>";
 
 					$x.= "</tr>";
@@ -261,17 +264,34 @@ class Venta extends Sagyc{
 	function agregaventa(){
 		parent::set_names();
 		$x="";
-
 		$idventa=$_REQUEST['idventa'];
 		$idbodega=$_REQUEST['idbodega'];
 
-		$arreglo =array();
-		$arreglo+=array('idventa'=>$idventa);
-		$arreglo+=array('cantidad'=>0);
-		$arreglo+=array('pendiente'=>0);
-		$arreglo+=array('total'=>1);
+/*
 
-		$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+		if($unico=="0") echo "Almacén (Se controla el inventario por volúmen)</option>";--------------->POR VOLUMEN
+		if($unico=="1") echo "Unico (se controla inventario por pieza única)</option>";--------------->PIEZA UNICA
+		if($unico=="2") echo "Registro (solo registra ventas, no es necesario registrar entrada)</option>"; --------->NO SE REGISTRA EN BODEGA
+		if($unico=="3") echo "Pago de linea</option>"; --------->NO SE REGISTRA EN BODEGA
+		if($unico=="4") echo "Reparación</option>";  --------->NO SE REGISTRA EN BODEGA
+
+
+*/
+		$sql="select * from et_bodega where id=:texto";
+		$sth = $this->dbh->prepare($sql);
+		$sth->bindValue(":texto",$idbodega);
+		$sth->execute();
+		$res=$sth->fetch();
+		if($res['unico']==0){
+		}
+		if($res['unico']==1){
+			$arreglo =array();
+			$arreglo+=array('idventa'=>$idventa);
+			$arreglo+=array('cantidad'=>0);
+			$arreglo+=array('pendiente'=>0);
+			$arreglo+=array('total'=>1);
+			$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+		}
 		return $x;
 	}
 	function borrar_venta(){
