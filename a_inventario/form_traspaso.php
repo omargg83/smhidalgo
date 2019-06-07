@@ -1,7 +1,7 @@
 <?php
 require_once("db_.php");
 $id=$_REQUEST['id'];
-$tienda = $db->tiendas_lista();
+$tienda = $db->tiendas_global();
 if($id>0){
 	$pd = $db->traspaso($id);
 	$id=$pd['id'];
@@ -17,6 +17,10 @@ else{
 	$idpara=0;
 	$estado="Activa";
 }
+$readonly="";
+if($estado!="Activa"){
+	$readonly="readonly";
+}
 ?>
 
 <div class="container">
@@ -31,21 +35,19 @@ else{
 					</div>
 					<div class='col-2'>
 						<label>Nombre:</label>
-						<input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $nombre ;?>" placeholder="Nombre del traspaso" required>
+						<input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $nombre ;?>" placeholder="Nombre del traspaso" required <?php echo $readonly ;?> >
 					</div>
 					<div class='col-3'>
 						<label>De:</label>
 						<?php
-						echo "<select class='form-control' name='idde' id='idde'>";
+						echo "<select class='form-control' name='idde' id='idde' $readonly>";
 						echo '<option disabled>Seleccione sucursal</option>';
 						for($i=0;$i<count($tienda);$i++){
-							if($tienda[$i]['id']==$_SESSION['idtienda']){
-								echo '<option value="'.$tienda[$i]['id'].'"';
-								if($tienda[$i]['id']==$idde){
-									echo " selected";
-								}
-								echo '>'.$tienda[$i]['nombre'].'</option>';
+							echo '<option value="'.$tienda[$i]['id'].'"';
+							if($tienda[$i]['id']==$idde){
+								echo " selected";
 							}
+							echo '>'.$tienda[$i]['nombre'].'</option>';
 						}
 						echo "</select>";
 						?>
@@ -53,23 +55,21 @@ else{
 					<div class='col-3'>
 						<label>Para:</label>
 						<?php
-						echo "<select class='form-control' name='idpara' id='idpara' >";
+						echo "<select class='form-control' name='idpara' id='idpara' $readonly>";
 						echo '<option disabled>Seleccione sucursal</option>';
 						for($i=0;$i<count($tienda);$i++){
-							if($tienda[$i]['id']!=$_SESSION['idtienda']){
-								echo '<option value="'.$tienda[$i]['id'].'"';
-								if($tienda[$i]['id']==$idpara){
-									echo " selected";
-								}
-								echo '>'.$tienda[$i]['nombre'].'</option>';
+							echo '<option value="'.$tienda[$i]['id'].'"';
+							if($tienda[$i]['id']==$idpara){
+								echo " selected";
 							}
+							echo '>'.$tienda[$i]['nombre'].'</option>';
 						}
 						echo "</select>";
 						?>
 					</div>
 					<div class='col-2'>
 						<label>Estado:</label>
-						<select class="form-control" name="estado" id="estado">
+						<select class="form-control" name="estado" id="estado" <?php echo $readonly ;?>>
 							<option value="Activa"<?php if($estado=="Activa") echo "selected"; ?> >Activa</option>
 							<option value="Enviada"<?php if($estado=="Enviada") echo "selected"; ?> >Enviada</option>
 							<option value="Entregada"<?php if($estado=="Entregada") echo "selected"; ?> >Entregada</option>
@@ -82,9 +82,9 @@ else{
 				<div class='row'>
 					<div class='col-12'>
 						<div class="btn-group">
-							<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
 							<?php
 								if($id>0 and $estado=="Activa"){
+										echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
 										echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_inventario/form_producto'><i class='fas fa-plus'></i> Productos</button>";
 								}
 							?>

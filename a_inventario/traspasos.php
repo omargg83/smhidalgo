@@ -23,16 +23,14 @@
 		echo '<tr id="'.$pd[$i]['id'].'" class="edit-t">';
 		echo '<td class="edit">';
 		echo '<div class="btn-group">';
-		echo '<a class="btn btn-outline-secondary btn-sm" id="edit_traspaso" data-lugar="a_inventario/form_traspaso"><i class="fa fa-edit"></i>Editar</a>';
+		echo '<a class="btn btn-outline-secondary btn-sm" id="edit_traspaso" data-lugar="a_inventario/form_traspaso"><i class="fas fa-pencil-alt"></i></a>';
 		echo '<td>'.$pd[$i]['id'].'</td>';
 		echo '<td>'.$pd[$i]['nombre'].'</td>';
 		echo '<td>'.$pd[$i]['fecha'].'</td>';
 		echo '<td>'.$pd[$i]['nde'].'</td>';
 		echo '<td>'.$pd[$i]['npara'].'</td>';
 		echo '<td>'.$pd[$i]['estado'].'</td>';
-
-
-			echo '</tr>';
+		echo '</tr>';
 	}
 
 	?>

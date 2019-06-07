@@ -22,7 +22,7 @@
 			  echo "</select>";
 			echo "</li>";
 			echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='select_tienda' data-lugar='a_inventario/lista' data-combo='idtienda'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
-			echo "<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_inventario/lista_transito'><i class='fas fa-plus'></i><span>En tránsito</span></a></li>";
+			//echo "<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_inventario/lista_transito'><i class='fas fa-plus'></i><span>En tránsito</span></a></li>";
 			echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_traspaso' data-lugar='a_inventario/traspasos'><i class='fas fa-random'></i><span>Traspasos</span></a></li>";
 			echo "</ul>";
 		echo "
@@ -132,5 +132,32 @@
 			});
 
 	}
+	$(document).on('click','#recibir',function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		var idtraspaso =$("#id").val();
+		var id=$(this).closest(".edit-t").attr("id");
 
+
+		$.ajax({
+			data:  {
+				"id":id,
+				"function":"recibir"
+			},
+			url:   "a_inventario/db_.php",
+			type:  'post',
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+				if (!isNaN(response)){
+					$("#resultadosx").html("");
+					$("#movimientos").load("a_inventario/lista_traspasos.php?id="+idtraspaso);
+				}
+				else{
+					alert(response);
+				}
+			}
+		});
+	});
  </script>
