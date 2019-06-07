@@ -1,6 +1,6 @@
 <?php
 	require_once("db_.php");
-
+	$id=$_REQUEST['id'];
 	$venta = $db->venta($id);
 	$pedido = $db->ventas_pedido($id);
 
@@ -24,6 +24,19 @@
 
 	for($i=0;$i<count($pedido);$i++){
 		echo "<tr id='".$pedido[$i]['id']."' class='edit-t' unico='".$pedido[$i]['unico']."'>";
+		echo "<td class=edit>";
+		if($estado=="Activa"){
+			echo "<button class='btn btn-outline-secondary btn-sm' id='eliminar_pedido' data-lugar='a_ventas/db_' data-destino='a_ventas/lista_pedido' data-id='".$pedido[$i]['id']."'
+			 data-iddest='$id' data-funcion='borrar_venta' data-div='compras'><i class='far fa-trash-alt'></i></i></button>";
+
+			//echo '<div class="btn-group"><a id="observaciones" class="btn btn-info btn-fill btn-sm" title="Agregar notas"><i class="far fa-file-alt"></i></a>';
+
+		}
+		echo "</td>";
+
+
+
+
 		echo "<td>".$pedido[$i]['codigo']."</td>";
 		echo "<td>".$pedido[$i]['clave']."</td>";
 		echo "<td>".$pedido[$i]['nombre'];
@@ -42,13 +55,7 @@
 			echo "</td>";
 			$gtotal+=$total;
 
-			echo "<td class=edit>";
-			if($estado=="Activa"){
-				echo '<div class="btn-group"><a id="remove" class="btn btn-info btn-fill btn-sm"><i class="fas fa-trash-alt"></i></a>';
-				echo '<div class="btn-group"><a id="observaciones" class="btn btn-info btn-fill btn-sm" title="Agregar notas"><i class="far fa-file-alt"></i></a>';
 
-			}
-			echo "</td>";
 		echo "</tr>";
 	}
 

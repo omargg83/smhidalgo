@@ -84,6 +84,43 @@ $(document).on('click','#ventasel',function(e){
 	});
 });
 
+function ventraprod(idbodega){
+	var idventa =$("#id").val();
+
+	$.confirm({
+		title: 'Agregar',
+		content: '¿Desea traspasar el articulo?',
+		buttons: {
+			Aceptar: function () {
+				$.ajax({
+					data:  {
+						"idventa":idventa,
+						"idbodega":idbodega,
+						"function":"agregaventa"
+					},
+					url:   "a_ventas/db_.php",
+					type:  'post',
+					beforeSend: function () {
+
+					},
+					success:  function (response) {
+						if (isNaN(response)){
+							alert(response);
+						}
+						else{
+							$("#resultadosx").html("");
+							$("#compras").load("a_ventas/lista_pedido.php?id="+idventa);
+						}
+					}
+				});
+			},
+			Cancelar: function () {
+
+			}
+		}
+	});
+}
+
 
 
 </script>

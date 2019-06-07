@@ -77,7 +77,6 @@ else{
 						<label>Forma de pago:</label>
 						<?php
 						echo "<select class='form-control' name='iddescuento' id='iddescuento' required>";
-						echo '<option>Seleccione tipo de pago</option>';
 						for($i=0;$i<count($descuento);$i++){
 							echo '<option value="'.$descuento[$i]['iddescuento'].'"';
 							if($descuento[$i]['iddescuento']==$iddescuento){
@@ -131,8 +130,8 @@ else{
 
 		<?php
 		if($id>0){
-			echo "<div class='card-body' id='pedidos'>";
-			include 'form_pedido.php';
+			echo "<div class='card-body' id='compras'>";
+			include 'lista_pedido.php';
 			echo "</div>";
 		}
 		?>

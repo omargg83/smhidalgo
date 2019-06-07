@@ -127,7 +127,7 @@ class Venta extends Sagyc{
 			if (isset($_REQUEST['idtienda'])){$idtienda=$_REQUEST['idtienda'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto) ";
+			$sql="SELECT * FROM et_bodega where idtienda='".$_SESSION['idtienda']."' and cantidad>0 and (descripcion like :texto or clave like :texto) ";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
@@ -150,7 +150,7 @@ class Venta extends Sagyc{
 
 					$x.= "<td>";
 					$x.= "<div class='btn-group'>";
-					$x.= "<button type='button' onclick='traspasosel(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i></button>";
+					$x.= "<button type='button' onclick='ventraprod(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i></button>";
 					$x.= "</div>";
 					$x.= "</td>";
 
@@ -258,8 +258,31 @@ class Venta extends Sagyc{
 		///////////////////////////////////////////////////////////////////////////
 		return $x;
 	}
-	function bodega(){
-		return "oal mundo";
+	function agregaventa(){
+		parent::set_names();
+		$x="";
+
+		$idventa=$_REQUEST['idventa'];
+		$idbodega=$_REQUEST['idbodega'];
+
+		$arreglo =array();
+		$arreglo+=array('idventa'=>$idventa);
+		$arreglo+=array('cantidad'=>0);
+		$arreglo+=array('pendiente'=>0);
+		$arreglo+=array('total'=>1);
+
+		$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+		return $x;
+	}
+	function borrar_venta(){
+		self::set_names();
+		$arreglo =array();
+		if (isset($_POST['id'])){$id=$_POST['id'];}
+		$arreglo+=array('idventa'=>null);
+		$arreglo+=array('cantidad'=>1);
+		$arreglo+=array('pendiente'=>0);
+		$arreglo+=array('total'=>0);
+		return $this->update('et_bodega',array('id'=>$id), $arreglo);
 	}
 }
 
