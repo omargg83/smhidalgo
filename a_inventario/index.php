@@ -23,7 +23,7 @@
 			echo "</li>";
 			echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_inventario/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
 			echo "<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_inventario/bodega'><i class='fas fa-plus'></i><span>En tránsito</span></a></li>";
-			echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_traspaso' data-lugar='a_inventario/lista_traspasos'><i class='fas fa-random'></i><span>Traspasos</span></a></li>";
+			echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_traspaso' data-lugar='a_inventario/traspasos'><i class='fas fa-random'></i><span>Traspasos</span></a></li>";
 			echo "</ul>";
 		echo "
 	  </div>
@@ -96,6 +96,7 @@
 
 	function traspasosel(idbodega){
 			var idtraspaso =$("#id").val();
+			var cantidad=$("#cantidad_"+idbodega).val();
 			$.confirm({
 				title: 'Agregar',
 				content: '¿Desea traspasar el articulo?',
@@ -105,6 +106,7 @@
 							data:  {
 								"idtraspaso":idtraspaso,
 								"idbodega":idbodega,
+								"cantidad":cantidad,
 								"function":"agregatraspaso"
 							},
 							url:   "a_inventario/db_.php",
@@ -113,8 +115,13 @@
 
 							},
 							success:  function (response) {
-								$("#resultadosx").html("");
-								$("#movimientos").load("a_inventario/lista_movimiento.php?id="+idtraspaso);
+								if (!isNaN(response)){
+									$("#resultadosx").html("");
+									$("#movimientos").load("a_inventario/lista_traspasos.php?id="+idtraspaso);
+								}
+								else{
+									alert(response);
+								}
 							}
 						});
 					},

@@ -209,12 +209,17 @@ class Entrada extends Sagyc{
 					$x.="<input type='text' class='form-control input-sm' id='descripcion' name='descripcion' value='".$key["nombre"]."' readonly>";
 				$x.="</div>";
 
-				$x.="<div class='col-3'>";
+				$x.="<div class='col-2'>";
 					$x.="<label>Unidad</label>";
 					$x.="<input type='text' class='form-control input-sm' id='unidad'  name='unidad' value='".$key['unidad']."' readonly>";
 				$x.="</div>";
 
-				$x.="<div class='col-3'>";
+				$x.="<div class='col-2'>";
+						$x.="<label>Color</label>";
+						$x.="<input type='text' class='form-control input-sm' id='color' name='color' value='' placeholder='Color'>";
+				$x.="</div>";
+
+				$x.="<div class='col-2'>";
 					$x.="<label>Material</label>";
 					$x.= "<select class='form-control' name='material' id='material'>";
 					$x.= "<option value=''></option>";
@@ -251,10 +256,7 @@ class Entrada extends Sagyc{
 					$x.="<input type='text' class='form-control input-sm' id='clave' name='clave' value='' placeholder='Clave' >";
 				$x.="</div>";
 
-				$x.="<div class='col-2'>";
-						$x.="<label>Color</label>";
-						$x.="<input type='text' class='form-control input-sm' id='color' name='color' value='' placeholder='Color'>";
-				$x.="</div>";
+
 			$x.="</div>";
 
 			$x.="<div class='row'>";
@@ -308,6 +310,7 @@ class Entrada extends Sagyc{
 			$arreglo+=array('material'=>$_REQUEST['material']);
 		}
 		$arreglo+=array('idtienda'=>1);
+		$arreglo+=array('llave'=>date("YmdHis")."_".rand(0,10000));
 		$x=$this->insert('et_bodega', $arreglo);
 		if(is_numeric($x)){
 			return $idx;

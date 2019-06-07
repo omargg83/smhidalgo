@@ -3,7 +3,6 @@
 	$id2=$_REQUEST['id2'];
 	echo "<input type='hidden' name='idpedido' id='idpedido' placeholder='buscar producto' value='$id2' class='form-control'>";
 ?>
-
 <div class="card">
 	<div class="card-header">Buscar producto</div>
 	<div class="card-body">
@@ -17,7 +16,6 @@
 		</div>
 
 		<div clas='row' id='resultadosx'>
-
 		</div>
 	</div>
 

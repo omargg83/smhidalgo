@@ -141,7 +141,7 @@ class Inventario extends Sagyc{
 	}
 	public function traspaso_pedido($id){
 		self::set_names();
-		$sql="select et_bodega.id, et_invent.codigo, et_bodega.clave, et_bodega.total, et_invent.nombre, et_invent.unidad, et_invent.unico, abs(et_bodega.cantidad) as cantidad, et_bodega.precio, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones, et_bodega.recibido, et_bodega.frecibido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idtraspaso='$id' order by et_bodega.id desc";
+		$sql="select et_bodega.id, et_invent.codigo, et_bodega.clave, et_bodega.total, et_bodega.color, et_invent.nombre, et_invent.unidad, et_invent.unico, abs(et_bodega.cantidad) as cantidad, et_bodega.precio, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones, et_bodega.recibido, et_bodega.frecibido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idtraspaso='$id' order by et_bodega.id desc";
 		$this->ventasp=array();
 		foreach ($this->dbh->query($sql) as $res){
 			$this->ventasp[]=$res;
@@ -180,7 +180,7 @@ class Inventario extends Sagyc{
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto) ";
+			$sql="SELECT sum(cantidad) as totalx,et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto)  group by et_bodega.llave";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
@@ -191,43 +191,55 @@ class Inventario extends Sagyc{
 				$x.="<table class='table table-sm'>";
 
 				$x.= "<tr>";
-				$x.= "<th>-</th>";
 				$x.= "<th>Código</th>";
 				$x.= "<th>Descripción</th>";
 				$x.= "<th>Unidad</th>";
-				$x.= "<th>Tipo</th>";
-
+				$x.= "<th>Color</th>";
+				$x.= "<th>Existencia</th>";
+				$x.= "<th>Cantidad</th>";
+				$x.= "<th>-</th>";
 				$x.="</tr>";
 				foreach ($res as $key) {
-					$x.= "<tr id=".$key['id']." class='edit-t'>";
+					if($key["totalx"]>0){
+						$x.= "<tr id=".$key['id']." class='edit-t'>";
 
-					$x.= "<td>";
-					$x.= "<div class='btn-group'>";
-					$x.= "<button type='button' onclick='traspasosel(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-check'></i></button>";
-					$x.= "</div>";
-					$x.= "</td>";
+						$x.= "<td>";
+						$x.= $key["clave"];
+						$x.= "</td>";
 
-					$x.= "<td>";
-					$x.= $key["clave"];
-					$x.= "</td>";
+						$x.= "<td>";
+						$x.= $key["descripcion"];
+						$x.= "</td>";
 
-					$x.= "<td>";
-					$x.= $key["descripcion"];
-					$x.= "</td>";
+						$x.= "<td>";
+						$x.= $key["unidad"];
+						$x.= "</td>";
 
-					$x.= "<td>";
-					$x.= $key["unidad"];
-					$x.= "</td>";
+						$x.= "<td>";
+						$x.= $key["color"];
+						$x.= "</td>";
 
-					$x.= "<td>";
-						if($key["unico"]=="0") $x.= "Almacén (Se controla el inventario por volúmen)";
-						if($key["unico"]=="1") $x.= "Unico (se controla inventario por pieza única)";
-						if($key["unico"]=="2") $x.= "Registro (solo registra ventas, no es necesario registrar entrada)";
-						if($key["unico"]=="3") $x.= "Pago de linea";
-						if($key["unico"]=="4") $x.= "Reparación";
-					$x.= "</td>";
+						$x.= "<td>";
+						$x.= "<input type='text' class='form-control' name='existencia_".$key['id']."' id='existencia_".$key['id']."' value='".$key['totalx']."' placeholder='cantidad' readonly>";
+						$x.= "</td>";
 
-					$x.= "</tr>";
+						$cantidad=1;
+						$x.= "<td>";
+						$readonly="";
+						if($key["unico"]==1) {
+							$readonly="readonly";
+						}
+						$x.= "<input type='text' class='form-control' name='cantidad_".$key['id']."' id='cantidad_".$key['id']."' value='$cantidad' placeholder='cantidad' $readonly>";
+						$x.= "</td>";
+
+						$x.= "<td>";
+						$x.= "<div class='btn-group'>";
+						$x.= "<button type='button' onclick='traspasosel(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+						$x.= "</div>";
+						$x.= "</td>";
+
+						$x.= "</tr>";
+					}
 				}
 				$x.= "</table>";
 			}
@@ -248,21 +260,60 @@ class Inventario extends Sagyc{
 
 		$idtraspaso=$_REQUEST['idtraspaso'];
 		$idbodega=$_REQUEST['idbodega'];
+		$cantidad=$_REQUEST['cantidad'];
 
-		$arreglo =array();
-		$arreglo+=array('idtraspaso'=>$idtraspaso);
-		$arreglo+=array('idtienda'=>null);
-
-		$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+		$sql="select * from et_bodega where id=:texto";
+		$sth = $this->dbh->prepare($sql);
+		$sth->bindValue(":texto",$idbodega);
+		$sth->execute();
+		$res=$sth->fetch();
+		if($res['unico']==0){
+			$arreglo =array();
+			$arreglo+=array('idtraspaso'=>$idtraspaso);
+			$arreglo+=array('cantidad'=>$cantidad*-1);
+			$arreglo+=array('pendiente'=>0);
+			$arreglo+=array('total'=>$cantidad);
+			$arreglo+=array('descripcion'=>$res['descripcion']);
+			$arreglo+=array('unico'=>$res['unico']);
+			$arreglo+=array('cantidad'=>$cantidad);
+			$arreglo+=array('id_invent'=>$res['id_invent']);
+			$arreglo+=array('llave'=>$res['llave']);
+			$arreglo+=array('idtienda'=>$res['idtienda']);
+			$arreglo+=array('color'=>$res['color']);
+			$x.=$this->insert('et_bodega', $arreglo);
+		}
+		if($res['unico']==1){
+			$arreglo =array();
+			$arreglo+=array('idtraspaso'=>$idtraspaso);
+			$arreglo+=array('idtienda'=>null);
+			$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+		}
 		return $x;
 	}
 	function borrar_traspaso(){
 		self::set_names();
 		$arreglo =array();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
+		$sql="select * from et_bodega where id=:texto";
+		$sth = $this->dbh->prepare($sql);
+		$sth->bindValue(":texto",$id);
+		$sth->execute();
+		$res=$sth->fetch();
+		if($res['unico']==0){
+
+			return $this->borrar('et_bodega',"id",$id);
+		}
+		if($res['unico']==1){
+			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+			$arreglo+=array('idtraspaso'=>null);
+			return $this->update('et_bodega',array('id'=>$id), $arreglo);
+		}
+
+		/*
 		$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
 		$arreglo+=array('idtraspaso'=>null);
 		return $this->update('et_bodega',array('id'=>$id), $arreglo);
+		*/
 	}
 }
 

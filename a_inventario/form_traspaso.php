@@ -88,7 +88,7 @@ else{
 										echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_inventario/form_producto'><i class='fas fa-plus'></i> Productos</button>";
 								}
 							?>
-							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_inventario/lista_traspasos' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
+							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_inventario/traspasos' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
 						</div>
 					</div>
 				</div>
@@ -97,7 +97,7 @@ else{
 			<?php
 			if($id>0){
 				echo "<div class='card-body' id='movimientos'>";
-				include 'lista_movimiento.php';
+				include 'lista_traspasos.php';
 				echo "</div>";
 			}
 			?>
