@@ -2,7 +2,7 @@
 	require_once("db_.php");
 	$bdd = new Inventario();
 	echo "<nav class='navbar navbar-expand-lg navbar-light bg-light '>
-	<a class='navbar-brand' ><i class='fas fa-user-check'></i> Inventario</a>
+	<a class='navbar-brand' ><i class='fas fa-user-check'></i> Catalogo de productos</a>
 	  <button class='navbar-toggler navbar-toggler-right' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='principal' aria-expanded='false' aria-label='Toggle navigation'>
 		<span class='navbar-toggler-icon'></span>
 	  </button>
