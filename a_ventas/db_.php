@@ -113,6 +113,7 @@ class Venta extends Sagyc{
 		if($id==0){
 			$date=date("Y-m-d H:i:s");
 			$arreglo+=array('fecha'=>$date);
+			$arreglo+=array('idusuario'=>$_SESSION['idpersona']);
 			$x.=$this->insert('et_venta', $arreglo);
 		}
 		else{
