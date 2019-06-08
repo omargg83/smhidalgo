@@ -92,9 +92,6 @@ class Venta extends Sagyc{
 		if (isset($_REQUEST['idcliente'])){
 			$arreglo+=array('idcliente'=>$_REQUEST['idcliente']);
 		}
-		if (isset($_REQUEST['idtienda'])){
-			$arreglo+=array('idtienda'=>$_REQUEST['idtienda']);
-		}
 		if (isset($_REQUEST['iddescuento'])){
 			$arreglo+=array('iddescuento'=>$_REQUEST['iddescuento']);
 		}
@@ -114,6 +111,7 @@ class Venta extends Sagyc{
 			$date=date("Y-m-d H:i:s");
 			$arreglo+=array('fecha'=>$date);
 			$arreglo+=array('idusuario'=>$_SESSION['idpersona']);
+			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
 			$x.=$this->insert('et_venta', $arreglo);
 		}
 		else{

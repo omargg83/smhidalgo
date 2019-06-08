@@ -54,23 +54,15 @@ else{
 						echo "</select>";
 						?>
 					</div>
-					<div class='col-3'>
-						<label >Tienda:</label>
-						<?php
-						echo "<select class='form-control' name='idtienda' id='idtienda'>";
-						for($i=0;$i<count($tiendas);$i++){
-							echo '<option value="'.$tiendas[$i]['id'].'"';
-							if($tiendas[$i]['id']==$idtienda){
-								echo " selected";
-							}
-							echo '>'.$tiendas[$i]["nombre"].'</option>';
-						}
-						echo "</select>";
-						?>
-					</div>
+
 					<div class='col-3'>
 						<label>Factura:</label>
 						<input type="text" class="form-control" name="factura" id="factura" value="<?php echo $factura ;?>" placeholder="Factura">
+					</div>
+
+					<div class='col-3'>
+						<label>Estado:</label>
+						<input type="text" class="form-control" name="estado" id="estado" value="<?php echo $estado ;?>" placeholder="Lugar de entrega" readonly>
 					</div>
 
 					<div class='col-3'>
@@ -98,17 +90,18 @@ else{
 						<input type="text" class="form-control" name="lugar" id="lugar" value="<?php echo $lugar ;?>" placeholder="Lugar de entrega">
 					</div>
 
-					<div class='col-3'>
-						<label>Estado:</label>
+
+
+
 						<?php
+						/*
 						echo "<select class='form-control' name='estado' id='estado' required>";
-						echo '<option disabled>Seleccione un descuento</option>';
 						echo '<option value="Activa"'; if($estado=="Activa"){ echo " selected"; } echo '>Activa</option>';
 						echo '<option value="Pagada"'; if($estado=="Pagada"){ echo " selected"; } echo '>Pagada</option>';
 						echo '<option value="Cerrada"'; if($estado=="Cerrada"){ echo " selected"; } echo '>Cerrada</option>';
 						echo "</select>";
+						*/
 						?>
-					</div>
 				</div>
 			</div>
 			<div class='card-footer'>
@@ -116,15 +109,16 @@ else{
 					<div class="col-sm-12">
 						<div class='btn-group'>
 							<?php
-								if($id==0 and $estado=="Activa"){
+								if($estado=="Activa"){
 									echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
 								}
-
                 if($id>0 and $estado=="Activa"){
                     echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i> Productos</button>";
                 }
+								if($estado=="Pagada"){
+									echo "<button type='button' class='btn btn-outline-secondary btn-sm' onclick='imprime($id)'><i class='fas fa-print'></i>Imprimir</button>";
+								}
               ?>
-							<button type='button' class='btn btn-outline-secondary btn-sm' onclick='imprime(<?php  echo $id; ?>)'><i class="fas fa-print"></i>Imprimir</button>
 							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_ventas/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
 						</div>
 					</div>
