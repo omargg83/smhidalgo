@@ -5,6 +5,7 @@
   $inven=$db->bodega_edit($id);
   $descripcion=$inven['descripcion'];
   $clave=$inven['clave'];
+  $pventa=$inven['pventa'];
 
 
   echo "<form action='' id='form_venta' data-lugar='a_inventario/db_' data-funcion='guardar_bodega'  data-destino='a_inventario/form_detalle' >";
@@ -23,6 +24,11 @@
       <div class="col-4">
         <label>Descripción</label>
         <input type="text" class="form-control" name="descripcion" id='descripcion' value='<?php echo $descripcion; ?>'>
+      </div>
+
+      <div class="col-4">
+        <label>Precio venta</label>
+        <input type="text" class="form-control" name="pventa" id='pventa' value='<?php echo $pventa; ?>'>
       </div>
     </div>
   </div>

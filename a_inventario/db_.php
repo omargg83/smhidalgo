@@ -374,6 +374,9 @@ class Inventario extends Sagyc{
 		if (isset($_REQUEST['clave'])){
 			$arreglo+=array('clave'=>$_REQUEST['clave']);
 		}
+		if (isset($_REQUEST['pventa'])){
+			$arreglo+=array('pventa'=>$_REQUEST['pventa']);
+		}
 		$x.=$this->update('et_bodega',array('id'=>$id), $arreglo);
 		return $idprod;
 	}
