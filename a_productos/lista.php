@@ -53,7 +53,14 @@
 		?>
 	</tbody>
 	</table>
-
+	<b>Productos:</b><br>
+	Captura de tipo de productos, no se afecta el inventario, solo es un catálogo,<br>
+	Existen 5 tipos de productos:<br>
+	*) Almacén (se registran por volúmen)<br>
+	*) Único (Se tiene que registrar uno a uno al momento de dar entrada)<br>
+	*) Registro (no se tiene que dar de alta, solo en el catalogo de productos)<br>
+	*) Pago de Linea (no se tiene que dar de alta, solo en el catalogo de productos)<br>
+	*) Reparación (no se tiene que dar de alta, solo en el catalogo de productos)<br>
 	</div>
 
 <script>

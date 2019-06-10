@@ -87,7 +87,7 @@ class Inventario extends Sagyc{
 	}
 	public function inventario_detalle($id){
 		self::set_names();
-		$sql="select * from et_bodega where id_invent='$id'";
+		$sql="select * from et_bodega where id_invent='$id' order by id asc";
 		$this->inventario=array();
 		foreach ($this->dbh->query($sql) as $res){
 			$this->inventario[]=$res;

@@ -31,7 +31,7 @@
 			<tr id="<?php echo $pd[$i]['id_invent']; ?>" class="edit-t">
 				<td class="edit">
 					<div class="btn-group">
-					<button class="btn btn-outline-secondary btn-sm" id='edit_inventario' data-lugar='a_inventario/form_detalle' data-valor='idtienda'><i class="fas fa-arrow-circle-right"></i></button>
+					<button class="btn btn-outline-secondary btn-sm" id='edit_inventario' data-lugar='a_inventario/form_detalle' data-valor='idtienda'><i class="fas fa-pencil-alt"></i></button>
 				</div></td>
 				<td><?php
 					if ($pd[$i]["unico"]==0){ echo "Almacén";}
@@ -57,6 +57,7 @@
 		?>
 	</tbody>
 	</table>
+	<b>Se contróla el inventario de productos, asi como su registro y precio</b><br>
 
 	</div>
 
