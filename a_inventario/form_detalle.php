@@ -1,7 +1,6 @@
 <?php
 	require_once("db_.php");
 	$id=$_REQUEST['id'];
-	$valor=$_REQUEST['valor'];
 	$pd = $db->inventario($id);
 	$nombre=$pd['nombre'];
 	$marca=$pd['marca'];
@@ -9,7 +8,7 @@
 ?>
 
 	<div class='card'>
-		<div class='card-header'>Inventario</div>
+		<div class='card-header'>Inventario <?php echo $id; ?></div>
 		<div class='card-body'>
 			<div class='row'>
 				<div class='col-2'>
@@ -54,7 +53,7 @@
 
 					echo "<td>";
 					if($pd[$i]['cantidad']>0){
-						echo "<button class='btn btn-outline-secondary btn-sm' id='edit_bodega' data-lugar='a_inventario/editar_producto'><i class='fas fa-pencil-alt'></i></button>";
+						echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo'  data-id='".$pd[$i]['id']."' data-id2='$id' data-lugar='a_inventario/editar_producto' title='Cambiar cargo'><i class='fas fa-pencil-alt'></i></button>";
 					}
 					echo "</td>";
 					echo "<td>".$pd[$i]['clave']."</td>";

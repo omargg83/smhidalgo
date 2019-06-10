@@ -90,18 +90,6 @@ else{
 						<input type="text" class="form-control" name="lugar" id="lugar" value="<?php echo $lugar ;?>" placeholder="Lugar de entrega">
 					</div>
 
-
-
-
-						<?php
-						/*
-						echo "<select class='form-control' name='estado' id='estado' required>";
-						echo '<option value="Activa"'; if($estado=="Activa"){ echo " selected"; } echo '>Activa</option>';
-						echo '<option value="Pagada"'; if($estado=="Pagada"){ echo " selected"; } echo '>Pagada</option>';
-						echo '<option value="Cerrada"'; if($estado=="Cerrada"){ echo " selected"; } echo '>Cerrada</option>';
-						echo "</select>";
-						*/
-						?>
 				</div>
 			</div>
 			<div class='card-footer'>

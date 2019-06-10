@@ -95,6 +95,16 @@ class Inventario extends Sagyc{
 		return $this->inventario;
 		$this->dbh=null;
 	}
+	public function bodega_edit($id){
+		self::set_names();
+		$sql="select * from et_bodega where id='$id'";
+		$this->inventario="";
+		foreach ($this->dbh->query($sql) as $res){
+			$this->inventario=$res;
+		}
+		return $this->inventario;
+		$this->dbh=null;
+	}
 	public function inventario_lista($idtienda){
 		self::set_names();
 
@@ -349,6 +359,23 @@ class Inventario extends Sagyc{
 		$arreglo =array();
 		$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
 		return $this->update('et_bodega',array('id'=>$id), $arreglo);
+	}
+
+	function guardar_bodega(){
+		$x="";
+		parent::set_names();
+		$arreglo =array();
+		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
+		if (isset($_REQUEST['idprod'])){$idprod=$_REQUEST['idprod'];}
+
+		if (isset($_REQUEST['descripcion'])){
+			$arreglo+=array('descripcion'=>$_REQUEST['descripcion']);
+		}
+		if (isset($_REQUEST['clave'])){
+			$arreglo+=array('clave'=>$_REQUEST['clave']);
+		}
+		$x.=$this->update('et_bodega',array('id'=>$id), $arreglo);
+		return $idprod;
 	}
 }
 
