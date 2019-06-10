@@ -31,16 +31,17 @@
 				<td><?php echo $pd[$i]["numero"]; ?></td>
 				<td><?php echo $pd[$i]["estado"]; ?></td>
 				<td align="right"><?php echo number_format($pd[$i]["total"],2); ?></td>
-
-
-
 			</tr>
 		<?php
 			}
 		?>
-
 		</tbody>
 	</table>
+	<b>Lista de entrada:</b><br>
+	Para dar acceso a los articulos a vender,<br>
+	1) Crear una nueva entrada.<br>
+	2) Agregar producto (se suman directamente al stock de productos).<br>
+	3) Finalizar entrada.<br>
 </div>
 <script>
 	$(document).ready( function () {

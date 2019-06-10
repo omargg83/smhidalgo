@@ -3,7 +3,9 @@
 	$bdd = new Compra();
 
 	$id = $_REQUEST['id'];
+	$compra = $bdd->compra($id);
 	$pedido = $bdd->compras_pedido($id);
+
 
 	echo "<table class='table table-sm'>";
 	echo "<tr>

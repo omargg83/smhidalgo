@@ -5,7 +5,12 @@
 ?>
 
 <div class="card">
-	<div class="card-header">Buscar producto</div>
+	<div class="card-header">Buscar producto
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+	</div>
 	<div class="card-body">
 		<div clas='row'>
 				<div class="input-group mb-3">
@@ -18,12 +23,6 @@
 
 		<div clas='row' id='resultadosx'>
 
-		</div>
-	</div>
-
-	<div class="card-footer">
-		<div class='btn-group'>
-			<button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Cerrar</button>
 		</div>
 	</div>
 </div>

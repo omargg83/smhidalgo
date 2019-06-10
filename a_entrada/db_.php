@@ -18,7 +18,6 @@ class Entrada extends Sagyc{
 			die();
 		}
 	}
-
 	public function inventario($id){
 		self::set_names();
 		$sql="select * from et_invent
@@ -68,7 +67,7 @@ class Entrada extends Sagyc{
 		$this->ventasp=array();
 		$sql="select et_bodega.id, et_invent.codigo, et_invent.nombre, et_invent.unidad, abs(et_bodega.cantidad) as cantidad, et_bodega.total, et_bodega.clave,
 		et_bodega.precio, et_bodega.gtotal, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.gtotal, et_bodega.id_invent,
-		et_bodega.observaciones, et_bodega.color, et_bodega.tipo from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id'
+		et_bodega.observaciones, et_bodega.color, et_bodega.tipo, et_bodega.pventa from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id'
 		order by et_bodega.id asc";
 		foreach ($this->dbh->query($sql) as $res){
 			$this->ventasp[]=$res;
@@ -85,7 +84,7 @@ class Entrada extends Sagyc{
 		return $this->clientes;
 		$this->dbh=null;
 	}
-	function guardar_entrada(){
+	public function guardar_entrada(){
 		$x="";
 		parent::set_names();
 		$arreglo =array();
@@ -118,7 +117,7 @@ class Entrada extends Sagyc{
 		if (isset($_POST['id'])){$id=$_POST['id'];}
 		return $this->borrar('et_bodega',"id",$id);
 	}
-	function busca_producto(){
+	public function busca_producto(){
 		try{
 			$x="";
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
@@ -187,7 +186,7 @@ class Entrada extends Sagyc{
 		}
 		return $texto;
 	}
-	function pre_sel(){
+	public function pre_sel(){
 		$x="";
 		$id=$_REQUEST['id'];
 		$identrada=$_REQUEST['identrada'];
@@ -270,8 +269,7 @@ class Entrada extends Sagyc{
 		///////////////////////////////////////////////////////////////////////////
 		return $x;
 	}
-
-	function agregar_producto(){
+	public function agregar_producto(){
 		$x="";
 		parent::set_names();
 		$arreglo =array();
@@ -318,6 +316,16 @@ class Entrada extends Sagyc{
 		else{
 			return $x;
 		}
+	}
+	public function cerrarentrada(){
+		$x="";
+		self::set_names();
+		$arreglo =array();
+		$id=$_REQUEST['id'];
+		$arreglo =array();
+		$arreglo+=array('estado'=>"Finalizada");
+		$x=$this->update('et_entrada',array('identrada'=>$id), $arreglo);
+		return $x;
 	}
 }
 

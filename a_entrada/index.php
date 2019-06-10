@@ -63,22 +63,45 @@ $(document).on('click','#entradasel',function(e){
 	var id=$(this).closest(".edit-t").attr("id");
 	var identrada = $("#id").val();
 	$.ajax({
-	  data: {
-	    "id":id,
-	    "identrada":identrada,
-	    "function":"pre_sel"
-	  },
-	  url:   "a_entrada/db_.php",
-	  type:  'post',
-	  beforeSend: function () {
+		data: {
+			"id":id,
+			"identrada":identrada,
+			"function":"pre_sel"
+		},
+		url:   "a_entrada/db_.php",
+		type:  'post',
+		beforeSend: function () {
 
-	  },
-	  success: function (response) {
-	      $("#resultadosx").html(response);
-	  }
+		},
+		success: function (response) {
+			$("#resultadosx").html(response);
+		}
 	});
 });
 
+$(document).on('click','#entradaend',function(e){
+	var id = $("#id").val();
+	$.confirm({
+		title: 'Cerrar entrada',
+		content: '¿Desea cerrar la entrada?<br>ya no se podrán agregar mas productos.',
+		buttons: {
+			Aceptar: function () {
+				$.ajax({
+					data:  {"id":id,"function":"cerrarentrada"},
+					url:   "a_entrada/db_.php",
+					type:  'post',
+					beforeSend: function () {
 
+					},
+					success:  function (response) {
+						$("#trabajo").load("a_entrada/editar.php?id="+id);
+					}
+				});
+			},
+			Cancelar: function () {
+			}
+		}
+	});
+});
 
 </script>

@@ -3,7 +3,7 @@
 	$pd = $db->traspaso_lista();
 	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
-	echo '<a class="btn btn-outline-secondary btn-sm" id="new_traspaso" data-lugar="a_inventario/form_traspaso"><i class="fa fa-edit"></i>Nuevo</a>';
+
 ?>
 <div class="content table-responsive table-full-width">
 	<table class="table table-hover table-striped" id="x_lista">
