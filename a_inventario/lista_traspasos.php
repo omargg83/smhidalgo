@@ -27,7 +27,7 @@
       echo "<div class='btn-group'>";
     if($estado=="Activa" and $pedido[$i]['recibido']!=1){
       echo "<button class='btn btn-outline-secondary btn-sm' id='eliminar_comision' data-lugar='a_inventario/db_' data-destino='a_inventario/lista_traspasos' data-id='".$pedido[$i]['id']."'
-       data-iddest='$id' data-funcion='borrar_traspaso' data-div='movimientos'><i class='far fa-trash-alt'></i>Editar</button>";
+       data-iddest='$id' data-funcion='borrar_traspaso' data-div='movimientos'><i class='far fa-trash-alt'></i></button>";
     }
     else{
       if($pedido[$i]['idtienda']==null){
