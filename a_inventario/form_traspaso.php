@@ -13,8 +13,8 @@ if($id>0){
 else{
 	$id=0;
 	$nombre="";
-	$idde=0;
-	$idpara=0;
+	$idde=$_SESSION['idtienda'];
+	$idpara=$_SESSION['idtienda'];
 	$estado="Activa";
 	$fecha=date("d-m-Y");
 }

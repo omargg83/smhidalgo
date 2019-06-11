@@ -4,7 +4,7 @@
 	echo "<input type='hidden' name='idpedido' id='idpedido' placeholder='buscar producto' value='$id2' class='form-control'>";
 ?>
 <div class="card">
-	<div class="card-header">Buscar producto</div>
+	<div class="card-header">Buscar producto a traspasar</div>
 	<div class="card-body">
 		<div clas='row'>
 				<div class="input-group mb-3">

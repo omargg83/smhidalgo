@@ -79,12 +79,10 @@ else{
 							<?php
 							if($estado=="Activa"){
 								echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
-								if($id>0){
-									echo "<button class='btn btn-outline-secondary btn-sm' type='button' id='entradaend'><i class='fas fa-lock'></i>Finalizar</button>";
-								}
 							}
 							if($id>0 and $estado=="Activa"){
 								echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_entrada/form_producto'><i class='fas fa-plus'></i> Productos</button>";
+								echo "<button class='btn btn-outline-secondary btn-sm' type='button' id='entradaend'><i class='fas fa-lock'></i>Finalizar</button>";
 							}
 							?>
 							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_entrada/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>

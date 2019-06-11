@@ -248,7 +248,7 @@ class Inventario extends Sagyc{
 				$x.= "<th>Unidad</th>";
 				$x.= "<th>Color</th>";
 				$x.= "<th>Existencia</th>";
-				$x.= "<th>Cantidad</th>";
+				$x.= "<th>Num.</th>";
 				$x.= "<th>-</th>";
 				$x.="</tr>";
 				foreach ($res as $key) {
@@ -272,7 +272,7 @@ class Inventario extends Sagyc{
 						$x.= "</td>";
 
 						$x.= "<td>";
-						$x.= "<input type='text' class='form-control' name='existencia_".$key['id']."' id='existencia_".$key['id']."' value='".$key['totalx']."' placeholder='cantidad' readonly>";
+						$x.= "<input type='text' style='width:70px' class='form-control' name='existencia_".$key['id']."' id='existencia_".$key['id']."' value='".$key['totalx']."' placeholder='cantidad' readonly>";
 						$x.= "</td>";
 
 						$cantidad=1;
@@ -281,7 +281,7 @@ class Inventario extends Sagyc{
 						if($key["unico"]==1) {
 							$readonly="readonly";
 						}
-						$x.= "<input type='text' class='form-control' name='cantidad_".$key['id']."' id='cantidad_".$key['id']."' value='$cantidad' placeholder='cantidad' $readonly>";
+						$x.= "<input type='text' style='width:70px' class='form-control' name='cantidad_".$key['id']."' id='cantidad_".$key['id']."' value='$cantidad' placeholder='cantidad' $readonly>";
 						$x.= "</td>";
 
 						$x.= "<td>";
@@ -361,10 +361,16 @@ class Inventario extends Sagyc{
 	}
 	function recibir(){
 		$x="";
+		/*
 		if (isset($_POST['id'])){$id=$_POST['id'];}
 		$arreglo =array();
 		$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+		$arreglo+=array('frecibido'=>date("Y-m-d H:i:s"));
+		$arreglo+=array('idpersona'=>$_SESSION['idpersona']);
 		return $this->update('et_bodega',array('id'=>$id), $arreglo);
+
+		*/
+		return "hola mundo";
 	}
 
 	function guardar_bodega(){

@@ -40,7 +40,6 @@ $(document).ready(function(){
 	id=document.getElementById("idtienda").value;
 	$("#trabajo").load('a_inventario/lista.php?id='+id);
 });
-
 $(document).on('change','#idtienda', function() {
 	var id =$(this).val();
 	var parametros={
@@ -60,7 +59,6 @@ $(document).on('change','#idtienda', function() {
 	});
 
 });
-
 $(document).on('keypress','#prod_traspaso',function(e){
 	if(e.which == 13) {
 		e.preventDefault();
@@ -68,13 +66,11 @@ $(document).on('keypress','#prod_traspaso',function(e){
 		buscatraspaso();
 	}
 });
-
 $(document).on('click','#buscartraspaso',function(e){
 	e.preventDefault();
 	e.stopPropagation();
 	buscatraspaso();
 });
-
 function buscatraspaso(){
 	var texto=$("#prod_traspaso").val();
 	if(texto.length>=-1){
@@ -94,7 +90,6 @@ function buscatraspaso(){
 		});
 	}
 }
-
 function traspasosel(idbodega){
 	var idtraspaso =$("#id").val();
 	var cantidad=$("#cantidad_"+idbodega).val();
@@ -132,35 +127,6 @@ function traspasosel(idbodega){
 		}
 	});
 }
-$(document).on('click','#recibir',function(e){
-	e.preventDefault();
-	e.stopPropagation();
-	var idtraspaso =$("#id").val();
-	var id=$(this).closest(".edit-t").attr("id");
-
-
-	$.ajax({
-		data:  {
-			"id":id,
-			"function":"recibir"
-		},
-		url:   "a_inventario/db_.php",
-		type:  'post',
-		beforeSend: function () {
-
-		},
-		success:  function (response) {
-			if (!isNaN(response)){
-				$("#resultadosx").html("");
-				$("#movimientos").load("a_inventario/lista_traspasos.php?id="+idtraspaso);
-			}
-			else{
-				alert(response);
-			}
-		}
-	});
-});
-
 $(document).on('click','#enviatraspaso',function(e){
 	e.preventDefault();
 	e.stopPropagation();
@@ -196,6 +162,32 @@ $(document).on('click','#enviatraspaso',function(e){
 		}
 	});
 });
+$(document).on('click','#recibir',function(e){
+	e.preventDefault();
+	e.stopPropagation();
+	var idtraspaso =$("#id").val();
+	var id=$(this).closest(".edit-t").attr("id");
+	var unico=$(this).closest(".edit-t").data("unico");
+	alert(unico);
+	$.ajax({
+		data:  {
+			"id":id,
+			"function":"recibir"
+		},
+		url:   "a_inventario/db_.php",
+		type:  'post',
+		beforeSend: function () {
 
-
+		},
+		success:  function (response) {
+			if (!isNaN(response)){
+				$("#resultadosx").html("");
+				$("#movimientos").load("a_inventario/lista_traspasos.php?id="+idtraspaso);
+			}
+			else{
+				alert(response);
+			}
+		}
+	});
+});
 </script>

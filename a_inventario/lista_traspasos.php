@@ -5,6 +5,7 @@
 
 	$traspaso = $db->traspaso($id);
 	$estado=$traspaso['estado'];
+  $idpara=$traspaso['idpara'];
 	$pedido = $db->traspaso_pedido($id);
 
 	echo "<table class='table table-sm'>";
@@ -22,7 +23,7 @@
 	$contar=1;
 
 	for($i=0;$i<count($pedido);$i++){
-		echo "<tr id='".$pedido[$i]['id']."' pendiente='".$pedido[$i]['pendiente']."' unico='".$pedido[$i]['unico']."' class='edit-t'>";
+		echo "<tr id='".$pedido[$i]['id']."' data-pendiente='".$pedido[$i]['pendiente']."' data-unico='".$pedido[$i]['unico']."' class='edit-t'>";
     echo "<td class=edit>";
       echo "<div class='btn-group'>";
     if($estado=="Activa" and $pedido[$i]['recibido']!=1){
@@ -30,8 +31,8 @@
        data-iddest='$id' data-funcion='borrar_traspaso' data-div='movimientos'><i class='far fa-trash-alt'></i></button>";
     }
     else{
-      if($pedido[$i]['idtienda']==null){
-        echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='recibir'><i class='fas fa-people-carry'></i>Recibir</button>";
+      if($idpara==$_SESSION['idtienda']){
+          echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='recibir'><i class='fas fa-people-carry'></i>Recibir</button>";
       }
     }
     echo "</div>";

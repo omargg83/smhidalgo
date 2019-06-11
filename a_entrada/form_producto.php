@@ -5,7 +5,7 @@
 ?>
 
 <div class="card">
-	<div class="card-header">Buscar producto
+	<div class="card-header">Buscar en catalogo
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -22,7 +22,10 @@
 		</div>
 
 		<div clas='row' id='resultadosx'>
+			*) Busca en catalogo para agrupar descripciones de articulos<br>
+			*) pago de linea, reparaciones tiempo de aire no se dan de alta
 
 		</div>
+
 	</div>
 </div>

@@ -55,7 +55,7 @@ if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
 				echo "<a class='dropdown-item' href='#a_inventario/index'  ><i class='fas fa-boxes'></i> Inventario</a>";
 				if($_SESSION['nivel']==1){
 					echo "<br>";
-					echo "<a class='dropdown-item' href='#a_productos/index' ><i class='fas fa-mobile-alt'></i> Productos</a>";
+
 					echo "<a class='dropdown-item' href='#a_compras/index' ><i class='fas fa-money-check-alt'></i> Lista de compras</a>";
 					echo "<a class='dropdown-item' href='#a_entrada/index' ><i class='fas fa-chalkboard-teacher'></i> Entrada</a>";
 				}
@@ -68,7 +68,8 @@ if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
 					echo "<i class='fas fa-clipboard-list'></i> Catalogos";
 					echo "</a>";
 					echo "<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
-
+					echo "<a class='dropdown-item' href='#a_productos/index' ><i class='fas fa-mobile-alt'></i> Productos</a>";
+					echo "<br>";
 					echo "<a class='dropdown-item' href='#a_usuarios/index' ><i class='fas fa-user-astronaut'></i> Usuarios</a>";
 					echo "<a class='dropdown-item' href='#' id='menu_acceso' ><i class='fas fa-user-clock'></i> Acceso</a>";
 					echo "<a class='dropdown-item' href='#a_tienda/index'><i class='fas fa-shopping-basket'></i> Tiendas</a>";
