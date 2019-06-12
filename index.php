@@ -110,25 +110,13 @@ if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
 
 	<div class="modal animated fadeIn delay-2s" tabindex="-1" role="dialog" id="myModal">
 		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content" id='modal_form' style='max-height:580px;overflow: auto;'>
+			<div class="modal-content" id='modal_form' >
 
 			</div>
 		</div>
 	</div>
 
 
-
-	<div id="myModal" class="modal">
-
-		<!-- The Close Button -->
-		<span class="close">&times;</span>
-
-		<!-- Modal Content (The Image) -->
-		<img class="modal-content" id="img01">
-
-		<!-- Modal Caption (Image Text) -->
-		<div id="caption"></div>
-	</div>
 
 </body>
 <!--   Core JS Files   -->

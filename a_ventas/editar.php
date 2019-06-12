@@ -102,6 +102,7 @@ else{
 								}
                 if($id>0 and $estado=="Activa"){
                     echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i> Productos</button>";
+										echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='$id' data-lugar='a_ventas/finalizar'><i class='fas fa-cash-register'></i> Finalizar</button>";
                 }
 								if($estado=="Pagada"){
 									echo "<button type='button' class='btn btn-outline-secondary btn-sm' onclick='imprime($id)'><i class='fas fa-print'></i>Imprimir</button>";

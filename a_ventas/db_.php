@@ -84,7 +84,7 @@ class Venta extends Sagyc{
 		return $this->descuento;
 		$this->dbh=null;
 	}
-	function guardar_venta(){
+	public function guardar_venta(){
 		$x="";
 		parent::set_names();
 		$arreglo =array();
@@ -119,7 +119,7 @@ class Venta extends Sagyc{
 		}
 		return $x;
 	}
-	function busca_producto(){
+	public function busca_producto(){
 		try{
 			$x="";
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
@@ -253,8 +253,7 @@ class Venta extends Sagyc{
 		}
 		return $texto;
 	}
-
-	function agregaventa(){
+	public function agregaventa(){
 		parent::set_names();
 		$x="";
 		$idventa=$_REQUEST['idventa'];
@@ -297,7 +296,7 @@ class Venta extends Sagyc{
 		}
 		return $x;
 	}
-	function agregaespecial(){
+	public function agregaespecial(){
 		parent::set_names();
 		$x="";
 		$idventa=$_REQUEST['idventa'];
@@ -328,7 +327,7 @@ class Venta extends Sagyc{
 		}
 		return $x;
 	}
-	function borrar_venta(){
+	public function borrar_venta(){
 		self::set_names();
 		$arreglo =array();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
@@ -353,10 +352,17 @@ class Venta extends Sagyc{
 			return $this->update('et_bodega',array('id'=>$id), $arreglo);
 		}
 	}
-	function imprimir(){
+	public function imprimir(){
+		self::set_names();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
 		$arreglo =array();
 		$arreglo+=array('imprimir'=>1);
+		return $this->update('et_venta',array('idventa'=>$id), $arreglo);
+	}
+	public function finalizar_venta(){
+		self::set_names();
+		if (isset($_POST['id'])){$id=$_POST['id'];}
+		$arreglo =array();
 		$arreglo+=array('estado'=>"Pagada");
 		return $this->update('et_venta',array('idventa'=>$id), $arreglo);
 	}

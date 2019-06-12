@@ -63,6 +63,8 @@
 	}
 
 
+
+
 	$sql="select et_descuento.cantidad from et_descuento left outer join et_venta on et_venta.iddescuento=et_descuento.iddescuento where idventa='$id'";
 	$desc = $db->general($sql);
 

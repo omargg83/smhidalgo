@@ -149,6 +149,14 @@ function imprime(id){
 			if (isNaN(response)){
 				alert(response);
 			}
+			else {
+				Swal.fire({
+					type: 'success',
+					title: "Se mandó imprimir correctamente",
+					showConfirmButton: false,
+					timer: 1000
+				});
+			}
 		}
 	});
 }
