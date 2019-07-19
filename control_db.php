@@ -13,7 +13,7 @@
 		public function __construct(){
 			date_default_timezone_set("America/Mexico_City");
 			$this->Salud = array();
-			$this->dbh = new PDO('mysql:host=smhidalgo.com;dbname=sagycrmr_smhidalgo', "sagyccom_esponda", "esponda123$");
+			$this->dbh = new PDO('mysql:host=sagyc.com.mx;dbname=sagycrmr_smhidalgo', "sagyccom_esponda", "esponda123$");
 			//$this->dbh = new PDO("mysql:host=".$_SESSION['servidor'].";dbname=".$_SESSION['bdd']."", $_SESSION['mysqluser'], $_SESSION['mysqlpass']);
 
 		}
