@@ -100,6 +100,8 @@
 				 $x.="</nav>";
 
 				$y="";
+				$y.="<div class='fijaproceso main' id='contenido'>";
+				$y.="</div>";
 				$arreglo=array('sess'=>"abierta", 'fondo'=>$valor, 'header'=>$x, 'cuerpo'=>$y);
 				///////////////////////////fin sesion abierta
 			}
