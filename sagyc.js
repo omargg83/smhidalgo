@@ -3,6 +3,43 @@
 	var chatx="";
 	var cuenta="";
 
+	$(function(){
+		$("#cargando").removeClass("is-active");
+		acceso();
+	});
+	function acceso(){
+		$.ajax({
+			data:  {
+				"ctrl":"control",
+				"function":"login"
+			},
+			url:   'control_db.php',
+			type:  'post',
+			success:  function (response) {
+				var datos = JSON.parse(response);
+				if (datos.sess=="cerrada"){
+					$("#header").html("");
+					$("#bodyx").html("");
+
+					$("#modallog_form").html(datos.carga);
+					$('#modal_login').modal({backdrop: 'static', keyboard: false})
+					$('#modal_login').modal('show');
+				}
+				if (datos.sess=="abierta"){
+					$("#cargando").addClass("is-active");
+					$("body").css("background-image","url('"+datos.fondo+"')");
+					$("#header").html(datos.header);
+					$("#bodyx").html(datos.cuerpo);
+					setTimeout(fondos, 2000);
+					setTimeout(chat_inicia, 3000);
+
+					loadContent(location.hash.slice(1));
+					$("#cargando").removeClass("is-active");
+				}
+			}
+		});
+	}
+
 	$(window).on('hashchange',function(){
 		loadContent(location.hash.slice(1));
 	});
@@ -48,22 +85,6 @@
 		}
 	});
 
-	$(function(){
-		$.ajax({
-			data:  {
-				"ctrl":"control",
-				"function":"leerfondo"
-			},
-			url: "control_db.php",
-			type: "post",
-			success:  function (response) {
-				$("body").css("background-image","url('"+response+"')");
-			}
-		});
-		$("#cargando").removeClass("is-active");
-		setTimeout(fondos, 5000);
-	});
-
 	function fondos(){
 		$.ajax({
 			data:  {
@@ -77,7 +98,6 @@
 			}
 		});
 	}
-
 	function lista(id) {
 		$('#'+id).DataTable({
 			"pageLength": 100,
@@ -120,6 +140,64 @@
 		$.datepicker.setDefaults($.datepicker.regional['es']);
 		$(".fechaclass").datepicker();
 	};
+	function salir(){
+		$.ajax({
+			data:  {
+				"ctrl":"control",
+				"function":"salir"
+			},
+			url:   'control_db.php',
+			type:  'post',
+			success:  function (response) {
+				acceso();
+			}
+		});
+	}
+
+	$(document).on('submit','#acceso',function(e){
+		e.preventDefault();
+		var tipo=1;
+		var userAcceso=document.getElementById("userAcceso").value;
+		var passAcceso=$.md5(document.getElementById("passAcceso").value);
+
+		var parametros={
+			"ctrl":"control",
+			"tipo":tipo,
+			"function":"acceso",
+			"userAcceso":userAcceso,
+			"passAcceso":passAcceso
+		};
+
+		var btn=$(this).find(':submit');
+		$(btn).attr('disabled', 'disabled');
+		var tmp=$(btn).children("i").attr('class');
+		$(btn).children("i").removeClass();
+		$(btn).children("i").addClass("fas fa-spinner fa-pulse");
+
+		$.ajax({
+			url: "control_db.php",
+			type: "POST",
+			data: parametros
+		}).done(function(echo){
+			if (echo==1){
+				acceso();
+				$('#modal_login').modal('hide');
+			}
+			else{
+				Swal.fire({
+						type: 'error',
+						title: echo,
+						showConfirmButton: false,
+						timer: 1000
+				})
+			}
+			$(btn).children("i").removeClass();
+			$(btn).children("i").addClass(tmp);
+			$(btn).prop('disabled', false);
+		});
+	});
+
+
 
 	//////////////////////subir archivos
 	$(document).on("click","[id^='fileup_']",function(e){
@@ -434,8 +512,6 @@
 		});
 	});
 
-
-
 	$(document).on('submit',"[id^='consulta_']",function(e){
 		e.preventDefault();
 		var dataString = $(this).serialize();
@@ -643,47 +719,6 @@
 	});
 
 
-	$(document).on('submit','#acceso',function(e){
-		e.preventDefault();
-		var tipo=1;
-		var userAcceso=document.getElementById("userAcceso").value;
-		var passAcceso=$.md5(document.getElementById("passAcceso").value);
-
-		var parametros={
-			"ctrl":"control",
-			"tipo":tipo,
-			"function":"acceso",
-			"userAcceso":userAcceso,
-			"passAcceso":passAcceso
-		};
-
-		var btn=$(this).find(':submit');
-		$(btn).attr('disabled', 'disabled');
-		var tmp=$(btn).children("i").attr('class');
-		$(btn).children("i").removeClass();
-		$(btn).children("i").addClass("fas fa-spinner fa-pulse");
-
-		$.ajax({
-			url: "control_db.php",
-			type: "POST",
-			data: parametros
-		}).done(function(echo){
-			if (echo==1){
-				window.location.replace("");
-			}
-			else{
-				Swal.fire({
-					  type: 'error',
-					  title: echo,
-					  showConfirmButton: false,
-					  timer: 1000
-				})
-			}
-			$(btn).children("i").removeClass();
-			$(btn).children("i").addClass(tmp);
-			$(btn).prop('disabled', false);
-		});
-	});
 	$(document).on("click",'#recuperar',function(e){
 		e.preventDefault();
 		$.ajax({

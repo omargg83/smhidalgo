@@ -1,10 +1,7 @@
 		var chatx="";
 		var newx="";
 
-		$(document).ready(function(){
-			setTimeout(inicia, 5000);
-		});
-		function inicia(){
+		function chat_inicia(){
 			if(chatx==""){
 				chatx=window.setInterval("conectados()",60000);
 			}
