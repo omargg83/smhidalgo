@@ -197,8 +197,6 @@
 		});
 	});
 
-
-
 	//////////////////////subir archivos
 	$(document).on("click","[id^='fileup_']",function(e){
 		e.preventDefault();
@@ -216,7 +214,6 @@
 		if ( $(this).data('proceso') ) {
 			proceso=$(this).data('proceso');
 		}
-
 		$("#modal_form").load("archivo.php?id="+id+"&ruta="+ruta+"&ext="+ext+"&tipo="+tipo+"&tabla="+tabla+"&campo="+campo+"&keyt="+keyt+"&destino="+destino+"&iddest="+iddest+"&proceso="+proceso);
 	});
 	$(document).on('change',"#prefile",function(e){
@@ -360,18 +357,17 @@
 			contenido="#"+$(this).data('div');
 		}
 
-		if(padre=="edit" || padre=="new" || padre=="lista"){
-			lugar = $("#"+id).data('lugar')+".php";
-			if(padre=="edit"){
-				lugar=$(this).attr("data-lugar")+".php";
-				if ( $(this).closest(".edit-t").attr("id")){
-					xyId = $(this).closest(".edit-t").attr("id");
-				}
-				else{
-					xyId = $("#"+id).data('id');
-				}
+		lugar = $("#"+id).data('lugar')+".php";
+		if(padre=="edit"){
+			lugar=$(this).attr("data-lugar")+".php";
+			if ( $(this).closest(".edit-t").attr("id")){
+				xyId = $(this).closest(".edit-t").attr("id");
+			}
+			else{
+				xyId = $("#"+id).data('id');
 			}
 		}
+
 		$.ajax({
 			data:  {"padre":padre,"opcion":opcion,"id":xyId,"nombre":id,"funcion":funcion,"valor":valor},
 			url:   lugar,
