@@ -49,15 +49,13 @@
 	});
 
 	$(function(){
-		var parametros={
-			"function":"leerfondo"
-		};
 		$.ajax({
-			data:  parametros,
-			url: "acceso_db.php",
-			type: "post",
-			beforeSend: function () {
+			data:  {
+				"ctrl":"control",
+				"function":"leerfondo"
 			},
+			url: "control_db.php",
+			type: "post",
 			success:  function (response) {
 				$("body").css("background-image","url('"+response+"')");
 			}
@@ -67,15 +65,13 @@
 	});
 
 	function fondos(){
-		var parametros={
-			"function":"fondo_carga"
-		};
 		$.ajax({
-			data:  parametros,
-			url: "acceso_db.php",
-			type: "post",
-			beforeSend: function () {
+			data:  {
+				"ctrl":"control",
+				"function":"fondo_carga"
 			},
+			url: "control_db.php",
+			type: "post",
 			success:  function (response) {
 				$("#fondo").html(response);
 			}
@@ -160,7 +156,7 @@
 		var tam=(fileSelect.files[0].size/1024)/1024;
 		if (tam<10){
 			var xhr = new XMLHttpRequest();
-			xhr.open('POST','acceso_db.php?function=subir_file');
+			xhr.open('POST','control_db.php?function=subir_file&ctrl=control');
 			xhr.onload = function() {
 
 			};
@@ -201,10 +197,10 @@
 		var funcion="guardar_file";
 		var destino = $("#destino").val();
 		var iddest = $("#iddest").val();
-		var proceso="acceso_db.php";
+		var proceso="control_db.php";
 
 		if ( $("#direccion").length ) {
-			var dataString = $(this).serialize()+"&function="+funcion;
+			var dataString = $(this).serialize()+"&function="+funcion+"&ctrl=control";
 			$.ajax({
 				data:  dataString,
 				url: proceso,
@@ -244,17 +240,14 @@
 		e.preventDefault();
 		var imagen=$("img", this).attr("src");
 
-		var lugar='acceso_db.php';
 		$.ajax({
 			data:  {
+				"ctrl":"control",
 				"imagen":imagen,
 				"function":"fondo"
 			},
-			url:   lugar,
+			url:   'control_db.php',
 			type:  'post',
-			beforeSend: function () {
-
-			},
 			success:  function (response) {
 				$("body").css("background-image","url('"+imagen+"')");
 			}
@@ -537,16 +530,18 @@
 			}
 		});
 	});
+
 	$(document).on("change","#yearx_val",function(e){
 		e.preventDefault();
 		var id=$(this).val();
 		$.ajax({
 			data:  {
-			"id":id,"function":"anioc"},
-			url:   "acceso_db.php",
-			type:  'post',
-			beforeSend: function () {
+				"ctrl":"control",
+				"id":id,
+				"function":"anioc"
 			},
+			url:   "control_db.php",
+			type:  'post',
 			success:  function (response) {
 				$("#contenido").load('escritorio/dashboard.php');
 				Swal.fire({
@@ -574,8 +569,8 @@
 			borrafile=$(this).data('borrafile');
 		}
 
-
 		var parametros={
+			"ctrl":"control",
 			"ruta":ruta,
 			"keyt":keyt,
 			"key":key,
@@ -585,14 +580,13 @@
 			"borrafile":borrafile,
 			"function":"eliminar_file"
 		};
-
 		$.confirm({
 			title: 'Eliminar',
 			content: '¿Desea eliminar el archivo?',
 			buttons: {
 				Aceptar: function () {
 					$.ajax({
-						url: "acceso_db.php",
+						url: "control_db.php",
 						type: "POST",
 						data: parametros
 					}).done(function(echo){
@@ -656,6 +650,7 @@
 		var passAcceso=$.md5(document.getElementById("passAcceso").value);
 
 		var parametros={
+			"ctrl":"control",
 			"tipo":tipo,
 			"function":"acceso",
 			"userAcceso":userAcceso,
@@ -669,7 +664,7 @@
 		$(btn).children("i").addClass("fas fa-spinner fa-pulse");
 
 		$.ajax({
-			url: "acceso_db.php",
+			url: "control_db.php",
 			type: "POST",
 			data: parametros
 		}).done(function(echo){
@@ -715,12 +710,13 @@
 
 				var tipo=2;
 				var parametros={
+					"ctrl":"control",
 					"function":"recuperar",
 					"tipo":tipo,
 					"telefono":telefono
 				};
 				$.ajax({
-					url: "acceso_db.php",
+					url: "control_db.php",
 					type: "post",
 					data: parametros,
 					beforeSend: function(objeto){
