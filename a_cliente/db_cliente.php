@@ -1,46 +1,47 @@
 <?php
 require_once("../control_db.php");
 if (isset($_REQUEST['function'])){$function=$_REQUEST['function'];}	else{ $function="";}
-	
+
 class Cliente extends Sagyc{
-	
 	public $nivel_personal;
 	public $nivel_captura;
-	
 	public function __construct(){
 		parent::__construct();
 		$this->doc="a_clientes/papeles/";
 
 		if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
-			
+
 		}
 		else{
 			include "../error.php";
 			die();
 		}
 	}
-
 	public function clientes_lista(){
-		self::set_names();
-		$sql="SELECT * FROM et_cliente";
-		 foreach ($this->dbh->query($sql) as $res){
-            $this->clientes[]=$res;
-        }
-        return $this->clientes;
-        $this->dbh=null;
+		try{
+			self::set_names();
+			$sql="SELECT * FROM et_cliente";
+			$sth = $this->dbh->prepare($sql);
+			$sth->execute();
+			return $sth->fetchAll();
+		}
+		catch(PDOException $e){
+			return "Database access FAILED!".$e->getMessage();
+		}
 	}
-
 	public function cliente($id){
-		self::set_names();
-		$this->clientes="";
-		$sql="select * from et_cliente where idcliente='$id'";
-		 foreach ($this->dbh->query($sql) as $res){
-            $this->clientes=$res;
-        }
-        return $this->clientes;
-        $this->dbh=null;
+		try{
+		  self::set_names();
+		  $sql="select * from et_cliente where idcliente=:id";
+		  $sth = $this->dbh->prepare($sql);
+		  $sth->bindValue(":id",$id);
+		  $sth->execute();
+		  return $sth->fetch();
+		}
+		catch(PDOException $e){
+		  return "Database access FAILED!".$e->getMessage();
+		}
 	}
-
 	public function guardar_cliente(){
 		$x="";
 		parent::set_names();
@@ -116,7 +117,7 @@ class Cliente extends Sagyc{
 			$arreglo+=array('plazo_prove'=>$_REQUEST['plazo']);
 		}
 		if($id==0){
-			
+
 			$date=date("Y-m-d H:i:s");
 			$arreglo+=array('fecha_alta_prove'=>$_REQUEST['plazo']);
 			$arreglo+=array('fecha_mod_prove'=>$_REQUEST['plazo']);
@@ -133,5 +134,3 @@ if(strlen($function)>0){
 	$db = new Cliente();
 	echo $db->$function();
 }
-
-

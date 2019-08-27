@@ -1,14 +1,9 @@
 <?php
-session_start();
-if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
-
-} else {
-	include('acceso/login.php');
-	die();
-};
+	session_start();
+	include "_ses.php";
+	require_once("control_db.php");
+	$bdd = new Sagyc();
 ?>
-
-
 <!doctype html>
 <html lang="es">
 <head>
@@ -18,105 +13,52 @@ if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>SMHidalgo</title>
 </head>
-<body>
+<?php
+	if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
+		$valor=$_SESSION['idfondo'];
+	}
+	else{
+		$arreglo=array();
+		$directory="fondo/";
+		$dirint = dir($directory);
+		$contar=0;
+		while (($archivo = $dirint->read()) !== false){
+			if ($archivo != "." && $archivo != ".." && $archivo != "" && substr($archivo,-4)==".jpg"){
+				$arreglo[$contar]=$directory.$archivo;
+				$contar++;
+			}
+		}
+		$valor=$arreglo[rand(1,$contar-1)];
+		$_SESSION['idfondo']=$valor;
+	}
+	echo "<body style='background-image: url(\"$valor\")'>";
+?>
 
-	<nav class="navbar navbar-expand-md navbar-dark bg-dark nav-principal">
-		<img src='img/sagyc.png' width='40' height='30' alt=''>
-		<a class="navbar-brand" href="#">SMHIDALGO</a>
+<header class="d-block p-2" id='header'>
+</header>
 
-		<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample06" aria-controls="navbarsExample06" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
+<div class="page-wrapper d-block p-2" id='bodyx'>
+</div>
 
-		<div class="navbar-collapse collapse" id="navbarsExample06" style="">
-			<ul class="navbar-nav mr-auto">
-
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class='fas fa-shopping-cart'></i>
-						Ventas
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="#a_ventas/index" ><i class='fas fa-shopping-cart'></i> Ventas</a>
-						<?php
-						/*
-						<a class="dropdown-item" href="#" id='menu_lineas'><i class="fas fa-clipboard-check"></i> S. de lineas</a>
-						<a class="dropdown-item" href="#" id='menu_reparaciones'><i class="fas fa-wrench"></i> Reparaciones</a>
-						<a class="dropdown-item" href="../app/publish.htm" target='_blank'><i class="fas fa-download"></i> Escritorio</a>
-						*/
-						?>
-					</div>
-				</li>
-				<?php
-				echo "<li class='nav-item dropdown'>";
-				echo "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-				echo "<i class='fas fa-boxes'></i> Productos";
-				echo "</a>";
-				echo "<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
-				echo "<a class='dropdown-item' href='#a_inventario/index'  ><i class='fas fa-boxes'></i> Inventario</a>";
-				if($_SESSION['nivel']==1){
-					echo "<br>";
-
-					echo "<a class='dropdown-item' href='#a_compras/index' ><i class='fas fa-money-check-alt'></i> Lista de compras</a>";
-					echo "<a class='dropdown-item' href='#a_entrada/index' ><i class='fas fa-chalkboard-teacher'></i> Entrada</a>";
-				}
-
-				echo "</div>";
-				echo "</li>";
-				if($_SESSION['nivel']==1){
-					echo "<li class='nav-item dropdown'>";
-					echo "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-					echo "<i class='fas fa-clipboard-list'></i> Catalogos";
-					echo "</a>";
-					echo "<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
-					echo "<a class='dropdown-item' href='#a_productos/index' ><i class='fas fa-mobile-alt'></i> Productos</a>";
-					echo "<br>";
-					echo "<a class='dropdown-item' href='#a_usuarios/index' ><i class='fas fa-user-astronaut'></i> Usuarios</a>";
-					echo "<a class='dropdown-item' href='#' id='menu_acceso' ><i class='fas fa-user-clock'></i> Acceso</a>";
-					echo "<a class='dropdown-item' href='#a_tienda/index'><i class='fas fa-shopping-basket'></i> Tiendas</a>";
-					echo "<a class='dropdown-item' href='#a_cliente/index'><i class='fas fa-people-carry'></i> Clientes</a>";
-					echo "<a class='dropdown-item' href='#a_proveedores/index' ><i class='fas fa-user-plus'></i> Proveedores</a>";
-					echo "<hr>";
-					echo "<a class='dropdown-item' href='#a_marca/index' ><i class='fas fa-mobile-alt'></i> Marcas</a>";
-					echo "<a class='dropdown-item' href='#a_modelo/index' ><i class='fab fa-android'></i> Modelos</a>";
-
-					echo "</div>";
-					echo "</li>";
-				}
-				echo "</ul>";
-				?>
-
-				<ul class="nav navbar-nav navbar-right" id="chatx"></ul>
-				<ul class="nav navbar-nav navbar-right" id="fondo"></ul>
-				<ul class='nav navbar-nav navbar-right'>
-
-					<li class="nav-item">
-						<a class="nav-link pull-left" href="acceso/salir.php">
-							<i class='fas fa-sign-out-alt'></i> Salir
-						</a>
-					</li>
-				</ul>
-
-			</div>
-		</div>
-	</nav>
-
-	<div class="fijaproceso main animated slideInDown delay-2s" id='contenido'>
+<div class="modal animated fadeInDown" tabindex="-1" role="dialog" id="myModal">
+	<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content" id='modal_form' style='max-height:580px;overflow: auto;'>
 
 	</div>
-
-	<div class="loader loader-default is-active" id='cargando' data-text="Cargando">
 	</div>
+</div>
 
-
-	<div class="modal animated fadeIn delay-2s" tabindex="-1" role="dialog" id="myModal">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content" id='modal_form' >
-
+<div class='modal animated fadeInDown ' tabindex='-1' role='dialog' id='modal_login'>
+	<div class='modal-dialog' role='document'>
+		<div class='modal-content'>
+			<div class='modal-body' id='modallog_form'>
 			</div>
 		</div>
 	</div>
+</div>
 
-
+<div class="loader loader-default is-active" id='cargando' data-text="Cargando">
+</div>
 
 </body>
 <!--   Core JS Files   -->
@@ -170,5 +112,5 @@ if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
 <script src="sagyc.js"></script>
 <link rel="stylesheet" type="text/css" href="librerias15/modulos.css"/>
 
-
+<script src="librerias15/jQuery-MD5-master/jquery.md5.js"></script>
 </html>

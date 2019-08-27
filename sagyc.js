@@ -3,6 +3,43 @@
 	var chatx="";
 	var cuenta="";
 
+	$(function(){
+		$("#cargando").removeClass("is-active");
+		acceso();
+	});
+	function acceso(){
+		$.ajax({
+			data:  {
+				"ctrl":"control",
+				"function":"login"
+			},
+			url:   'control_db.php',
+			type:  'post',
+			success:  function (response) {
+				var datos = JSON.parse(response);
+				if (datos.sess=="cerrada"){
+					$("#header").html("");
+					$("#bodyx").html("");
+
+					$("#modallog_form").html(datos.carga);
+					$('#modal_login').modal({backdrop: 'static', keyboard: false})
+					$('#modal_login').modal('show');
+				}
+				if (datos.sess=="abierta"){
+					$("#cargando").addClass("is-active");
+					$("body").css("background-image","url('"+datos.fondo+"')");
+					$("#header").html(datos.header);
+					$("#bodyx").html(datos.cuerpo);
+					setTimeout(fondos, 2000);
+					setTimeout(chat_inicia, 3000);
+
+					loadContent(location.hash.slice(1));
+					$("#cargando").removeClass("is-active");
+				}
+			}
+		});
+	}
+
 	$(window).on('hashchange',function(){
 		loadContent(location.hash.slice(1));
 	});
@@ -48,40 +85,19 @@
 		}
 	});
 
-	$(function(){
-		var parametros={
-			"function":"leerfondo"
-		};
-		$.ajax({
-			data:  parametros,
-			url: "acceso_db.php",
-			type: "post",
-			beforeSend: function () {
-			},
-			success:  function (response) {
-				$("body").css("background-image","url('"+response+"')");
-			}
-		});
-		$("#cargando").removeClass("is-active");
-		setTimeout(fondos, 5000);
-	});
-
 	function fondos(){
-		var parametros={
-			"function":"fondo_carga"
-		};
 		$.ajax({
-			data:  parametros,
-			url: "acceso_db.php",
-			type: "post",
-			beforeSend: function () {
+			data:  {
+				"ctrl":"control",
+				"function":"fondo_carga"
 			},
+			url: "control_db.php",
+			type: "post",
 			success:  function (response) {
 				$("#fondo").html(response);
 			}
 		});
 	}
-
 	function lista(id) {
 		$('#'+id).DataTable({
 			"pageLength": 100,
@@ -124,6 +140,62 @@
 		$.datepicker.setDefaults($.datepicker.regional['es']);
 		$(".fechaclass").datepicker();
 	};
+	function salir(){
+		$.ajax({
+			data:  {
+				"ctrl":"control",
+				"function":"salir"
+			},
+			url:   'control_db.php',
+			type:  'post',
+			success:  function (response) {
+				acceso();
+			}
+		});
+	}
+
+	$(document).on('submit','#acceso',function(e){
+		e.preventDefault();
+		var tipo=1;
+		var userAcceso=document.getElementById("userAcceso").value;
+		var passAcceso=$.md5(document.getElementById("passAcceso").value);
+
+		var parametros={
+			"ctrl":"control",
+			"tipo":tipo,
+			"function":"acceso",
+			"userAcceso":userAcceso,
+			"passAcceso":passAcceso
+		};
+
+		var btn=$(this).find(':submit');
+		$(btn).attr('disabled', 'disabled');
+		var tmp=$(btn).children("i").attr('class');
+		$(btn).children("i").removeClass();
+		$(btn).children("i").addClass("fas fa-spinner fa-pulse");
+
+		$.ajax({
+			url: "control_db.php",
+			type: "POST",
+			data: parametros
+		}).done(function(echo){
+			if (echo==1){
+				acceso();
+				$('#modal_login').modal('hide');
+			}
+			else{
+				Swal.fire({
+						type: 'error',
+						title: echo,
+						showConfirmButton: false,
+						timer: 1000
+				})
+			}
+			$(btn).children("i").removeClass();
+			$(btn).children("i").addClass(tmp);
+			$(btn).prop('disabled', false);
+		});
+	});
 
 	//////////////////////subir archivos
 	$(document).on("click","[id^='fileup_']",function(e){
@@ -142,7 +214,6 @@
 		if ( $(this).data('proceso') ) {
 			proceso=$(this).data('proceso');
 		}
-
 		$("#modal_form").load("archivo.php?id="+id+"&ruta="+ruta+"&ext="+ext+"&tipo="+tipo+"&tabla="+tabla+"&campo="+campo+"&keyt="+keyt+"&destino="+destino+"&iddest="+iddest+"&proceso="+proceso);
 	});
 	$(document).on('change',"#prefile",function(e){
@@ -160,7 +231,7 @@
 		var tam=(fileSelect.files[0].size/1024)/1024;
 		if (tam<10){
 			var xhr = new XMLHttpRequest();
-			xhr.open('POST','acceso_db.php?function=subir_file');
+			xhr.open('POST','control_db.php?function=subir_file&ctrl=control');
 			xhr.onload = function() {
 
 			};
@@ -201,10 +272,10 @@
 		var funcion="guardar_file";
 		var destino = $("#destino").val();
 		var iddest = $("#iddest").val();
-		var proceso="acceso_db.php";
+		var proceso="control_db.php";
 
 		if ( $("#direccion").length ) {
-			var dataString = $(this).serialize()+"&function="+funcion;
+			var dataString = $(this).serialize()+"&function="+funcion+"&ctrl=control";
 			$.ajax({
 				data:  dataString,
 				url: proceso,
@@ -244,17 +315,14 @@
 		e.preventDefault();
 		var imagen=$("img", this).attr("src");
 
-		var lugar='acceso_db.php';
 		$.ajax({
 			data:  {
+				"ctrl":"control",
 				"imagen":imagen,
 				"function":"fondo"
 			},
-			url:   lugar,
+			url:   'control_db.php',
 			type:  'post',
-			beforeSend: function () {
-
-			},
 			success:  function (response) {
 				$("body").css("background-image","url('"+imagen+"')");
 			}
@@ -289,18 +357,17 @@
 			contenido="#"+$(this).data('div');
 		}
 
-		if(padre=="edit" || padre=="new" || padre=="lista"){
-			lugar = $("#"+id).data('lugar')+".php";
-			if(padre=="edit"){
-				lugar=$(this).attr("data-lugar")+".php";
-				if ( $(this).closest(".edit-t").attr("id")){
-					xyId = $(this).closest(".edit-t").attr("id");
-				}
-				else{
-					xyId = $("#"+id).data('id');
-				}
+		lugar = $("#"+id).data('lugar')+".php";
+		if(padre=="edit"){
+			lugar=$(this).attr("data-lugar")+".php";
+			if ( $(this).closest(".edit-t").attr("id")){
+				xyId = $(this).closest(".edit-t").attr("id");
+			}
+			else{
+				xyId = $("#"+id).data('id');
 			}
 		}
+
 		$.ajax({
 			data:  {"padre":padre,"opcion":opcion,"id":xyId,"nombre":id,"funcion":funcion,"valor":valor},
 			url:   lugar,
@@ -441,8 +508,6 @@
 		});
 	});
 
-
-
 	$(document).on('submit',"[id^='consulta_']",function(e){
 		e.preventDefault();
 		var dataString = $(this).serialize();
@@ -537,16 +602,18 @@
 			}
 		});
 	});
+
 	$(document).on("change","#yearx_val",function(e){
 		e.preventDefault();
 		var id=$(this).val();
 		$.ajax({
 			data:  {
-			"id":id,"function":"anioc"},
-			url:   "acceso_db.php",
-			type:  'post',
-			beforeSend: function () {
+				"ctrl":"control",
+				"id":id,
+				"function":"anioc"
 			},
+			url:   "control_db.php",
+			type:  'post',
 			success:  function (response) {
 				$("#contenido").load('escritorio/dashboard.php');
 				Swal.fire({
@@ -574,8 +641,8 @@
 			borrafile=$(this).data('borrafile');
 		}
 
-
 		var parametros={
+			"ctrl":"control",
 			"ruta":ruta,
 			"keyt":keyt,
 			"key":key,
@@ -585,14 +652,13 @@
 			"borrafile":borrafile,
 			"function":"eliminar_file"
 		};
-
 		$.confirm({
 			title: 'Eliminar',
 			content: '¿Desea eliminar el archivo?',
 			buttons: {
 				Aceptar: function () {
 					$.ajax({
-						url: "acceso_db.php",
+						url: "control_db.php",
 						type: "POST",
 						data: parametros
 					}).done(function(echo){
@@ -649,46 +715,6 @@
 	});
 
 
-	$(document).on('submit','#acceso',function(e){
-		e.preventDefault();
-		var tipo=1;
-		var userAcceso=document.getElementById("userAcceso").value;
-		var passAcceso=$.md5(document.getElementById("passAcceso").value);
-
-		var parametros={
-			"tipo":tipo,
-			"function":"acceso",
-			"userAcceso":userAcceso,
-			"passAcceso":passAcceso
-		};
-
-		var btn=$(this).find(':submit');
-		$(btn).attr('disabled', 'disabled');
-		var tmp=$(btn).children("i").attr('class');
-		$(btn).children("i").removeClass();
-		$(btn).children("i").addClass("fas fa-spinner fa-pulse");
-
-		$.ajax({
-			url: "acceso_db.php",
-			type: "POST",
-			data: parametros
-		}).done(function(echo){
-			if (echo==1){
-				window.location.replace("");
-			}
-			else{
-				Swal.fire({
-					  type: 'error',
-					  title: echo,
-					  showConfirmButton: false,
-					  timer: 1000
-				})
-			}
-			$(btn).children("i").removeClass();
-			$(btn).children("i").addClass(tmp);
-			$(btn).prop('disabled', false);
-		});
-	});
 	$(document).on("click",'#recuperar',function(e){
 		e.preventDefault();
 		$.ajax({
@@ -715,12 +741,13 @@
 
 				var tipo=2;
 				var parametros={
+					"ctrl":"control",
 					"function":"recuperar",
 					"tipo":tipo,
 					"telefono":telefono
 				};
 				$.ajax({
-					url: "acceso_db.php",
+					url: "control_db.php",
 					type: "post",
 					data: parametros,
 					beforeSend: function(objeto){
