@@ -1,6 +1,4 @@
 <?php
-	session_start();
-	include "_ses.php";
 	require_once("control_db.php");
 	$bdd = new Sagyc();
 ?>

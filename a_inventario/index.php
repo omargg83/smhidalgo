@@ -190,4 +190,7 @@ $(document).on('click','#recibir',function(e){
 		}
 	});
 });
+function barras(id){
+	alert(id);
+}
 </script>
