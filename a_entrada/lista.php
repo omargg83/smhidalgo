@@ -8,12 +8,12 @@
 	<table class="table table-hover table-striped" id="x_lista">
 		<thead>
 		<tr>
+		<th>-</th>
 		<th>Numero</th>
 		<th>Proveedor</th>
 		<th># Compra</th>
 		<th>Estado</th>
 		<th>Total</th>
-		<th></th>
 		</tr>
 		</thead>
 		<tbody>

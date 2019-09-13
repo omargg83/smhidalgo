@@ -41,20 +41,10 @@ class Entrada extends Sagyc{
 		return $this->inventario;
 		$this->dbh=null;
 	}
-	public function compras_lista(){
-		self::set_names();
-		$sql="select * from et_compra left outer join et_prove on et_prove.id_prove=et_compra.id_prove order by idcompra desc";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->comprax[]=$res;
-		}
-		return $this->comprax;
-		$this->dbh=null;
-	}
 	public function entrada_lista(){
 		self::set_names();
-		$sql="select et_entrada.identrada, et_entrada.numero, et_prove.razon_social_prove, et_compra.numero as cnumero, et_entrada.estado, et_entrada.total from et_entrada
+		$sql="select et_entrada.identrada, et_entrada.numero, et_prove.razon_social_prove,  et_entrada.estado, et_entrada.total from et_entrada
 		left outer join et_prove on et_prove.id_prove=et_entrada.id_prove
-		left outer join et_compra on et_compra.idcompra=et_entrada.idcompra
 		order by identrada desc";
 		foreach ($this->dbh->query($sql) as $res){
 			$this->ventas[]=$res;
@@ -65,10 +55,11 @@ class Entrada extends Sagyc{
 	public function entrada_pedido($id){
 		self::set_names();
 		$this->ventasp=array();
-		$sql="select et_bodega.id, et_invent.codigo, et_invent.nombre, et_invent.unidad, abs(et_bodega.cantidad) as cantidad, et_bodega.total, et_bodega.clave,
+		$sql="select  et_bodega.id, et_invent.codigo, et_invent.nombre, et_invent.unidad, sum(et_bodega.cantidad) as cantidad, et_bodega.total, et_bodega.clave,
 		et_bodega.precio, et_bodega.gtotal, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.gtotal, et_bodega.id_invent,
-		et_bodega.observaciones, et_bodega.color, et_bodega.tipo, et_bodega.pventa from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id'
-		order by et_bodega.id asc";
+		et_bodega.observaciones, et_bodega.color, et_bodega.tipo, et_bodega.pventa, et_bodega.llave from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id'
+		group by llave order by et_bodega.id asc ";
+
 		foreach ($this->dbh->query($sql) as $res){
 			$this->ventasp[]=$res;
 		}
@@ -115,7 +106,7 @@ class Entrada extends Sagyc{
 	public function borrar_producto(){
 		self::set_names();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
-		return $this->borrar('et_bodega',"id",$id);
+		return $this->borrar('et_bodega',"llave",$id);
 	}
 	public function busca_producto(){
 		try{
@@ -199,7 +190,7 @@ class Entrada extends Sagyc{
 			$x.="<div class='row'>";
 
 				$x.="<div class='col-2'>";
-					$x.="<label>Codigo</label>";
+					$x.="<label>Código</label>";
 					$x.="<input type='text' class='form-control input-sm' id='codigo' name='codigo' value='".$key["codigo"]."' readonly>";
 				$x.="</div>";
 
@@ -254,14 +245,13 @@ class Entrada extends Sagyc{
 					$x.="<label>Clave/IMEI</label>";
 					$x.="<input type='text' class='form-control input-sm' id='clave' name='clave' value='' placeholder='Clave' >";
 				$x.="</div>";
-
-
 			$x.="</div>";
 
 			$x.="<div class='row'>";
 				$x.="<div class='col-12'>
 					<div class='btn-group'>
 						<button class='btn btn-outline-secondary btn-sm' title='Agregar producto a la compra' type='submit'><i class='fas fa-plus'></i>Agregar</button>
+						<button type='button' class='btn btn-outline-secondary btn-sm' data-dismiss='modal' title='Cancelar'><i class='fas fa-sign-out-alt'></i>Cancelar</button>
 					</div>
 				</div>";
 			$x.="</div>";
@@ -276,9 +266,10 @@ class Entrada extends Sagyc{
 		if (isset($_REQUEST['id'])){
 			$arreglo+=array('id_invent'=>$_REQUEST['id']);
 		}
-		if (isset($_REQUEST['cantidad'])){
-			$arreglo+=array('cantidad'=>$_REQUEST['cantidad']);
-		}
+
+		$cantidad=$_REQUEST['cantidad'];
+		$arreglo+=array('cantidad'=>1);
+
 		if (isset($_REQUEST['precio'])){
 			$arreglo+=array('precio'=>$_REQUEST['precio']);
 		}
@@ -309,7 +300,10 @@ class Entrada extends Sagyc{
 		}
 		$arreglo+=array('idtienda'=>1);
 		$arreglo+=array('llave'=>date("YmdHis")."_".rand(0,10000));
-		$x=$this->insert('et_bodega', $arreglo);
+
+		for($i=1;$i<=$cantidad;$i++){
+			$x=$this->insert('et_bodega', $arreglo);
+		}
 		if(is_numeric($x)){
 			return $idx;
 		}

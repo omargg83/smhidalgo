@@ -8,11 +8,8 @@ echo "<nav class='navbar navbar-expand-lg navbar-light bg-light '>
 </button>
 <div class='collapse navbar-collapse' id='navbarSupportedContent'>
 <ul class='navbar-nav mr-auto'>";
-echo"<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_entrada/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
-
-
-echo"<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_entrada/editar'><i class='fas fa-plus'></i><span>Nuevo</span></a></li>";
-
+echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_entrada/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
+echo "<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_entrada/editar'><i class='fas fa-plus'></i><span>Nuevo</span></a></li>";
 echo "</ul>";
 echo "
 </div>
@@ -23,6 +20,7 @@ include 'lista.php';
 echo "</div>";
 ?>
 <script type="text/javascript">
+
 $(document).on('keypress','#prod_entra',function(e){
 	if(e.which == 13) {
 		e.preventDefault();
@@ -30,13 +28,11 @@ $(document).on('keypress','#prod_entra',function(e){
 		buscar();
 	}
 });
-
 $(document).on('click','#buscar_prodentra',function(e){
 	e.preventDefault();
 	e.stopPropagation();
 	buscar();
 });
-
 function buscar(){
 	var texto=$("#prod_entra").val();
 	if(texto.length>=-1){
@@ -56,7 +52,6 @@ function buscar(){
 		});
 	}
 }
-
 $(document).on('click','#entradasel',function(e){
 	e.preventDefault();
 	e.stopPropagation();
@@ -79,8 +74,8 @@ $(document).on('click','#entradasel',function(e){
 	});
 });
 
-$(document).on('click','#entradaend',function(e){
-	var id = $("#id").val();
+
+function entradaend(id){
 	$.confirm({
 		title: 'Cerrar entrada',
 		content: '¿Desea cerrar la entrada?<br>ya no se podrán agregar mas productos.',
@@ -102,6 +97,6 @@ $(document).on('click','#entradaend',function(e){
 			}
 		}
 	});
-});
+}
 
 </script>

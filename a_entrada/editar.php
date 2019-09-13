@@ -2,14 +2,12 @@
 require_once("db_.php");
 $id=$_REQUEST['id'];
 $proveedores = $db->proveedores_lista();
-$compras = $db->compras_lista();
 $i=0;
 if($id>0){
 	$pd = $db->entrada($id);
 	$id=$pd['identrada'];
 	$numero=$pd['numero'];
 	$id_prove=$pd['id_prove'];
-	$idcompra=$pd['idcompra'];
 	$estado=$pd['estado'];
 }
 else{
@@ -30,9 +28,9 @@ else{
 						<label>Entrada:</label>
 						<input type="text" name="id" id="id" value="<?php echo $id?>" class="form-control" readonly>
 					</div>
-					<div class="col-2">
-						<label >Folio de Factura:</label>
-						<input type="text" class="form-control" name="numero" id="numero" value="<?php echo $numero ;?>" placeholder="Número de Factura">
+					<div class="col-5">
+						<label >Folio de compra:</label>
+						<input type="text" class="form-control" name="numero" id="numero" value="<?php echo $numero ;?>" placeholder="Número de compra">
 					</div>
 					<div class="col-3">
 						<label >Proveedor:</label>
@@ -45,21 +43,6 @@ else{
 								echo " selected";
 							}
 							echo '>'.$proveedores[$i]["razon_social_prove"].'</option>';
-						}
-						echo "</select>";
-						?>
-					</div>
-					<div class="col-3">
-						<label>Numero de compra:</label>
-						<?php
-						echo "<select class='form-control' name='idcompra' id='idcompra'>";
-						echo '<option disabled>Seleccione el cliente</option>';
-						for($i=0;$i<count($compras);$i++){
-							echo '<option value="'.$compras[$i]['idcompra'].'"';
-							if($compras[$i]['idcompra']==$idcompra){
-								echo " selected";
-							}
-							echo '>'.$compras[$i]["idcompra"]."-".$compras[$i]["razon_social_prove"].'</option>';
 						}
 						echo "</select>";
 						?>
@@ -82,7 +65,7 @@ else{
 							}
 							if($id>0 and $estado=="Activa"){
 								echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_entrada/form_producto'><i class='fas fa-plus'></i> Productos</button>";
-								echo "<button class='btn btn-outline-secondary btn-sm' type='button' id='entradaend'><i class='fas fa-lock'></i>Finalizar</button>";
+								echo "<button class='btn btn-outline-secondary btn-sm' type='button' onclick='entradaend($id)'><i class='fas fa-lock'></i>Finalizar</button>";
 							}
 							?>
 							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_entrada/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>

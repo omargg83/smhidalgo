@@ -57,7 +57,7 @@
 					      if($_SESSION['nivel']==1){
 					        $x.="<br>";
 
-					        $x.="<a class='dropdown-item' href='#a_compras/index' ><i class='fas fa-money-check-alt'></i> Lista de compras</a>";
+					        //$x.="<a class='dropdown-item' href='#a_compras/index' ><i class='fas fa-money-check-alt'></i> Lista de compras</a>";
 					        $x.="<a class='dropdown-item' href='#a_entrada/index' ><i class='fas fa-chalkboard-teacher'></i> Entrada</a>";
 					      }
 
@@ -215,8 +215,8 @@
 		public function borrar($DbTableName, $key,$id){
 			try{
 				self::set_names();
-				$sql="delete from $DbTableName where $key=$id";
-				$this->dbh->query($sql);
+				$sql="delete from $DbTableName where $key='$id'";
+				$x=$this->dbh->query($sql);
 				return 1;
 			}
 			catch(PDOException $e){
