@@ -40,6 +40,7 @@ $(document).ready(function(){
 	id=document.getElementById("idtienda").value;
 	$("#trabajo").load('a_inventario/lista.php?id='+id);
 });
+
 $(document).on('change','#idtienda', function() {
 	var id =$(this).val();
 	var parametros={

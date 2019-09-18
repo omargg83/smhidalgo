@@ -24,7 +24,6 @@
 	</div>
 </div>
 
-
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Cerrar</button>
 </div>

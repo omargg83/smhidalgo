@@ -283,6 +283,9 @@ class Entrada extends Sagyc{
 		if (isset($_REQUEST['clave'])){
 			$arreglo+=array('clave'=>$_REQUEST['clave']);
 		}
+		if (isset($_REQUEST['codigo'])){
+			$arreglo+=array('codigo'=>$_REQUEST['codigo']);
+		}
 		if (isset($_REQUEST['unidad'])){
 			$arreglo+=array('unidad'=>$_REQUEST['unidad']);
 		}
