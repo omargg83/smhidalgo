@@ -126,7 +126,7 @@ class Venta extends Sagyc{
 			if (isset($_REQUEST['idtienda'])){$idtienda=$_REQUEST['idtienda'];}
 			parent::set_names();
 
-			$sql="SELECT sum(cantidad) as totalx,et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto)  group by et_bodega.llave";
+			$sql="SELECT sum(cantidad) as totalx,et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto  or codigo like :texto)  group by et_bodega.llave";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
@@ -137,6 +137,7 @@ class Venta extends Sagyc{
 			$x.="<table class='table table-sm'>";
 			$x.= "<tr>";
 			$x.= "<th>Código</th>";
+			$x.= "<th>Clave</th>";
 			$x.= "<th>Descripción</th>";
 			$x.= "<th>Unidad</th>";
 			$x.= "<th>Existencias</th>";
@@ -149,6 +150,11 @@ class Venta extends Sagyc{
 				foreach ($res as $key) {
 					if($key["totalx"]>0){
 						$x.= "<tr id=".$key['id']." class='edit-t'>";
+
+						$x.= "<td>";
+						$x.= $key["codigo"];
+						$x.= "</td>";
+
 
 						$x.= "<td>";
 						$x.= $key["clave"];
