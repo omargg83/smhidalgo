@@ -1,11 +1,11 @@
 <?php
 	require_once("db_.php");
-	$valor=$_REQUEST['valor'];
+	$idcomision=$_REQUEST['id'];
 	$tipo=$_REQUEST['tipo'];
 
 	if($tipo==1){			/////////////////comision pdf
-		$inven=$db->bodega_edit($valor);
-		$text=$inven['clave'];
+		$inven=$db->inventario($idcomision);
+		$text=$inven['codigo'];
 
 		include 'barcode.php';
 		$filepath = (isset($_GET["filepath"])?$_GET["filepath"]:"");

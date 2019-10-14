@@ -8,7 +8,8 @@
 	echo "<table class='table table-sm'>";
 	echo "<tr>
 	<th>-</th>
-	<th>Codigo</th>
+	<th>Código</th>
+	<th>Rápido</th>
 	<th>Clave/IMEI</th>
 	<th>Nombre</th>
 	<th>Color</th>
@@ -30,6 +31,7 @@
 		}
 		echo "</td>";
 		echo "<td>".$pedido[$i]['codigo']."</td>";
+		echo "<td>".$pedido[$i]['rapido']."</td>";
 		echo "<td>".$pedido[$i]['clave']."</td>";
 		echo "<td>".$pedido[$i]['nombre']."</td>";
 		echo "<td>".$pedido[$i]['color']."</td>";

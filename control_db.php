@@ -49,7 +49,7 @@
 							$x.="</li>";
 
 							$x.="<li class='nav-item dropdown'>";
-					      $x.="<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
+							  $x.="<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
 					      $x.="<i class='fas fa-boxes'></i> Productos";
 					      $x.="</a>";
 					      $x.="<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
@@ -69,8 +69,8 @@
 				        $x.="<i class='fas fa-clipboard-list'></i> Catalogos";
 				        $x.="</a>";
 				        $x.="<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
-				        $x.="<a class='dropdown-item' href='#a_productos/index' ><i class='fas fa-mobile-alt'></i> Productos</a>";
-				        $x.="<br>";
+				        //$x.="<a class='dropdown-item' href='#a_productos/index' ><i class='fas fa-mobile-alt'></i> Productos</a>";
+				        //$x.="<br>";
 				        $x.="<a class='dropdown-item' href='#a_usuarios/index' ><i class='fas fa-user-astronaut'></i> Usuarios</a>";
 				        $x.="<a class='dropdown-item' href='#' id='menu_acceso' ><i class='fas fa-user-clock'></i> Acceso</a>";
 				        $x.="<a class='dropdown-item' href='#a_tienda/index'><i class='fas fa-shopping-basket'></i> Tiendas</a>";

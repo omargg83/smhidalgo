@@ -80,16 +80,25 @@ class Inventario extends Sagyc{
 				$this->dbh=null;
 	}
 
-
-
 	public function guardar_producto(){
 		$x="";
 		parent::set_names();
 		$arreglo =array();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
-		if (isset($_REQUEST['codigo'])){
+		if (isset($_REQUEST['codigo']) and strlen($_REQUEST['codigo'])>0){
 			$arreglo+=array('codigo'=>$_REQUEST['codigo']);
 		}
+		else{
+			$arreglo+=array('codigo'=>NULL);
+		}
+
+		if (isset($_REQUEST['rapido']) and strlen($_REQUEST['rapido'])>0){
+			$arreglo+=array('rapido'=>$_REQUEST['rapido']);
+		}
+		else{
+			$arreglo+=array('rapido'=>NULL);
+		}
+
 		if (isset($_REQUEST['nombre'])){
 			$arreglo+=array('nombre'=>$_REQUEST['nombre']);
 		}

@@ -13,6 +13,7 @@
 	<th></th>
 	<th>Tipo</th>
 	<th>Código</th>
+	<th>Rápido</th>
 	<th>Nombre</th>
 	<th>Marca</th>
 	<th>Modelo</th>
@@ -29,10 +30,14 @@
 			for($i=0;$i<count($pd);$i++){
 		?>
 			<tr id="<?php echo $pd[$i]['id_invent']; ?>" class="edit-t">
+
 				<td class="edit">
 					<div class="btn-group">
-					<button class="btn btn-outline-secondary btn-sm" id='edit_inventario' data-lugar='a_inventario/form_detalle' data-valor='idtienda'><i class="fas fa-pencil-alt"></i></button>
+					<button class="btn btn-outline-secondary btn-sm" id='edit_inventario' data-lugar='a_inventario/form_detalle' data-valor='idtienda'><i class="far fa-hand-pointer"></i></button>
+					<button class="btn btn-outline-secondary btn-sm" id='edit_persona' data-lugar='a_productos/editar'><i class="fas fa-pencil-alt"></i></button>
+					<?php echo "<button class='btn btn-outline-secondary btn-sm' id='imprimir_comision' title='Imprimir' data-lugar='a_inventario/imprimir' data-tipo='1'><i class='fas fa-barcode'></i></button>";  ?>
 				</div></td>
+
 				<td><?php
 					if ($pd[$i]["unico"]==0){ echo "Almacén";}
 					if ($pd[$i]["unico"]==1){ echo "Unico";}
@@ -40,7 +45,9 @@
 					if ($pd[$i]["unico"]==3){ echo "Pago de linea";}
 					if ($pd[$i]["unico"]==4){ echo "Reparación";}
 				?></td>
+
 				<td ><?php echo $pd[$i]["codigo"]; ?></td>
+				<td ><?php echo $pd[$i]["rapido"]; ?></td>
 				<td><?php echo $pd[$i]["nombre"]; ?></td>
 				<td><?php echo $pd[$i]["marca"]; ?></td>
 				<td><?php echo $pd[$i]["modelo"]; ?></td>

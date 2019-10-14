@@ -30,7 +30,10 @@
 			</div>
 		</div>
 		<div class='card-body' id='pedido'>
+
+
 			<?php
+				echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo'  data-id='0' data-id2='$id' data-lugar='a_inventario/editar_producto' title='Editar'><i class='fas fa-plus'></i> Nuevo</button>";
 				$pd = $db->inventario_detalle($id);
 				$gtotal=0;
 
@@ -53,8 +56,9 @@
 
 					echo "<td>";
 					if($pd[$i]['cantidad']>0){
-						echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo'  data-id='".$pd[$i]['id']."' data-id2='$id' data-lugar='a_inventario/editar_producto' title='Cambiar cargo'><i class='fas fa-pencil-alt'></i></button>";
+						echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo'  data-id='".$pd[$i]['id']."' data-id2='$id' data-lugar='a_inventario/editar_producto' title='Editar'><i class='fas fa-pencil-alt'></i></button>";
 					}
+
 					echo "</td>";
 					echo "<td>".$pd[$i]['clave']."</td>";
 					echo "<td>".$pd[$i]['descripcion']."</td>";

@@ -11,6 +11,7 @@
 		$pd = $bdd->inventario($id);
 		$id=$pd['id_invent'];
 		$codigo=$pd['codigo'];
+		$rapido=$pd['rapido'];
 		$nombre=$pd['nombre'];
 		$unidad=$pd['unidad'];
 		$stockmin=$pd['stockmin'];
@@ -34,6 +35,7 @@
 		$id =0;
 		$codigo=$bdd->numero("et_invent","id_invent");
 		$codigo="9".str_pad($codigo, 6, "0", STR_PAD_LEFT);
+		$rapido="";
 		$categoria="";
 		$nombre="";
 		$unidad="";
@@ -80,10 +82,16 @@
 				</div>
 
 				<div class="form-group row">
-					<label class="control-label col-sm-2">Código de Producto:</label>
+					<label class="control-label col-sm-2">Código de barras:</label>
 					<div class="col-sm-10">
-
 						<input type="text" class="form-control" name="codigo" id="codigo" value="<?php echo $codigo ;?>" placeholder="Código de Producto">
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label class="control-label col-sm-2">Acceso rápido:</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="rapido" id="rapido" value="<?php echo $rapido ;?>" placeholder="Código de Producto">
 					</div>
 				</div>
 
@@ -205,7 +213,7 @@
 					<div class="col-sm-12">
 						<div class="btn-group">
 						<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
-						<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_productos/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
+						<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_inventario/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
 						</div>
 					</div>
 				</div>

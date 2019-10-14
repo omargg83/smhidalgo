@@ -102,8 +102,7 @@ class Inventario extends Sagyc{
 	}
 	public function inventario_lista($idtienda){
 		self::set_names();
-
-		$sql="select inven.id_invent, inven.codigo, inven.unico, inven.nombre, inven.pvgeneral, (select COALESCE(sum(cantidad),0) as total from et_bodega where et_bodega.id_invent=inven.id_invent and et_bodega.idtienda='$idtienda') as conteo, inven.preciocompra, inven.pvpromo, inven.pvdistr, et_marca.marca, et_modelo.modelo from et_invent inven
+		$sql="select inven.id_invent, inven.codigo, inven.unico, inven.nombre, inven.pvgeneral, inven.rapido,(select COALESCE(sum(cantidad),0) as total from et_bodega where et_bodega.id_invent=inven.id_invent and et_bodega.idtienda='$idtienda') as conteo, inven.preciocompra, inven.pvpromo, inven.pvdistr, et_marca.marca, et_modelo.modelo from et_invent inven
 		left outer join et_marca on et_marca.idmarca=inven.idmarca
 		left outer join et_modelo on et_modelo.idmodelo=inven.idmodelo
 		where activo=1 order by id_invent ,unico desc";
@@ -227,13 +226,13 @@ class Inventario extends Sagyc{
 		}
 		return $x;
 	}
-	function busca_producto(){
+	public function busca_producto(){
 		try{
 			$x="";
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
 			parent::set_names();
 
-			$sql="SELECT sum(cantidad) as totalx,et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto)  group by et_bodega.llave";
+			$sql="SELECT sum(cantidad) as totalx,et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto) ";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
@@ -306,7 +305,7 @@ class Inventario extends Sagyc{
 		}
 		return $texto;
 	}
-	function agregatraspaso(){
+	public function agregatraspaso(){
 		parent::set_names();
 		$x="";
 
@@ -328,7 +327,6 @@ class Inventario extends Sagyc{
 			$arreglo+=array('descripcion'=>$res['descripcion']);
 			$arreglo+=array('unico'=>$res['unico']);
 			$arreglo+=array('id_invent'=>$res['id_invent']);
-			$arreglo+=array('llave'=>$res['llave']);
 			$arreglo+=array('idtienda'=>$res['idtienda']);
 			$arreglo+=array('color'=>$res['color']);
 			$x.=$this->insert('et_bodega', $arreglo);
@@ -341,7 +339,7 @@ class Inventario extends Sagyc{
 		}
 		return $x;
 	}
-	function borrar_traspaso(){
+	public function borrar_traspaso(){
 		self::set_names();
 		$arreglo =array();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
@@ -359,7 +357,7 @@ class Inventario extends Sagyc{
 			return $this->update('et_bodega',array('id'=>$id), $arreglo);
 		}
 	}
-	function recibir(){
+	public function recibir(){
 		$x="";
 		/*
 		if (isset($_POST['id'])){$id=$_POST['id'];}
@@ -373,7 +371,7 @@ class Inventario extends Sagyc{
 		return "hola mundo";
 	}
 
-	function guardar_bodega(){
+	public function guardar_bodega(){
 		$x="";
 		self::set_names();
 		$arreglo =array();
@@ -389,10 +387,23 @@ class Inventario extends Sagyc{
 		if (isset($_REQUEST['pventa'])){
 			$arreglo+=array('pventa'=>$_REQUEST['pventa']);
 		}
-		$x.=$this->update('et_bodega',array('id'=>$id), $arreglo);
+		if (isset($_REQUEST['cantidad'])){
+			$arreglo+=array('cantidad'=>$_REQUEST['cantidad']);
+		}
+		if (isset($_REQUEST['precio'])){
+			$arreglo+=array('precio'=>$_REQUEST['precio']);
+		}
+		if($id==0){
+			$arreglo+=array('id_invent'=>$_REQUEST['idprod']);
+			$arreglo+=array('idtienda'=>1);
+			$x.=$this->insert('et_bodega', $arreglo);
+		}
+		else{
+			$x.=$this->update('et_bodega',array('id'=>$id), $arreglo);
+		}
 		return $idprod;
 	}
-	function enviarproducto(){
+	public function enviarproducto(){
 		$x="";
 		self::set_names();
 		$arreglo =array();

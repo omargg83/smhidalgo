@@ -9,6 +9,7 @@ echo "<nav class='navbar navbar-expand-lg navbar-light bg-light '>
 </button>
 <div class='collapse navbar-collapse' id='navbarSupportedContent'>
 <ul class='navbar-nav mr-auto'>";
+echo "<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_productos/editar'><i class='fas fa-plus'></i><span>Categoria</span></a></li>";
 echo "<li class='nav-item'>";
 echo "<select class='form-control' name='idtienda' id='idtienda'>";
 echo '<option disabled>Seleccione una tienda</option>';

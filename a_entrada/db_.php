@@ -57,7 +57,7 @@ class Entrada extends Sagyc{
 		$this->ventasp=array();
 		$sql="select  et_bodega.id, et_invent.codigo, et_invent.nombre, et_invent.unidad, sum(et_bodega.cantidad) as cantidad, et_bodega.total, et_bodega.clave,
 		et_bodega.precio, et_bodega.gtotal, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.gtotal, et_bodega.id_invent,
-		et_bodega.observaciones, et_bodega.color, et_bodega.tipo, et_bodega.pventa, et_bodega.llave from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id'
+		et_bodega.observaciones, et_bodega.color, et_bodega.tipo, et_bodega.pventa, et_bodega.llave, et_bodega.rapido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id'
 		group by llave order by et_bodega.id asc ";
 
 		foreach ($this->dbh->query($sql) as $res){
@@ -114,7 +114,7 @@ class Entrada extends Sagyc{
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
 			parent::set_names();
 
-			$sql="SELECT * FROM et_invent where activo=1 and (nombre like :texto OR codigo like :nombre) and (unico=0 or unico=1)";
+			$sql="SELECT * FROM et_invent where activo=1 and (nombre like :texto OR codigo like :nombre OR rapido like :nombre) and (unico=0 or unico=1)";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->bindValue(":nombre","%$texto%");
@@ -128,6 +128,7 @@ class Entrada extends Sagyc{
 				$x.= "<tr>";
 				$x.= "<th>-</th>";
 				$x.= "<th>Código</th>";
+				$x.= "<th>Rápido</th>";
 				$x.= "<th>Descripción</th>";
 				$x.= "<th>Unidad</th>";
 				$x.= "<th>Tipo</th>";
@@ -144,6 +145,10 @@ class Entrada extends Sagyc{
 
 					$x.= "<td>";
 					$x.= $key["codigo"];
+					$x.= "</td>";
+
+					$x.= "<td>";
+					$x.= $key["rapido"];
 					$x.= "</td>";
 
 					$x.= "<td>";
@@ -188,13 +193,7 @@ class Entrada extends Sagyc{
 			$x.="<input type='hidden' class='form-control input-sm' id='identrada' name='identrada' value='$identrada' readonly>";
 			$x.="<input type='hidden' class='form-control input-sm' id='unico' name='unico' value='".$key["unico"]."' readonly>";
 			$x.="<div class='row'>";
-
-				$x.="<div class='col-2'>";
-					$x.="<label>Código</label>";
-					$x.="<input type='text' class='form-control input-sm' id='codigo' name='codigo' value='".$key["codigo"]."' readonly>";
-				$x.="</div>";
-
-				$x.="<div class='col-4'>";
+				$x.="<div class='col-6'>";
 					$x.="<label>Descripción</label>";
 					$x.="<input type='text' class='form-control input-sm' id='descripcion' name='descripcion' value='".$key["nombre"]."' readonly>";
 				$x.="</div>";
@@ -226,25 +225,42 @@ class Entrada extends Sagyc{
 					$unico="readonly";
 				}
 
-				$x.="<div class='col-2'>";
+				$x.="<div class='col-4'>";
 					$x.="<label>Cantidad</label>";
 					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='cantidad' name='cantidad' value='1' $unico>";
 				$x.="</div>";
 
-				$x.="<div class='col-3'>";
+				$x.="<div class='col-4'>";
 					$x.="<label>Precio de compra</label>";
 					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='precio'  name='precio' value='".$key['preciocompra']."'>";
 				$x.="</div>";
 
-				$x.="<div class='col-3'>";
+				$x.="<div class='col-4'>";
 					$x.="<label>Precio de venta</label>";
 					$x.="<input type='text' class='form-control input-sm' style='text-align:right' id='pventa'  name='pventa' value='".$key['pvgeneral']."'>";
+				$x.="</div>";
+
+				$x.="</div>";
+
+				$x.="<div class='row'>";
+
+				$x.="<div class='col-4'>";
+					$x.="<label>Código</label>";
+					$x.="<input type='text' class='form-control input-sm' id='codigo' name='codigo' value='".$key["codigo"]."' readonly>";
+				$x.="</div>";
+
+				$x.="<div class='col-4'>";
+					$x.="<label>Rápido</label>";
+					$x.="<input type='text' class='form-control input-sm' id='rapido' name='rapido' value='".$key["rapido"]."' readonly>";
 				$x.="</div>";
 
 				$x.="<div class='col-4'>";
 					$x.="<label>Clave/IMEI</label>";
 					$x.="<input type='text' class='form-control input-sm' id='clave' name='clave' value='' placeholder='Clave' >";
 				$x.="</div>";
+
+
+
 			$x.="</div>";
 
 			$x.="<div class='row'>";
@@ -285,6 +301,9 @@ class Entrada extends Sagyc{
 		}
 		if (isset($_REQUEST['codigo'])){
 			$arreglo+=array('codigo'=>$_REQUEST['codigo']);
+		}
+		if (isset($_REQUEST['rapido'])){
+			$arreglo+=array('rapido'=>$_REQUEST['rapido']);
 		}
 		if (isset($_REQUEST['unidad'])){
 			$arreglo+=array('unidad'=>$_REQUEST['unidad']);
