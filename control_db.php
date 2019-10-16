@@ -139,7 +139,6 @@
 			$_SESSION['idpersona']="";
 		}
 
-
 		public function insert($DbTableName, $values = array()){
 			try{
 				self::set_names();
@@ -310,16 +309,13 @@
 			return $mes;
 		}
 
-		public function color($id){
+		public function color(){
 			try{
 				self::set_names();
-				$this->areax="";
-				$sql="select * from colores where idcolor='$id'";
-				foreach ($this->dbh->query($sql) as $res){
-					$this->areax=$res;
-				}
-				return $this->areax;
-				$this->dbh=null;
+				$sql="select * from color";
+				$sth = $this->dbh->prepare($sql);
+				$sth->execute();
+				return $sth->fetchAll();
 			}
 			catch(PDOException $e){
 				return "Database access FAILED!".$e->getMessage();

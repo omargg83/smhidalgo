@@ -54,17 +54,12 @@ class Entrada extends Sagyc{
 	}
 	public function entrada_pedido($id){
 		self::set_names();
-		$this->ventasp=array();
 		$sql="select  et_bodega.id, et_invent.codigo, et_invent.nombre, et_invent.unidad, sum(et_bodega.cantidad) as cantidad, et_bodega.total, et_bodega.clave,
 		et_bodega.precio, et_bodega.gtotal, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.gtotal, et_bodega.id_invent,
-		et_bodega.observaciones, et_bodega.color, et_bodega.tipo, et_bodega.pventa, et_bodega.llave, et_bodega.rapido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id'
-		group by llave order by et_bodega.id asc ";
-
-		foreach ($this->dbh->query($sql) as $res){
-			$this->ventasp[]=$res;
-		}
-		return $this->ventasp;
-		$this->dbh=null;
+		et_bodega.observaciones, et_bodega.color, et_bodega.tipo, et_bodega.pventa, et_bodega.rapido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where identrada='$id' group by id_invent, clave, color, pventa order by et_bodega.id asc ";
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function proveedores_lista(){
 		self::set_names();
@@ -106,7 +101,7 @@ class Entrada extends Sagyc{
 	public function borrar_producto(){
 		self::set_names();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
-		return $this->borrar('et_bodega',"llave",$id);
+		return $this->borrar('et_bodega',"id",$id);
 	}
 	public function busca_producto(){
 		try{
@@ -187,12 +182,13 @@ class Entrada extends Sagyc{
 		$id=$_REQUEST['id'];
 		$identrada=$_REQUEST['identrada'];
 		$key=$this->inventario($id);
-
+		$colores=$this->color();
 		$x.="<form action='' id='form_cliente' data-lugar='a_entrada/db_' data-funcion='agregar_producto' data-destino='a_entrada/editar' data-cmodal='1'>";
 			$x.="<input type='hidden' class='form-control input-sm' id='id' name='id' value='$id' readonly>";
 			$x.="<input type='hidden' class='form-control input-sm' id='identrada' name='identrada' value='$identrada' readonly>";
 			$x.="<input type='hidden' class='form-control input-sm' id='unico' name='unico' value='".$key["unico"]."' readonly>";
 			$x.="<div class='row'>";
+
 				$x.="<div class='col-6'>";
 					$x.="<label>Descripción</label>";
 					$x.="<input type='text' class='form-control input-sm' id='descripcion' name='descripcion' value='".$key["nombre"]."' readonly>";
@@ -205,7 +201,13 @@ class Entrada extends Sagyc{
 
 				$x.="<div class='col-2'>";
 						$x.="<label>Color</label>";
-						$x.="<input type='text' class='form-control input-sm' id='color' name='color' value='' placeholder='Color'>";
+						$x.= "<select class='form-control' name='color' id='color'>";
+						$x.= "<option value='' selected></option>";
+						foreach($colores as $v2){
+							$x.= "<option value='".$v2['color']."'";
+							$x.= ">".$v2['color']."</option>";
+						}
+						$x.= "</select>";
 				$x.="</div>";
 
 				$x.="<div class='col-2'>";
@@ -242,10 +244,10 @@ class Entrada extends Sagyc{
 
 				$x.="</div>";
 
-				$x.="<div class='row'>";
+			$x.="<div class='row'>";
 
 				$x.="<div class='col-4'>";
-					$x.="<label>Código</label>";
+					$x.="<label>Código de barras</label>";
 					$x.="<input type='text' class='form-control input-sm' id='codigo' name='codigo' value='".$key["codigo"]."' readonly>";
 				$x.="</div>";
 
@@ -258,9 +260,6 @@ class Entrada extends Sagyc{
 					$x.="<label>Clave/IMEI</label>";
 					$x.="<input type='text' class='form-control input-sm' id='clave' name='clave' value='' placeholder='Clave' >";
 				$x.="</div>";
-
-
-
 			$x.="</div>";
 
 			$x.="<div class='row'>";
@@ -296,8 +295,11 @@ class Entrada extends Sagyc{
 			$idx=$_REQUEST['identrada'];
 			$arreglo+=array('identrada'=>$_REQUEST['identrada']);
 		}
-		if (isset($_REQUEST['clave'])){
+		if (isset($_REQUEST['clave']) and strlen($_REQUEST['clave'])>0){
 			$arreglo+=array('clave'=>$_REQUEST['clave']);
+		}
+		else{
+			$arreglo+=array('clave'=>null);
 		}
 		if (isset($_REQUEST['codigo'])){
 			$arreglo+=array('codigo'=>$_REQUEST['codigo']);
@@ -311,9 +313,6 @@ class Entrada extends Sagyc{
 		if (isset($_REQUEST['color'])){
 			$arreglo+=array('color'=>$_REQUEST['color']);
 		}
-		if (isset($_REQUEST['unico'])){
-			$arreglo+=array('unico'=>$_REQUEST['unico']);
-		}
 		if (isset($_REQUEST['descripcion'])){
 			$arreglo+=array('descripcion'=>$_REQUEST['descripcion']);
 		}
@@ -321,7 +320,6 @@ class Entrada extends Sagyc{
 			$arreglo+=array('material'=>$_REQUEST['material']);
 		}
 		$arreglo+=array('idtienda'=>1);
-		$arreglo+=array('llave'=>date("YmdHis")."_".rand(0,10000));
 
 		for($i=1;$i<=$cantidad;$i++){
 			$x=$this->insert('et_bodega', $arreglo);

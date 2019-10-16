@@ -381,6 +381,15 @@ class Inventario extends Sagyc{
 		if (isset($_REQUEST['descripcion'])){
 			$arreglo+=array('descripcion'=>$_REQUEST['descripcion']);
 		}
+		if (isset($_REQUEST['unidad'])){
+			$arreglo+=array('unidad'=>$_REQUEST['unidad']);
+		}
+		if (isset($_REQUEST['color'])){
+			$arreglo+=array('color'=>$_REQUEST['color']);
+		}
+		if (isset($_REQUEST['material'])){
+			$arreglo+=array('material'=>$_REQUEST['material']);
+		}
 		if (isset($_REQUEST['clave'])){
 			$arreglo+=array('clave'=>$_REQUEST['clave']);
 		}
@@ -392,6 +401,15 @@ class Inventario extends Sagyc{
 		}
 		if (isset($_REQUEST['precio'])){
 			$arreglo+=array('precio'=>$_REQUEST['precio']);
+		}
+		if (isset($_REQUEST['codigo'])){
+			$arreglo+=array('codigo'=>$_REQUEST['codigo']);
+		}
+		if (isset($_REQUEST['clave']) and strlen($_REQUEST['clave'])>0){
+			$arreglo+=array('clave'=>$_REQUEST['clave']);
+		}
+		else{
+			$arreglo+=array('clave'=>null);
 		}
 		if($id==0){
 			$arreglo+=array('id_invent'=>$_REQUEST['idprod']);

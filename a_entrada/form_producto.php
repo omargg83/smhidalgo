@@ -24,7 +24,6 @@
 		<div clas='row' id='resultadosx'>
 			*) Busca en catalogo para agrupar descripciones de articulos<br>
 			*) pago de linea, reparaciones tiempo de aire no se dan de alta
-
 		</div>
 
 	</div>
