@@ -22,12 +22,9 @@ class Venta extends Sagyc{
 	public function venta($id){
 		self::set_names();
 		$sql="select * from et_venta where idventa='$id'";
-		$this->ventas="";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->ventas=$res;
-		}
-		return $this->ventas;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function ventas_lista($idtienda){
 		self::set_names();
@@ -46,13 +43,10 @@ class Venta extends Sagyc{
 	}
 	public function ventas_pedido($id){
 		self::set_names();
-		$sql="select et_bodega.id, et_bodega.clave, et_invent.codigo, et_invent.nombre, abs(et_bodega.cantidad) as cantidad, et_bodega.precio, et_bodega.pventa, et_bodega.pendiente, et_bodega.total, et_bodega.gtotal, et_bodega.gtotalv, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.unico, et_bodega.observaciones from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idventa='$id' order by et_bodega.id desc";
-		$this->ventasp=array();
-		foreach ($this->dbh->query($sql) as $res){
-			$this->ventasp[]=$res;
-		}
-		return $this->ventasp;
-		$this->dbh=null;
+		$sql="select et_bodega.id, et_bodega.clave, et_invent.codigo, et_invent.nombre, abs(et_bodega.cantidad) as cantidad, et_bodega.precio, et_bodega.pventa, et_bodega.pendiente, et_bodega.total, et_bodega.gtotal, et_bodega.gtotalv, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idventa='$id' order by et_bodega.id desc";
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function clientes_lista(){
 		self::set_names();
@@ -126,7 +120,8 @@ class Venta extends Sagyc{
 			if (isset($_REQUEST['idtienda'])){$idtienda=$_REQUEST['idtienda'];}
 			parent::set_names();
 
-			$sql="SELECT sum(cantidad) as totalx,et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto  or codigo like :texto or rapido like :texto )  group by et_bodega.llave";
+			$sql="SELECT et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto  or codigo like :texto or rapido like :texto )";
+
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
@@ -138,47 +133,31 @@ class Venta extends Sagyc{
 			$x.= "<tr>";
 			$x.= "<th>Código</th>";
 			$x.= "<th>Clave</th>";
+			$x.= "<th>Rápido</th>";
 			$x.= "<th>Descripción</th>";
-			$x.= "<th>Unidad</th>";
-			$x.= "<th>Existencias</th>";
-			$x.= "<th>Cantidad</th>";
 			$x.= "<th>Precio</th>";
 			$x.= "<th>Observaciones</th>";
 			$x.= "<th>-</th>";
 			$x.="</tr>";
 			if(count($res)>0){
 				foreach ($res as $key) {
-					if($key["totalx"]>0){
+					if($key["cantidad"]>0){
 						$x.= "<tr id=".$key['id']." class='edit-t'>";
 
 						$x.= "<td>";
 						$x.= $key["codigo"];
 						$x.= "</td>";
 
-
 						$x.= "<td>";
 						$x.= $key["clave"];
 						$x.= "</td>";
 
 						$x.= "<td>";
+						$x.= $key["rapido"];
+						$x.= "</td>";
+
+						$x.= "<td>";
 						$x.= $key["descripcion"];
-						$x.= "</td>";
-
-						$x.= "<td>";
-						$x.= $key["unidad"];
-						$x.= "</td>";
-
-						$x.= "<td><center>";
-						$x.= "<input type='text' class='form-control' name='existencia_".$key['id']."' id='existencia_".$key['id']."' value='".$key["totalx"]."' placeholder='cantidad' readonly>";
-						$x.= "</center></td>";
-
-						$cantidad=1;
-						$x.= "<td>";
-						$readonly="";
-						if($key["unico"]==1) {
-							$readonly="readonly";
-						}
-						$x.= "<input type='text' class='form-control' name='cantidad_".$key['id']."' id='cantidad_".$key['id']."' value='$cantidad' placeholder='cantidad' $readonly>";
 						$x.= "</td>";
 
 						$x.= "<td align='right'>";
@@ -201,51 +180,6 @@ class Venta extends Sagyc{
 				}
 			}
 
-			$sql="SELECT * from et_invent where unico>1 and (nombre like :texto or codigo like :texto)";
-			$sth = $this->dbh->prepare($sql);
-			$sth->bindValue(":texto","%$texto%");
-			$sth->execute();
-			$res=$sth->fetchAll();
-
-			foreach ($res as $key) {
-				$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
-
-				$x.= "<td>";
-				$x.= $key["codigo"];
-				$x.= "</td>";
-
-				$x.= "<td>";
-				$x.= $key["nombre"];
-				$x.= "</td>";
-
-				$x.= "<td>";
-				$x.= $key["unidad"];
-				$x.= "</td>";
-
-				$x.= "<td><center>";
-				$x.= "</center></td>";
-
-				$x.= "<td>";
-				$x.= "<input type='text' class='form-control' name='cantidad_".$key['id_invent']."' id='cantidad_".$key['id_invent']."' value='1' placeholder='cantidad'>";
-				$x.= "</td>";
-
-				$x.= "<td align='right'>";
-				$preciov=$key['pvgeneral'];
-				$x.= "<input type='text' class='form-control' name='precio_".$key['id_invent']."' id='precio_".$key['id_invent']."' value='$preciov' placeholder='Precio'>";
-				$x.= "</td>";
-
-				$x.= "<td>";
-				$x.= "<input type='text' class='form-control' name='observa_".$key['id_invent']."' id='observa_".$key['id_invent']."' value='' placeholder='Observaciones'>";
-				$x.= "</td>";
-
-				$x.= "<td>";
-				$x.= "<div class='btn-group'>";
-				$x.= "<button type='button' onclick='ventaespecial(".$key['id_invent'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
-				$x.= "</div>";
-				$x.= "</td>";
-
-				$x.= "</tr>";
-			}
 
 			$x.= "</table>";
 
