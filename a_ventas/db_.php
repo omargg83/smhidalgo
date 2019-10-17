@@ -198,7 +198,7 @@ class Venta extends Sagyc{
 		$x="";
 		$idventa=$_REQUEST['idventa'];
 		$idbodega=$_REQUEST['idbodega'];
-		$cantidad=$_REQUEST['cantidad'];
+
 		$precio=$_REQUEST['precio'];
 		$observa=$_REQUEST['observa'];
 
@@ -209,31 +209,14 @@ class Venta extends Sagyc{
 		$res=$sth->fetch();
 		$arreglo =array();
 
-		if($res['unico']==0){
-			$arreglo+=array('observaciones'=>$observa);
-			$arreglo+=array('idventa'=>$idventa);
-			$arreglo+=array('cantidad'=>$cantidad*-1);
-			$arreglo+=array('pendiente'=>0);
-			$arreglo+=array('total'=>$cantidad);
-			$arreglo+=array('descripcion'=>$res['descripcion']);
-			$arreglo+=array('unico'=>$res['unico']);
-			$arreglo+=array('id_invent'=>$res['id_invent']);
-			$arreglo+=array('llave'=>$res['llave']);
-			$arreglo+=array('idtienda'=>$res['idtienda']);
-			$arreglo+=array('color'=>$res['color']);
-			$arreglo+=array('precio'=>$precio);
-			$arreglo+=array('pventa'=>$res['pventa']);
-			$arreglo+=array('gtotalv'=>$cantidad*$precio);
-			$x.=$this->insert('et_bodega', $arreglo);
-		}
-		if($res['unico']==1){
-			$arreglo+=array('idventa'=>$idventa);
-			$arreglo+=array('cantidad'=>0);
-			$arreglo+=array('pendiente'=>0);
-			$arreglo+=array('total'=>1);
-			$arreglo+=array('gtotalv'=>$res['pventa']);
-			$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
-		}
+
+		$arreglo+=array('idventa'=>$idventa);
+		$arreglo+=array('cantidad'=>0);
+		$arreglo+=array('pendiente'=>0);
+		$arreglo+=array('total'=>1);
+		$arreglo+=array('gtotalv'=>$res['pventa']);
+		$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+
 		return $x;
 	}
 	public function agregaespecial(){
@@ -277,20 +260,14 @@ class Venta extends Sagyc{
 		$sth->bindValue(":texto",$id);
 		$sth->execute();
 		$res=$sth->fetch();
-		if($res['unico']==0){
-			return $this->borrar('et_bodega',"id",$id);
-		}
-		if($res['unico']>1){
-			return $this->borrar('et_bodega',"id",$id);
-		}
-		if($res['unico']==1){
-			$arreglo+=array('idventa'=>null);
-			$arreglo+=array('cantidad'=>1);
-			$arreglo+=array('pendiente'=>0);
-			$arreglo+=array('total'=>0);
-			$arreglo+=array('gtotalv'=>null);
-			return $this->update('et_bodega',array('id'=>$id), $arreglo);
-		}
+
+		$arreglo+=array('idventa'=>null);
+		$arreglo+=array('cantidad'=>1);
+		$arreglo+=array('pendiente'=>0);
+		$arreglo+=array('total'=>0);
+		$arreglo+=array('gtotalv'=>null);
+		return $this->update('et_bodega',array('id'=>$id), $arreglo);
+
 	}
 	public function imprimir(){
 		self::set_names();

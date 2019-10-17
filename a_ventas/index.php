@@ -62,41 +62,34 @@ function buscar_venta(){
 
 function ventraprod(idbodega){
 	var idventa =$("#id").val();
-	var cantidad=parseInt($("#cantidad_"+idbodega).val());
 	var existencia=parseInt($("#existencia_"+idbodega).val());
 	var precio=parseInt($("#precio_"+idbodega).val());
 	var observa=$("#observa_"+idbodega).val();
 
-	if(cantidad<=existencia){
-			$.ajax({
-				data:  {
-					"idventa":idventa,
-					"idbodega":idbodega,
-					"cantidad":cantidad,
-					"precio":precio,
-					"observa":observa,
-					"function":"agregaventa"
-				},
-				url:   "a_ventas/db_.php",
-				type:  'post',
-				beforeSend: function () {
+	$.ajax({
+		data:  {
+			"idventa":idventa,
+			"idbodega":idbodega,
+			"precio":precio,
+			"observa":observa,
+			"function":"agregaventa"
+		},
+		url:   "a_ventas/db_.php",
+		type:  'post',
+		beforeSend: function () {
 
-				},
-				success:  function (response) {
-					if (isNaN(response)){
-						alert(response);
-					}
-					else{
-						$("#resultadosx").html("");
-						$("#compras").load("a_ventas/lista_pedido.php?id="+idventa);
-						buscar_venta();
-					}
-				}
-			});
-	}
-	else{
-		alert("Confirmar existencias");
-	}
+		},
+		success:  function (response) {
+			if (isNaN(response)){
+				alert(response);
+			}
+			else{
+				$("#resultadosx").html("");
+				$("#compras").load("a_ventas/lista_pedido.php?id="+idventa);
+				buscar_venta();
+			}
+		}
+	});
 }
 
 function ventaespecial(id_invent){
