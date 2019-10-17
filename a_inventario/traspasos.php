@@ -46,7 +46,7 @@
 echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
 echo "<br>";
 ?>
-h5>Enviados</h5>
+<h5>Enviados</h5>
 
 <table class="table table-hover table-striped">
 		<thead>

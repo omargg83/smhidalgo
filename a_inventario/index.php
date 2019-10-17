@@ -23,9 +23,16 @@ for($i=0;$i<count($tiendas);$i++){
 echo "</select>";
 echo "</li>";
 echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='select_tienda' data-lugar='a_inventario/lista' data-combo='idtienda'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
-//echo "<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_inventario/lista_transito'><i class='fas fa-plus'></i><span>En tránsito</span></a></li>";
-echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_traspaso' data-lugar='a_inventario/traspasos'><i class='fas fa-random'></i><span>Traspasos</span></a></li>";
-echo "<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='new_traspaso' data-lugar='a_inventario/form_traspaso'><i class='fas fa-random'></i><span>Nuevo Traspaso</span></a></li>";
+
+echo "<li class='nav-item dropdown'>";
+	echo "<a class='nav-link dropdown-toggle' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='fas fa-bars'></i>Traspasos</a>";
+	echo "<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
+	echo "<a class='dropdown-item' title='Traspasos' id='lista_traspaso' data-lugar='a_inventario/traspasos'><i class='fas fa-random'></i><span>Traspasos</span></a>";
+	echo "<a class='dropdown-item' title='Nuevo' id='new_traspaso' data-lugar='a_inventario/form_traspaso'><i class='fas fa-random'></i><span>Nuevo Traspaso</span></a>";
+	echo "<a class='dropdown-item' title='Nuevo' id='lista_transito' data-lugar='a_inventario/lista_transito'><i class='fas fa-plus'></i><span>En tránsito</span></a>";
+	echo "</div>";
+echo "</li>";
+
 echo "</ul>";
 echo "
 </div>

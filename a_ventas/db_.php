@@ -43,7 +43,7 @@ class Venta extends Sagyc{
 	}
 	public function ventas_pedido($id){
 		self::set_names();
-		$sql="select et_bodega.id, et_bodega.clave, et_invent.codigo, et_invent.nombre, abs(et_bodega.cantidad) as cantidad, et_bodega.precio, et_bodega.pventa, et_bodega.pendiente, et_bodega.total, et_bodega.gtotal, et_bodega.gtotalv, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idventa='$id' order by et_bodega.id desc";
+		$sql="select et_bodega.id, et_bodega.clave, et_invent.codigo, et_invent.nombre, et_bodega.cantidad, et_bodega.precio, et_bodega.pventa, et_bodega.pendiente, et_bodega.total, et_bodega.gtotal, et_bodega.gtotalv, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idventa='$id' order by et_bodega.id desc";
 		$sth = $this->dbh->prepare($sql);
 		$sth->execute();
 		return $sth->fetchAll();
@@ -120,20 +120,16 @@ class Venta extends Sagyc{
 			if (isset($_REQUEST['idtienda'])){$idtienda=$_REQUEST['idtienda'];}
 			parent::set_names();
 
-			$sql="SELECT et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto  or codigo like :texto or rapido like :texto )";
-
+			$sql="SELECT et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto  or codigo like :texto or rapido like :texto ) limit 10";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
 			$res=$sth->fetchAll();
 
 			$x.="<div class='row'>";
-
 			$x.="<table class='table table-sm'>";
 			$x.= "<tr>";
 			$x.= "<th>Código</th>";
-			$x.= "<th>Clave</th>";
-			$x.= "<th>Rápido</th>";
 			$x.= "<th>Descripción</th>";
 			$x.= "<th>Precio</th>";
 			$x.= "<th>Observaciones</th>";
@@ -144,19 +140,13 @@ class Venta extends Sagyc{
 					if($key["cantidad"]>0){
 						$x.= "<tr id=".$key['id']." class='edit-t'>";
 
-						$x.= "<td>";
-						$x.= $key["codigo"];
-						$x.= "</td>";
+						$x.= "<td><span style='font-size:12px'>";
+						$x.= "<B>IMEI:</B>".$key["clave"]."<br>";
+						$x.= "<B>BARRAS:</B>".$key["codigo"]."<br>";
+						$x.= "<B>RAPIDO:</B>".$key["rapido"];
+						$x.= "</span></td>";
 
-						$x.= "<td>";
-						$x.= $key["clave"];
-						$x.= "</td>";
-
-						$x.= "<td>";
-						$x.= $key["rapido"];
-						$x.= "</td>";
-
-						$x.= "<td>";
+						$x.= "<td width='30%'>";
 						$x.= $key["descripcion"];
 						$x.= "</td>";
 
@@ -180,11 +170,45 @@ class Venta extends Sagyc{
 				}
 			}
 
+			$sql="SELECT * from et_invent where unico>1 and (nombre like :texto or codigo like :texto or rapido like :texto) limit 10";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":texto","%$texto%");
+			$sth->execute();
+			$res=$sth->fetchAll();
+
+			foreach ($res as $key) {
+				$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
+
+				$x.= "<td><span style='font-size:10px'>";
+				$x.= "<B>BARRAS:</B>".$key["codigo"]."<br>";
+				$x.= "<B>RAPIDO:</B>".$key["rapido"];
+				$x.= "</span></td>";
+
+				$x.= "<td>";
+				$x.= $key["nombre"];
+				$x.= "</td>";
+
+
+				$x.= "<td align='right'>";
+				$preciov=$key['pvgeneral'];
+				$x.= "<input type='text' class='form-control' name='precio_".$key['id_invent']."' id='precio_".$key['id_invent']."' value='$preciov' placeholder='Precio'>";
+				$x.= "</td>";
+
+				$x.= "<td>";
+				$x.= "<input type='text' class='form-control' name='observa_".$key['id_invent']."' id='observa_".$key['id_invent']."' value='' placeholder='Observaciones'>";
+				$x.= "</td>";
+
+				$x.= "<td>";
+				$x.= "<div class='btn-group'>";
+				$x.= "<button type='button' onclick='ventaespecial(".$key['id_invent'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+				$x.= "</div>";
+				$x.= "</td>";
+
+				$x.= "</tr>";
+			}
+
 
 			$x.= "</table>";
-
-
-
 			$x.="</div>";
 			return $x;
 		}
@@ -209,7 +233,6 @@ class Venta extends Sagyc{
 		$res=$sth->fetch();
 		$arreglo =array();
 
-
 		$arreglo+=array('idventa'=>$idventa);
 		$arreglo+=array('cantidad'=>0);
 		$arreglo+=array('pendiente'=>0);
@@ -224,9 +247,9 @@ class Venta extends Sagyc{
 		$x="";
 		$idventa=$_REQUEST['idventa'];
 		$id_invent=$_REQUEST['id_invent'];
-		$cantidad=$_REQUEST['cantidad'];
 		$precio=$_REQUEST['precio'];
 		$observa=$_REQUEST['observa'];
+		$cantidad=1;
 
 		$sql="select * from et_invent where id_invent=:texto";
 		$sth = $this->dbh->prepare($sql);
@@ -235,19 +258,20 @@ class Venta extends Sagyc{
 		$res=$sth->fetch();
 		$arreglo =array();
 
-		if($res['unico']>1){
-			$arreglo+=array('observaciones'=>$observa);
-			$arreglo+=array('idventa'=>$idventa);
-			$arreglo+=array('id_invent'=>$id_invent);
-			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
-			$arreglo+=array('unico'=>$res['unico']);
-			$arreglo+=array('descripcion'=>$res['nombre']);
-			$arreglo+=array('total'=>$cantidad);
-			$arreglo+=array('gtotalv'=>$cantidad*$precio);
-			$arreglo+=array('precio'=>$precio);
-			$arreglo+=array('pventa'=>$precio);
-			$x.=$this->insert('et_bodega', $arreglo);
-		}
+		$arreglo+=array('observaciones'=>$observa);
+		$arreglo+=array('idventa'=>$idventa);
+		$arreglo+=array('id_invent'=>$id_invent);
+		$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+		$arreglo+=array('descripcion'=>$res['nombre']);
+		$arreglo+=array('total'=>$cantidad);
+		$arreglo+=array('gtotalv'=>$cantidad*$precio);
+		$arreglo+=array('precio'=>$precio);
+		$arreglo+=array('pventa'=>$precio);
+		$arreglo+=array('cantidad'=>0);
+		$arreglo+=array('pendiente'=>0);
+		$arreglo+=array('tipo'=>0);
+		$x.=$this->insert('et_bodega', $arreglo);
+
 		return $x;
 	}
 	public function borrar_venta(){
@@ -261,13 +285,18 @@ class Venta extends Sagyc{
 		$sth->execute();
 		$res=$sth->fetch();
 
-		$arreglo+=array('idventa'=>null);
-		$arreglo+=array('cantidad'=>1);
-		$arreglo+=array('pendiente'=>0);
-		$arreglo+=array('total'=>0);
-		$arreglo+=array('gtotalv'=>null);
-		return $this->update('et_bodega',array('id'=>$id), $arreglo);
-
+		if ($res['tipo']==0){
+			if (isset($_POST['id'])){$id=$_POST['id'];}
+			return $this->borrar('et_bodega',"id",$id);
+		}
+		else{
+			$arreglo+=array('idventa'=>null);
+			$arreglo+=array('cantidad'=>1);
+			$arreglo+=array('pendiente'=>0);
+			$arreglo+=array('total'=>0);
+			$arreglo+=array('gtotalv'=>null);
+			return $this->update('et_bodega',array('id'=>$id), $arreglo);
+		}
 	}
 	public function imprimir(){
 		self::set_names();

@@ -23,7 +23,7 @@
 	$contar=1;
 
 	for($i=0;$i<count($pedido);$i++){
-		echo "<tr id='".$pedido[$i]['id']."' data-pendiente='".$pedido[$i]['pendiente']."' data-unico='".$pedido[$i]['unico']."' class='edit-t'>";
+		echo "<tr id='".$pedido[$i]['id']."' data-pendiente='".$pedido[$i]['pendiente']."' class='edit-t'>";
     echo "<td class=edit>";
       echo "<div class='btn-group'>";
     if($estado=="Activa" and $pedido[$i]['recibido']!=1){

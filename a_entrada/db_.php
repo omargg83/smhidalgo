@@ -322,6 +322,7 @@ class Entrada extends Sagyc{
 		$arreglo+=array('idtienda'=>1);
 
 		for($i=1;$i<=$cantidad;$i++){
+			$arreglo+=array('tipo'=>1);
 			$x=$this->insert('et_bodega', $arreglo);
 		}
 		if(is_numeric($x)){

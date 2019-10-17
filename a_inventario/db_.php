@@ -21,22 +21,17 @@ class Inventario extends Sagyc{
 	}
 	public function marca($id){
 		self::set_names();
-		$this->marca="";
 		$sql="select * from et_marca where idmarca='$id'";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->marca=$res;
-		}
-		return $this->marca;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function modelo($id){
 		self::set_names();
 		$sql="select * from et_modelo where idmodelo='$id'";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->ventas=$res;
-		}
-		return $this->ventas;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function tiendas_lista(){
 		self::set_names();
@@ -46,11 +41,9 @@ class Inventario extends Sagyc{
 		else{
 			$sql="SELECT * FROM et_tienda where id='".$_SESSION['idtienda']."'";
 		}
-		foreach ($this->dbh->query($sql) as $res){
-			$this->tiendas[]=$res;
-		}
-		return $this->tiendas;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function tiendas_global($key=""){
 		self::set_names();
@@ -60,12 +53,9 @@ class Inventario extends Sagyc{
 		else{
 			$sql="SELECT * FROM et_tienda where id='$key'";
 		}
-		$this->tiendas=array();
-		foreach ($this->dbh->query($sql) as $res){
-			$this->tiendas[]=$res;
-		}
-		return $this->tiendas;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function inventario($id){
 		self::set_names();
@@ -74,31 +64,23 @@ class Inventario extends Sagyc{
 		left outer join et_modelo on et_modelo.idmodelo=et_invent.idmodelo
 		where id_invent='$id'
 		order by id_invent asc";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->inventario=$res;
-		}
-		return $this->inventario;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function inventario_detalle($id){
 		self::set_names();
-		$sql="select * from et_bodega where id_invent='$id' order by id asc";
-		$this->inventario=array();
-		foreach ($this->dbh->query($sql) as $res){
-			$this->inventario[]=$res;
-		}
-		return $this->inventario;
-		$this->dbh=null;
+		$sql="select * from et_bodega where id_invent='$id' and idtienda='".$_SESSION['idtienda']."' order by id asc";
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function bodega_edit($id){
 		self::set_names();
 		$sql="select * from et_bodega where id='$id'";
-		$this->inventario="";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->inventario=$res;
-		}
-		return $this->inventario;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function inventario_lista($idtienda){
 		self::set_names();
@@ -106,12 +88,9 @@ class Inventario extends Sagyc{
 		left outer join et_marca on et_marca.idmarca=inven.idmarca
 		left outer join et_modelo on et_modelo.idmodelo=inven.idmodelo
 		where activo=1 order by id_invent ,unico desc";
-		$this->ventas=array();
-		foreach ($this->dbh->query($sql) as $res){
-			$this->ventas[]=$res;
-		}
-		return $this->ventas;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function guardar_usuario(){
 		$x="";
@@ -152,7 +131,6 @@ class Inventario extends Sagyc{
 		left outer join et_tienda de on de.id=et_traspaso.idde
 		left outer join et_tienda para on para.id=et_traspaso.idpara where idde='".$_SESSION['idtienda']."' or idpara='".$_SESSION['idtienda']."' order by fecha desc";
 		$this->traspaso=array();
-		echo $sql;
 		foreach ($this->dbh->query($sql) as $res){
 			$this->traspaso[]=$res;
 		}
@@ -163,11 +141,9 @@ class Inventario extends Sagyc{
 	public function traspaso($id){
 		self::set_names();
 		$sql="select * from et_traspaso where id='$id'";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->traspaso=$res;
-		}
-		return $this->traspaso;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function traspaso_lista(){
 		self::set_names();
@@ -195,13 +171,10 @@ class Inventario extends Sagyc{
 	}
 	public function traspaso_pedido($id){
 		self::set_names();
-		$sql="select et_bodega.id, et_invent.codigo, et_bodega.clave, et_bodega.total, et_bodega.color, et_invent.nombre, et_invent.unidad, et_invent.unico, abs(et_bodega.cantidad) as cantidad, et_bodega.precio, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones, et_bodega.recibido, et_bodega.frecibido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idtraspaso='$id' order by et_bodega.id desc";
-		$this->ventasp=array();
-		foreach ($this->dbh->query($sql) as $res){
-			$this->ventasp[]=$res;
-		}
-		return $this->ventasp;
-		$this->dbh=null;
+		$sql="select et_bodega.id, et_invent.codigo, et_bodega.clave, et_bodega.total, et_bodega.color, et_invent.nombre, et_invent.unidad, et_bodega.cantidad, et_bodega.precio, et_bodega.pendiente, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones, et_bodega.recibido, et_bodega.frecibido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idtraspaso='$id' order by et_bodega.id desc";
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function guardar_traspaso(){
 		$x="";
@@ -232,7 +205,7 @@ class Inventario extends Sagyc{
 			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
 			parent::set_names();
 
-			$sql="SELECT sum(cantidad) as totalx,et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto) ";
+			$sql="SELECT et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and cantidad>0 and (descripcion like :texto or clave like :texto or rapido like :texto or codigo like :texto) ";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
 			$sth->execute();
@@ -244,26 +217,19 @@ class Inventario extends Sagyc{
 				$x.= "<tr>";
 				$x.= "<th>Código</th>";
 				$x.= "<th>Descripción</th>";
-				$x.= "<th>Unidad</th>";
 				$x.= "<th>Color</th>";
-				$x.= "<th>Existencia</th>";
-				$x.= "<th>Num.</th>";
 				$x.= "<th>-</th>";
 				$x.="</tr>";
 				foreach ($res as $key) {
-					if($key["totalx"]>0){
 						$x.= "<tr id=".$key['id']." class='edit-t'>";
-
-						$x.= "<td>";
-						$x.= $key["clave"];
-						$x.= "</td>";
+						$x.= "<td><span style='font-size:10px'>";
+						$x.= "<B>IMEI:</B>".$key["clave"]."<br>";
+						$x.= "<B>BARRAS:</B>".$key["codigo"]."<br>";
+						$x.= "<B>RAPIDO:</B>".$key["rapido"];
+						$x.= "</span></td>";
 
 						$x.= "<td>";
 						$x.= $key["descripcion"];
-						$x.= "</td>";
-
-						$x.= "<td>";
-						$x.= $key["unidad"];
 						$x.= "</td>";
 
 						$x.= "<td>";
@@ -271,26 +237,11 @@ class Inventario extends Sagyc{
 						$x.= "</td>";
 
 						$x.= "<td>";
-						$x.= "<input type='text' style='width:70px' class='form-control' name='existencia_".$key['id']."' id='existencia_".$key['id']."' value='".$key['totalx']."' placeholder='cantidad' readonly>";
-						$x.= "</td>";
-
-						$cantidad=1;
-						$x.= "<td>";
-						$readonly="";
-						if($key["unico"]==1) {
-							$readonly="readonly";
-						}
-						$x.= "<input type='text' style='width:70px' class='form-control' name='cantidad_".$key['id']."' id='cantidad_".$key['id']."' value='$cantidad' placeholder='cantidad' $readonly>";
-						$x.= "</td>";
-
-						$x.= "<td>";
 						$x.= "<div class='btn-group'>";
 						$x.= "<button type='button' onclick='traspasosel(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
 						$x.= "</div>";
 						$x.= "</td>";
-
 						$x.= "</tr>";
-					}
 				}
 				$x.= "</table>";
 			}
@@ -311,13 +262,13 @@ class Inventario extends Sagyc{
 
 		$idtraspaso=$_REQUEST['idtraspaso'];
 		$idbodega=$_REQUEST['idbodega'];
-		$cantidad=$_REQUEST['cantidad'];
 
 		$sql="select * from et_bodega where id=:texto";
 		$sth = $this->dbh->prepare($sql);
 		$sth->bindValue(":texto",$idbodega);
 		$sth->execute();
 		$res=$sth->fetch();
+		/*
 		if($res['unico']==0){
 			$arreglo =array();
 			$arreglo+=array('idtraspaso'=>$idtraspaso);
@@ -330,13 +281,13 @@ class Inventario extends Sagyc{
 			$arreglo+=array('idtienda'=>$res['idtienda']);
 			$arreglo+=array('color'=>$res['color']);
 			$x.=$this->insert('et_bodega', $arreglo);
-		}
-		if($res['unico']==1){
-			$arreglo =array();
-			$arreglo+=array('idtraspaso'=>$idtraspaso);
-			$arreglo+=array('idtienda'=>null);
-			$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
-		}
+		}*/
+
+		$arreglo =array();
+		$arreglo+=array('idtraspaso'=>$idtraspaso);
+		$arreglo+=array('idtienda'=>null);
+		$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+
 		return $x;
 	}
 	public function borrar_traspaso(){

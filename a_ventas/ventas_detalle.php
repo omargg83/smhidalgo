@@ -1,8 +1,8 @@
-<?php 
+<?php
 	require_once("control_db.php");
 	$bdd = new Venta();
 	if (isset($_POST['id'])){$id=$_POST['id'];} else{ $id=0;}
-	
+
 	$pd = $bdd->venta($id);
 
 	$idventa=$pd['idventa'];
@@ -15,7 +15,7 @@
 	$estado=$pd['estado'];
 	$factura=$pd['factura'];
 	$fecha=$pd['fecha'];
-	
+
 	$cliente = $bdd->cliente($idcliente);
 ?>
 	<div class='container'>
@@ -38,7 +38,7 @@
 						<input type="text" class="form-control" name="cliente" id="cliente" value="<?php echo $cliente['razon_social_prove'] ;?>" placeholder="Cliente" readonly>
 				   </div>
 			   </div>
-			</div>  
+			</div>
 			<div class='card-body'>
 			   <?php
 					if($estado=="Activa"){
@@ -46,18 +46,18 @@
 					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">
 					 <i class="fas fa-plus"></i> Productos
 					</button>
-				
+
 				<?php
 					}
 				?>
-			</div>  	
-				
+			</div>
+
 			<div class='card-body' id='pedido'>
 
 			</div>
 		</div>
 	 </div>
-	 
+
 	  <!-- Modal -->
             <div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
               <div class="modal-dialog modal-lg" role="document">
@@ -79,7 +79,7 @@
 						</div>
                     <div id="loader" style="position: absolute; text-align: center; top: 55px;  width: 100%;display:none;"></div><!-- Carga gif animado -->
                      <div class="outer_div" style='height:350px; overflow:auto;'>
-					
+
 					</div>
                   </div>
                   <div class="modal-footer">
@@ -88,8 +88,8 @@
                 </div>
               </div>
             </div>
-			
-<script type="text/javascript">		
+
+<script type="text/javascript">
 	$(document).ready(function(){
 		var id;
 		id=document.getElementById("id").value;
