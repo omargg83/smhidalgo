@@ -129,25 +129,28 @@ class Venta extends Sagyc{
 			$x.="<div class='row'>";
 			$x.="<table class='table table-sm'>";
 			$x.= "<tr>";
-			$x.= "<th>Código</th>";
+			$x.= "<th>-</th>";
 			$x.= "<th>Descripción</th>";
 			$x.= "<th>Precio</th>";
 			$x.= "<th>Observaciones</th>";
-			$x.= "<th>-</th>";
 			$x.="</tr>";
 			if(count($res)>0){
 				foreach ($res as $key) {
 					if($key["cantidad"]>0){
 						$x.= "<tr id=".$key['id']." class='edit-t'>";
+						$x.= "<td>";
+						$x.= "<div class='btn-group'>";
+						$x.= "<button type='button' onclick='ventraprod(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+						$x.= "</div>";
+						$x.= "</td>";
 
-						$x.= "<td><span style='font-size:12px'>";
-						$x.= "<B>IMEI:</B>".$key["clave"]."<br>";
-						$x.= "<B>BARRAS:</B>".$key["codigo"]."<br>";
-						$x.= "<B>RAPIDO:</B>".$key["rapido"];
-						$x.= "</span></td>";
-
-						$x.= "<td width='30%'>";
+						$x.= "<td>";
 						$x.= $key["descripcion"];
+						$x.= "<br><span style='font-size:12px'>";
+						$x.= "<B>IMEI:</B>".$key["clave"]." / ";
+						$x.= "<B>BARRAS:</B>".$key["codigo"]." / ";
+						$x.= "<B>RAPIDO:</B>".$key["rapido"];
+						$x.= "</span>";
 						$x.= "</td>";
 
 						$x.= "<td align='right'>";
@@ -159,11 +162,7 @@ class Venta extends Sagyc{
 						$x.= "<input type='text' class='form-control' name='observa_".$key['id']."' id='observa_".$key['id']."' value='' placeholder='Observaciones'>";
 						$x.= "</td>";
 
-						$x.= "<td>";
-						$x.= "<div class='btn-group'>";
-						$x.= "<button type='button' onclick='ventraprod(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
-						$x.= "</div>";
-						$x.= "</td>";
+
 
 						$x.= "</tr>";
 					}
@@ -178,14 +177,20 @@ class Venta extends Sagyc{
 
 			foreach ($res as $key) {
 				$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
+				$x.= "<td>";
+				$x.= "<div class='btn-group'>";
+				$x.= "<button type='button' onclick='ventaespecial(".$key['id_invent'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+				$x.= "</div>";
+				$x.= "</td>";
 
-				$x.= "<td><span style='font-size:10px'>";
-				$x.= "<B>BARRAS:</B>".$key["codigo"]."<br>";
-				$x.= "<B>RAPIDO:</B>".$key["rapido"];
-				$x.= "</span></td>";
 
 				$x.= "<td>";
 				$x.= $key["nombre"];
+
+				$x.= "<br><span style='font-size:10px'>";
+				$x.= "<B>BARRAS:</B>".$key["codigo"]." / ";
+				$x.= "<B>RAPIDO:</B>".$key["rapido"];
+				$x.= "</span>";
 				$x.= "</td>";
 
 
@@ -198,11 +203,7 @@ class Venta extends Sagyc{
 				$x.= "<input type='text' class='form-control' name='observa_".$key['id_invent']."' id='observa_".$key['id_invent']."' value='' placeholder='Observaciones'>";
 				$x.= "</td>";
 
-				$x.= "<td>";
-				$x.= "<div class='btn-group'>";
-				$x.= "<button type='button' onclick='ventaespecial(".$key['id_invent'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
-				$x.= "</div>";
-				$x.= "</td>";
+
 
 				$x.= "</tr>";
 			}
