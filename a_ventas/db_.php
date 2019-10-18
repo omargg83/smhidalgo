@@ -3,7 +3,6 @@ require_once("../control_db.php");
 if (isset($_REQUEST['function'])){$function=$_REQUEST['function'];}	else{ $function="";}
 
 class Venta extends Sagyc{
-
 	public $nivel_personal;
 	public $nivel_captura;
 
@@ -28,22 +27,17 @@ class Venta extends Sagyc{
 	}
 	public function ventas_lista($idtienda){
 		self::set_names();
-
 		$sql="select et_venta.idventa, et_venta.idtienda, et_venta.iddescuento, et_venta.factura, et_cliente.razon_social_prove, et_tienda.nombre, et_venta.total, et_venta.fecha, et_venta.gtotal, et_venta.estado, et_descuento.nombre as descuento from et_venta
 		left outer join et_cliente on et_cliente.idcliente=et_venta.idcliente
 		left outer join et_descuento on et_descuento.iddescuento=et_venta.iddescuento
 		left outer join et_tienda on et_tienda.id=et_venta.idtienda where et_venta.idtienda='$idtienda' order by et_venta.fecha desc";
-
-		$this->ventas=array();
-		foreach ($this->dbh->query($sql) as $res){
-			$this->ventas[]=$res;
-		}
-		return $this->ventas;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function ventas_pedido($id){
 		self::set_names();
-		$sql="select et_bodega.id, et_bodega.clave, et_invent.codigo, et_invent.nombre, et_bodega.cantidad, et_bodega.precio, et_bodega.pventa, et_bodega.pendiente, et_bodega.total, et_bodega.gtotal, et_bodega.gtotalv, COALESCE(et_bodega.idpaquete,0) as paquete, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idventa='$id' order by et_bodega.id desc";
+		$sql="select et_bodega.id, et_bodega.clave, et_invent.codigo, et_invent.nombre, et_bodega.cantidad, et_bodega.precio, et_bodega.pventa, et_bodega.total, et_bodega.gtotal, et_bodega.gtotalv, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones, et_bodega.rapido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idventa='$id' order by et_bodega.id desc";
 		$sth = $this->dbh->prepare($sql);
 		$sth->execute();
 		return $sth->fetchAll();
@@ -51,32 +45,23 @@ class Venta extends Sagyc{
 	public function clientes_lista(){
 		self::set_names();
 		$sql="SELECT * FROM et_cliente";
-		$this->clientes=array();
-		foreach ($this->dbh->query($sql) as $res){
-			$this->clientes[]=$res;
-		}
-		return $this->clientes;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function tiendas_lista(){
 		self::set_names();
-		$this->tiendas=array();
 		$sql="SELECT * FROM et_tienda where id='".$_SESSION['idtienda']."'";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->tiendas[]=$res;
-		}
-		return $this->tiendas;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function descuento_lista(){
 		self::set_names();
 		$sql="SELECT * FROM et_descuento";
-		$this->descuento=array();
-		foreach ($this->dbh->query($sql) as $res){
-			$this->descuento[]=$res;
-		}
-		return $this->descuento;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function guardar_venta(){
 		$x="";
@@ -110,6 +95,20 @@ class Venta extends Sagyc{
 		}
 		else{
 			$x.=$this->update('et_venta',array('idventa'=>$id), $arreglo);
+			{
+				$sql="select sum(gtotalv) as gtotal from et_bodega where idventa=:texto";
+				$sth = $this->dbh->prepare($sql);
+				$sth->bindValue(":texto",$id);
+				$sth->execute();
+				$res=$sth->fetch();
+				$gtotal=$res['gtotal'];
+
+				$subtotal=$gtotal/1.16;
+				$iva=$gtotal-$subtotal;
+
+				$values = array('subtotal'=>$subtotal, 'iva'=>$iva, 'total'=>$gtotal, 'gtotal'=>$gtotal );
+				$this->update('et_venta',array('idventa'=>$id), $values);
+			}
 		}
 		return $x;
 	}
@@ -140,7 +139,7 @@ class Venta extends Sagyc{
 						$x.= "<tr id=".$key['id']." class='edit-t'>";
 						$x.= "<td>";
 						$x.= "<div class='btn-group'>";
-						$x.= "<button type='button' onclick='ventraprod(".$key['id'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+						$x.= "<button type='button' onclick='ventraprod(".$key['id'].",1)' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
 						$x.= "</div>";
 						$x.= "</td>";
 
@@ -161,9 +160,6 @@ class Venta extends Sagyc{
 						$x.= "<td>";
 						$x.= "<input type='text' class='form-control' name='observa_".$key['id']."' id='observa_".$key['id']."' value='' placeholder='Observaciones'>";
 						$x.= "</td>";
-
-
-
 						$x.= "</tr>";
 					}
 				}
@@ -179,7 +175,7 @@ class Venta extends Sagyc{
 				$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
 				$x.= "<td>";
 				$x.= "<div class='btn-group'>";
-				$x.= "<button type='button' onclick='ventaespecial(".$key['id_invent'].")' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
+				$x.= "<button type='button' onclick='ventraprod(".$key['id_invent'].",2)' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
 				$x.= "</div>";
 				$x.= "</td>";
 
@@ -222,73 +218,151 @@ class Venta extends Sagyc{
 		parent::set_names();
 		$x="";
 		$idventa=$_REQUEST['idventa'];
+		$idcliente=$_REQUEST['idcliente'];
 		$idbodega=$_REQUEST['idbodega'];
-
-		$precio=$_REQUEST['precio'];
-		$observa=$_REQUEST['observa'];
-
-		$sql="select * from et_bodega where id=:texto";
-		$sth = $this->dbh->prepare($sql);
-		$sth->bindValue(":texto",$idbodega);
-		$sth->execute();
-		$res=$sth->fetch();
-		$arreglo =array();
-
-		$arreglo+=array('idventa'=>$idventa);
-		$arreglo+=array('cantidad'=>0);
-		$arreglo+=array('pendiente'=>0);
-		$arreglo+=array('total'=>1);
-		$arreglo+=array('gtotalv'=>$res['pventa']);
-		$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
-
-		return $x;
-	}
-	public function agregaespecial(){
-		parent::set_names();
-		$x="";
-		$idventa=$_REQUEST['idventa'];
 		$id_invent=$_REQUEST['id_invent'];
+
 		$precio=$_REQUEST['precio'];
 		$observa=$_REQUEST['observa'];
-		$cantidad=1;
+		$tipo=$_REQUEST['tipo'];
 
-		$sql="select * from et_invent where id_invent=:texto";
-		$sth = $this->dbh->prepare($sql);
-		$sth->bindValue(":texto",$id_invent);
-		$sth->execute();
-		$res=$sth->fetch();
-		$arreglo =array();
+		if($idventa==0){
+			$arreglo=array();
+			$arreglo+=array('idcliente'=>$idcliente);
+			$arreglo+=array('estado'=>"Activa");
+			$date=date("Y-m-d H:i:s");
+			$arreglo+=array('fecha'=>$date);
+			$arreglo+=array('idusuario'=>$_SESSION['idpersona']);
+			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+			$x=$this->insert('et_venta', $arreglo);
+			$idventa=$x;
+		}
+		$nombre="";
+		$clave="";
+		$codigo="";
+		$rapido="";
+		$total=0;
+				$pventa=0;
+		if($tipo==1){
+			$sql="select * from et_bodega where id=:texto";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":texto",$idbodega);
+			$sth->execute();
+			$res=$sth->fetch();
+			$nombre=$res['descripcion'];
+			$codigo=$res['codigo'];
+			$rapido=$res['rapido'];
+			$clave=$res['clave'];
+			$pventa=$res['pventa'];
 
-		$arreglo+=array('observaciones'=>$observa);
-		$arreglo+=array('idventa'=>$idventa);
-		$arreglo+=array('id_invent'=>$id_invent);
-		$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
-		$arreglo+=array('descripcion'=>$res['nombre']);
-		$arreglo+=array('total'=>$cantidad);
-		$arreglo+=array('gtotalv'=>$cantidad*$precio);
-		$arreglo+=array('precio'=>$precio);
-		$arreglo+=array('pventa'=>$precio);
-		$arreglo+=array('cantidad'=>0);
-		$arreglo+=array('pendiente'=>0);
-		$arreglo+=array('tipo'=>0);
-		$x.=$this->insert('et_bodega', $arreglo);
+			$total=1;
+			$arreglo =array();
+			$arreglo+=array('idventa'=>$idventa);
+			$arreglo+=array('cantidad'=>0);
+			$arreglo+=array('pendiente'=>0);
+			$arreglo+=array('total'=>1);
+			$arreglo+=array('gtotalv'=>$res['pventa']);
+			$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
+			$id=$idbodega;
+		}
+		if($tipo==2){
+			$sql="select * from et_invent where id_invent=:texto";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":texto",$id_invent);
+			$sth->execute();
+			$res=$sth->fetch();
+			$arreglo =array();
+			$nombre=$res['nombre'];
+			$codigo=$res['codigo'];
+			$rapido=$res['rapido'];
+			$pventa=$precio;
+			$clave="";
+			$total=1;
 
-		return $x;
+			$arreglo+=array('observaciones'=>$observa);
+			$arreglo+=array('idventa'=>$idventa);
+			$arreglo+=array('id_invent'=>$id_invent);
+			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+			$arreglo+=array('descripcion'=>$res['nombre']);
+			$arreglo+=array('total'=>1);
+			$arreglo+=array('gtotalv'=>1*$precio);
+			$arreglo+=array('precio'=>$precio);
+			$arreglo+=array('pventa'=>$precio);
+			$arreglo+=array('cantidad'=>0);
+			$arreglo+=array('pendiente'=>0);
+			$arreglo+=array('tipo'=>0);
+			$id=$this->insert('et_bodega', $arreglo);
+		}
+
+		{
+			$sql="select sum(gtotalv) as gtotal from et_bodega where idventa=:texto";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":texto",$idventa);
+			$sth->execute();
+			$res=$sth->fetch();
+			$gtotal=$res['gtotal'];
+
+			$subtotal=$gtotal/1.16;
+			$iva=$gtotal-$subtotal;
+
+			$values = array('subtotal'=>$subtotal, 'iva'=>$iva, 'total'=>$gtotal, 'gtotal'=>$gtotal );
+			$this->update('et_venta',array('idventa'=>$idventa), $values);
+		}
+		///////
+		$estado="";
+		$observaciones="";
+
+		$data="<div class='row' id='div_$id'>";
+			$data.= "<div class='col-1'>";
+				$data.= "<button class='btn btn-outline-secondary btn-sm' id='eliminar_pedido' onclick='borra_venta($id)'><i class='far fa-trash-alt'></i></i></button>";
+			$data.= "</div>";
+			$data.= "<div class='col-3'>";
+				$data.= $nombre;
+				if(strlen($observaciones)>0){
+					$data.= "<br><span style='font-size:10px;font-weight: bold;'>".$observaciones."</span>";
+				}
+			$data.= "</div>";
+
+			$data.= "<div class='col-2'>";
+				$data.= "<span style='font-size:12px'>";
+				$data.= "<B>IMEI:</B>".$clave." / ";
+				$data.= "<B>BARRAS:</B>".$codigo." / ";
+				$data.= "<B>RAPIDO:</B>".$rapido;
+			$data.= "</div>";
+
+			$data.= "<div class='col-2'><center>";
+				$data.= number_format($total);
+			$data.= "</center></div>";
+
+			$data.= "<div class='col-2'>";
+				$data.= number_format($pventa,2);
+			$data.= "</div>";
+
+			$data.= "<div class='col-2'>";
+				$data.= number_format($pventa,2);
+			$data.= "</div>";
+		$data.= "</div>";
+
+		$row = array('idventa' =>$idventa,'subtotal' =>round($subtotal,2), 'iva'=>round($iva,2), 'total'=>round($gtotal,2), 'datax'=>$data);
+		return json_encode($row);
 	}
+
 	public function borrar_venta(){
 		self::set_names();
 		$arreglo =array();
 		if (isset($_POST['id'])){$id=$_POST['id'];}
-
+		$res="";
 		$sql="select * from et_bodega where id=:texto";
 		$sth = $this->dbh->prepare($sql);
 		$sth->bindValue(":texto",$id);
 		$sth->execute();
 		$res=$sth->fetch();
 
+		$idventa=$res['idventa'];
+
 		if ($res['tipo']==0){
 			if (isset($_POST['id'])){$id=$_POST['id'];}
-			return $this->borrar('et_bodega',"id",$id);
+			$res=$this->borrar('et_bodega',"id",$id);
 		}
 		else{
 			$arreglo+=array('idventa'=>null);
@@ -296,8 +370,25 @@ class Venta extends Sagyc{
 			$arreglo+=array('pendiente'=>0);
 			$arreglo+=array('total'=>0);
 			$arreglo+=array('gtotalv'=>null);
-			return $this->update('et_bodega',array('id'=>$id), $arreglo);
+			$res=$this->update('et_bodega',array('id'=>$id), $arreglo);
 		}
+
+		{
+			$sql="select sum(gtotalv) as gtotal from et_bodega where idventa=:texto";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":texto",$idventa);
+			$sth->execute();
+			$resx=$sth->fetch();
+			$gtotal=$resx['gtotal'];
+
+			$subtotal=$gtotal/1.16;
+			$iva=$gtotal-$subtotal;
+
+			$values = array('subtotal'=>$subtotal, 'iva'=>$iva, 'total'=>$gtotal, 'gtotal'=>$gtotal );
+			$this->update('et_venta',array('idventa'=>$idventa), $values);
+		}
+		$row = array('id' =>$id,'subtotal' =>round($subtotal,2), 'iva'=>round($iva,2), 'total'=>round($gtotal,2));
+		return json_encode($row);
 	}
 	public function imprimir(){
 		self::set_names();

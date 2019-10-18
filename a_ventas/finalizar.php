@@ -3,7 +3,7 @@ require_once("db_.php");
 $id=$_REQUEST['id'];
 
 $pd = $db->venta($id);
-$total=number_format($pd['total'],2);
+$total=round($pd['total'],2);
 
 ?>
 <form action="" id="form_venta" data-lugar="a_ventas/db_" data-funcion="finalizar_venta" data-destino='a_ventas/editar'>
@@ -19,17 +19,17 @@ $total=number_format($pd['total'],2);
     <div clas='row'>
       <div class='col-12'>
         <label>Total</label>
-        <input type='text' name='total' id='total' style='text-align:right' placeholder='Total' value='<?php echo $total; ?>' class='form-control' readonly>
+        <input type='text' name='total_g' id='total_g' style='text-align:right' placeholder='Total' value='<?php echo $total; ?>' class='form-control' readonly>
       </div>
 
       <div class='col-12'>
         <label>Efectivo</label>
-        <input type='text' name='efectivo' id='efectivo' style='text-align:right' placeholder='efectivo' value='' class='form-control' required>
+        <input type='text' name='efectivo_g' id='efectivo_g' style='text-align:right' placeholder='efectivo' value='' class='form-control' required onchange='cambio_total()'>
       </div>
 
       <div class='col-12'>
         <label>Cambio</label>
-        <input type='text' name='cambio' id='cambio' style='text-align:right' placeholder='cambio' value='' class='form-control' required>
+        <input type='text' name='cambio_g' id='cambio_g' style='text-align:right' placeholder='cambio' value='' class='form-control' required>
       </div>
     </div>
   </div>

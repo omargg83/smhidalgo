@@ -24,20 +24,6 @@
 
 <script type="text/javascript">
 
-$(document).on('keypress','#prod_venta',function(e){
-	if(e.which == 13) {
-		e.preventDefault();
-		e.stopPropagation();
-		buscar_venta();
-	}
-});
-
-$(document).on('click','#buscar_prodventa',function(e){
-	e.preventDefault();
-	e.stopPropagation();
-	buscar_venta();
-});
-
 function buscar_venta(){
 	var texto=$("#prod_venta").val();
 	var idtienda=$("#idtienda").val();
@@ -55,75 +41,56 @@ function buscar_venta(){
 			},
 			success:  function (response) {
 				$("#resultadosx").html(response);
+				$("#prod_venta").val();
 			}
 		});
 	}
 }
-
-function ventraprod(idbodega){
+function ventraprod(idx,tipo){
 	var idventa =$("#id").val();
-	var existencia=parseInt($("#existencia_"+idbodega).val());
-	var precio=parseInt($("#precio_"+idbodega).val());
-	var observa=$("#observa_"+idbodega).val();
+	var idcliente =$("#idcliente").val();
+	var idbodega="";
+	var id_invent="";
+	if(tipo==1){
+		idbodega=idx;
+	}
+	if(tipo==2){
+		id_invent=idx;
+	}
+	var precio=parseInt($("#precio_"+idx).val());
+	var observa=$("#observa_"+idx).val();
 
 	$.ajax({
 		data:  {
 			"idventa":idventa,
-			"idbodega":idbodega,
+			"idcliente":idcliente,
 			"precio":precio,
 			"observa":observa,
+			"idbodega":idbodega,
+			"id_invent":id_invent,
+			"tipo":tipo,
 			"function":"agregaventa"
 		},
 		url:   "a_ventas/db_.php",
 		type:  'post',
-		beforeSend: function () {
-
-		},
 		success:  function (response) {
-			if (isNaN(response)){
-				alert(response);
-			}
-			else{
-				$("#resultadosx").html("");
-				$("#compras").load("a_ventas/lista_pedido.php?id="+idventa);
-				buscar_venta();
-			}
+			var data = JSON.parse(response);
+			$("#id").val(data.idventa);
+			$("#sub_x").val(data.subtotal);
+			$("#iva_x").val(data.iva);
+			$("#total_x").val(data.total);
+
+			$("#tablax").append(data.datax);
+
+			Swal.fire({
+				type: 'success',
+				title: "Se agregó correctamente",
+				showConfirmButton: false,
+				timer: 500
+			});
 		}
 	});
 }
-
-function ventaespecial(id_invent){
-	var idventa =$("#id").val();
-	var cantidad=parseInt($("#cantidad_"+id_invent).val());
-	var precio=parseInt($("#precio_"+id_invent).val());
-	var observa=$("#observa_"+id_invent).val();
-	$.ajax({
-		data:  {
-			"idventa":idventa,
-			"id_invent":id_invent,
-			"cantidad":cantidad,
-			"precio":precio,
-			"observa":observa,
-			"function":"agregaespecial"
-		},
-		url:   "a_ventas/db_.php",
-		type:  'post',
-		beforeSend: function () {
-
-		},
-		success:  function (response) {
-			if (isNaN(response)){
-				alert(response);
-			}
-			else{
-				$("#resultadosx").html("");
-				$("#compras").load("a_ventas/lista_pedido.php?id="+idventa);
-				buscar_venta();
-			}
-		}
-	});
-}
-
 function imprime(id){
 	$.ajax({
 		data:  {
@@ -150,4 +117,49 @@ function imprime(id){
 		}
 	});
 }
+function cambio_total(){
+	var total_g=$("#total_g").val();
+	var efectivo_g=$("#efectivo_g").val();
+	var total=(efectivo_g-total_g)*100;
+	$("#cambio_g").val(Math.round(total)/100);
+}
+function borra_venta(id){
+
+	$.confirm({
+		title: 'Guardar',
+		content: '¿Desea borrar el registro seleccionado?',
+		buttons: {
+			Aceptar: function () {
+				var parametros={
+					"id":id,
+					"function":"borrar_venta"
+				};
+				$.ajax({
+					data:  parametros,
+					url: "a_ventas/db_.php",
+					type:  'post',
+					success:  function (response) {
+						var data = JSON.parse(response);
+						$("#sub_x").val(data.subtotal);
+						$("#iva_x").val(data.iva);
+						$("#total_x").val(data.total);
+						$("#div_"+data.id).remove();
+
+						Swal.fire({
+							type: 'success',
+							title: "Se éliminó correctamente",
+							showConfirmButton: false,
+							timer: 500
+						});
+					}
+				});
+			},
+			Cancelar: function () {
+
+			}
+		}
+	});
+
+}
+
 </script>

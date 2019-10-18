@@ -539,7 +539,6 @@
 			var funcion = $(this).data('funcion');
 		}
 		else{
-			console.log("error");
 			return;
 		}
 

@@ -13,9 +13,9 @@
 <div class="modal-body" style='max-height:580px;overflow: auto;'>
 	<div clas='row'>
 			<div class="input-group mb-3">
-			<input type="text" class="form-control" name="prod_venta" id='prod_venta' placeholder='buscar producto' aria-label="buscar producto" aria-describedby="basic-addon2">
+			<input type="text" class="form-control" name="prod_venta" id='prod_venta' placeholder='buscar producto' aria-label="buscar producto" aria-describedby="basic-addon2" onchange='buscar_venta()'>
 			<div class="input-group-append">
-				<button class="btn btn-outline-secondary btn-sm" type="button" id='buscar_prodventa'><i class='fas fa-search'></i>Buscar</button>
+				<button class="btn btn-outline-secondary btn-sm" type="button" onclick='buscar_venta()'><i class='fas fa-search'></i>Buscar</button>
 			</div>
 		</div>
 	</div>
