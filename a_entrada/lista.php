@@ -18,19 +18,19 @@
 		</thead>
 		<tbody>
 		<?php
-			for($i=0;$i<count($pd);$i++){
+			foreach($pd as $key){
 		?>
-			<tr id="<?php echo $pd[$i]['identrada']; ?>" class="edit-t">
+			<tr id="<?php echo $key['identrada']; ?>" class="edit-t">
 				<td>
 					<div class="btn-group">
 						<button class='btn btn-outline-secondary btn-sm' id='edit_persona' title='Editar' data-lugar='a_entrada/editar'><i class='fas fa-pencil-alt'></i></button>
 					</div>
 				</td>
-				<td><?php echo $pd[$i]["identrada"]; ?></td>
-				<td><?php echo $pd[$i]["razon_social_prove"]; ?></td>
-				<td><?php echo $pd[$i]["numero"]; ?></td>
-				<td><?php echo $pd[$i]["estado"]; ?></td>
-				<td align="right"><?php echo number_format($pd[$i]["total"],2); ?></td>
+				<td><?php echo $key["identrada"]; ?></td>
+				<td><?php echo $key["razon_social_prove"]; ?></td>
+				<td><?php echo $key["numero"]; ?></td>
+				<td><?php echo $key["estado"]; ?></td>
+				<td align="right"><?php echo number_format($key["total"],2); ?></td>
 			</tr>
 		<?php
 			}

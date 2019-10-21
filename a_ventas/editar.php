@@ -5,7 +5,7 @@ $id=$_REQUEST['id'];
 $clientes = $db->clientes_lista();
 //$tiendas = $db->tiendas_lista();
 //$descuento = $db->descuento_lista();
-
+$llave=date("YmdHis").rand(1,1983);
 if($id==0){
 	$idtienda=$_SESSION['idtienda'];
 	$idcliente=0;
@@ -32,6 +32,7 @@ else{
 <div class="container">
 	<div class='card'>
 		<form action="" id="form_venta" data-lugar="a_ventas/db_" data-funcion="guardar_venta" data-destino='a_ventas/editar'>
+			<input type="hidden" class="form-control" name="llave" id="llave" value="<?php echo $llave ;?>" placeholder="Numero de compra">
 			<div class='card-header'>Venta <?php echo $id; ?></div>
 			<div class='card-body'>
 				<div class='row'>
@@ -72,9 +73,9 @@ else{
 									echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
 									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i> Productos</button>";
 
-                	if($id>0){
-										echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='$id' data-lugar='a_ventas/finalizar'><i class='fas fa-cash-register'></i> Finalizar</button>";
-									}
+
+									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='$id' data-lugar='a_ventas/finalizar'><i class='fas fa-cash-register'></i> Finalizar</button>";
+
                 }
 								if($estado=="Pagada"){
 									echo "<button type='button' class='btn btn-outline-secondary btn-sm' onclick='imprime($id)'><i class='fas fa-print'></i>Imprimir</button>";
@@ -93,7 +94,7 @@ else{
 			echo "<div class='card-body' id='compras'>";
 			include 'lista_pedido.php';
 			echo "</div>";
-		
+
 		?>
 	</div>
 </div>

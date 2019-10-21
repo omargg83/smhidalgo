@@ -29,7 +29,7 @@ $total=round($pd['total'],2);
 
       <div class='col-12'>
         <label>Cambio</label>
-        <input type='text' name='cambio_g' id='cambio_g' style='text-align:right' placeholder='cambio' value='' class='form-control' required>
+        <input type='text' name='cambio_g' id='cambio_g' style='text-align:right' placeholder='cambio' value='' class='form-control' required readonly>
       </div>
     </div>
   </div>

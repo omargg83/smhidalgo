@@ -86,12 +86,23 @@ class Venta extends Sagyc{
 		if (isset($_REQUEST['factura'])){
 			$arreglo+=array('factura'=>$_REQUEST['factura']);
 		}
+		if (isset($_REQUEST['llave'])){
+			$llave=$_REQUEST['llave'];
+			$arreglo+=array('llave'=>$llave);
+		}
+
 		if($id==0){
 			$date=date("Y-m-d H:i:s");
 			$arreglo+=array('fecha'=>$date);
 			$arreglo+=array('idusuario'=>$_SESSION['idpersona']);
 			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
-			$x.=$this->insert('et_venta', $arreglo);
+			$this->insert('et_venta', $arreglo);
+
+			$sql="select * from et_venta where llave='$llave' and idusuario='".$_SESSION['idpersona']."'";
+			$sth = $this->dbh->prepare($sql);
+			$sth->execute();
+			$res=$sth->fetch();
+			return $res['idventa'];
 		}
 		else{
 			$x.=$this->update('et_venta',array('idventa'=>$id), $arreglo);
@@ -242,7 +253,8 @@ class Venta extends Sagyc{
 		$codigo="";
 		$rapido="";
 		$total=0;
-				$pventa=0;
+		$pventa=0;
+
 		if($tipo==1){
 			$sql="select * from et_bodega where id=:texto";
 			$sth = $this->dbh->prepare($sql);
@@ -318,8 +330,8 @@ class Venta extends Sagyc{
 			$data.= "</div>";
 			$data.= "<div class='col-3'>";
 				$data.= $nombre;
-				if(strlen($observaciones)>0){
-					$data.= "<br><span style='font-size:10px;font-weight: bold;'>".$observaciones."</span>";
+				if(strlen($observa)>0){
+					$data.= "<br><span style='font-size:10px;font-weight: bold;'>".$observa."</span>";
 				}
 			$data.= "</div>";
 
@@ -330,15 +342,15 @@ class Venta extends Sagyc{
 				$data.= "<B>RAPIDO:</B>".$rapido;
 			$data.= "</div>";
 
-			$data.= "<div class='col-2'><center>";
+			$data.= "<div class='col-2 text-center'>";
 				$data.= number_format($total);
-			$data.= "</center></div>";
+			$data.= "</div>";
 
-			$data.= "<div class='col-2'>";
+			$data.= "<div class='col-2 text-right'>";
 				$data.= number_format($pventa,2);
 			$data.= "</div>";
 
-			$data.= "<div class='col-2'>";
+			$data.= "<div class='col-2 text-right'>";
 				$data.= number_format($pventa,2);
 			$data.= "</div>";
 		$data.= "</div>";
@@ -350,7 +362,7 @@ class Venta extends Sagyc{
 	public function borrar_venta(){
 		self::set_names();
 		$arreglo =array();
-		if (isset($_POST['id'])){$id=$_POST['id'];}
+		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
 		$res="";
 		$sql="select * from et_bodega where id=:texto";
 		$sth = $this->dbh->prepare($sql);
@@ -361,7 +373,7 @@ class Venta extends Sagyc{
 		$idventa=$res['idventa'];
 
 		if ($res['tipo']==0){
-			if (isset($_POST['id'])){$id=$_POST['id'];}
+			if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
 			$res=$this->borrar('et_bodega',"id",$id);
 		}
 		else{
@@ -392,17 +404,32 @@ class Venta extends Sagyc{
 	}
 	public function imprimir(){
 		self::set_names();
-		if (isset($_POST['id'])){$id=$_POST['id'];}
+		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
 		$arreglo =array();
 		$arreglo+=array('imprimir'=>1);
 		return $this->update('et_venta',array('idventa'=>$id), $arreglo);
 	}
 	public function finalizar_venta(){
 		self::set_names();
-		if (isset($_POST['id'])){$id=$_POST['id'];}
-		$arreglo =array();
-		$arreglo+=array('estado'=>"Pagada");
-		return $this->update('et_venta',array('idventa'=>$id), $arreglo);
+
+		$total_g=$_REQUEST['total_g'];
+		$efectivo_g=$_REQUEST['efectivo_g'];
+		$cambio_g=$_REQUEST['cambio_g'];
+
+		if($total_g>0){
+			if($total_g<=$efectivo_g){
+				if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
+				$arreglo =array();
+				$arreglo+=array('estado'=>"Pagada");
+				return $this->update('et_venta',array('idventa'=>$id), $arreglo);
+			}
+			else{
+				return "favor de verificar";
+			}
+		}
+		else{
+			return "Debe de agregar un producto";
+		}
 	}
 }
 

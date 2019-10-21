@@ -56,16 +56,16 @@
 				echo "<B>RAPIDO:</B>".$key["rapido"];
 			echo "</div>";
 
-			echo "<div class='col-2'><center>";
+			echo "<div class='col-2 text-center'>";
 				echo number_format($key['total']);
-			echo "</center></div>";
+			echo "</div>";
 
-			echo "<div class='col-2'>";
+			echo "<div class='col-2 text-right'>";
 				echo number_format($key['pventa'],2);
 			echo "</div>";
 
 			$total=$key['gtotalv'];
-			echo "<div class='col-2'>";
+			echo "<div class='col-2 text-right'>";
 				echo number_format($total,2);
 			echo "</div>";
 		echo "</div>";

@@ -22,23 +22,23 @@
 	$idpaquete=0;
 	$contar=1;
 	$estado=$pd['estado'];
-
-	for($i=0;$i<count($pedido);$i++){
-		echo "<tr id='".$pedido[$i]['id']."' class='edit-t'>";
+	foreach($pedido as $key){
+		echo "<tr id='".$key['id']."' class='edit-t'>";
 		echo "<td>";
-		if($estado=="Activa"){
-			echo "<button class='btn btn-outline-secondary btn-sm' id='eliminar_comision' data-lugar='a_entrada/db_' data-destino='a_entrada/form_pedido' data-id='".$pedido[$i]['id']."' data-iddest='$id' data-funcion='borrar_producto' data-div='pedidos'><i class='far fa-trash-alt'></i></i></button>";
+		if($estado=="Activa" and $key['cantidad']>0){
+			echo "<button class='btn btn-outline-secondary btn-sm' id='eliminar_comision' data-lugar='a_entrada/db_' data-destino='a_entrada/form_pedido' data-id='".$key['id']."' data-iddest='$id' data-funcion='borrar_producto' data-div='pedidos'><i class='far fa-trash-alt'></i></i></button>";	
 		}
+
 		echo "</td>";
-		echo "<td>".$pedido[$i]['codigo']."</td>";
-		echo "<td>".$pedido[$i]['rapido']."</td>";
-		echo "<td>".$pedido[$i]['clave']."</td>";
-		echo "<td>".$pedido[$i]['nombre']."</td>";
-		echo "<td>".$pedido[$i]['color']."</td>";
-		echo "<td align='center'>".$pedido[$i]['unidad']."</td>";
-		echo "<td align='right'>".$pedido[$i]['cantidad']."</td>";
-		echo "<td align='right'>".moneda($pedido[$i]['precio'])."</td>";
-		echo "<td align='right'>".moneda($pedido[$i]['pventa'])."</td>";
+		echo "<td>".$key['codigo']."</td>";
+		echo "<td>".$key['rapido']."</td>";
+		echo "<td>".$key['clave']."</td>";
+		echo "<td>".$key['nombre']."</td>";
+		echo "<td>".$key['color']."</td>";
+		echo "<td align='center'>".$key['unidad']."</td>";
+		echo "<td align='right'>1</td>";
+		echo "<td align='right'>".moneda($key['precio'])."</td>";
+		echo "<td align='right'>".moneda($key['pventa'])."</td>";
 
 		echo "</tr>";
 	}

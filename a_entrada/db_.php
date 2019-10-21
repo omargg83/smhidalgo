@@ -25,32 +25,26 @@ class Entrada extends Sagyc{
 		left outer join et_modelo on et_modelo.idmodelo=et_invent.idmodelo
 		where id_invent='$id'
 		order by id_invent asc";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->inventario=$res;
-		}
-		return $this->inventario;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function entrada($id){
 		self::set_names();
 		$this->inventario="";
 		$sql="select * from et_entrada where identrada='$id'";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->inventario=$res;
-		}
-		return $this->inventario;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function entrada_lista(){
 		self::set_names();
 		$sql="select et_entrada.identrada, et_entrada.numero, et_prove.razon_social_prove,  et_entrada.estado, et_entrada.total from et_entrada
 		left outer join et_prove on et_prove.id_prove=et_entrada.id_prove
 		order by identrada desc";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->ventas[]=$res;
-		}
-		return $this->ventas;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function entrada_pedido($id){
 		self::set_names();
@@ -64,11 +58,9 @@ class Entrada extends Sagyc{
 	public function proveedores_lista(){
 		self::set_names();
 		$sql="SELECT * FROM et_prove";
-		foreach ($this->dbh->query($sql) as $res){
-			$this->clientes[]=$res;
-		}
-		return $this->clientes;
-		$this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 	public function guardar_entrada(){
 		$x="";
@@ -100,7 +92,7 @@ class Entrada extends Sagyc{
 	}
 	public function borrar_producto(){
 		self::set_names();
-		if (isset($_POST['id'])){$id=$_POST['id'];}
+		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
 		return $this->borrar('et_bodega',"id",$id);
 	}
 	public function busca_producto(){
