@@ -55,7 +55,7 @@ class Inventario extends Sagyc{
 		}
 		$sth = $this->dbh->prepare($sql);
 		$sth->execute();
-		return $sth->fetch();
+		return $sth->fetchAll();
 	}
 	public function inventario($id){
 		self::set_names();
@@ -309,16 +309,17 @@ class Inventario extends Sagyc{
 	}
 	public function recibir(){
 		$x="";
-		/*
+
 		if (isset($_POST['id'])){$id=$_POST['id'];}
+		if (isset($_POST['idtraspaso'])){$idtraspaso=$_POST['idtraspaso'];}
+
 		$arreglo =array();
 		$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+		$arreglo+=array('recibido'=>1);
 		$arreglo+=array('frecibido'=>date("Y-m-d H:i:s"));
 		$arreglo+=array('idpersona'=>$_SESSION['idpersona']);
-		return $this->update('et_bodega',array('id'=>$id), $arreglo);
-
-		*/
-		return "hola mundo";
+		$x=$this->update('et_bodega',array('id'=>$id), $arreglo);
+		return $x;
 	}
 
 	public function guardar_bodega(){

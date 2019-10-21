@@ -136,9 +136,7 @@ function traspasosel(idbodega){
 		}
 	});
 }
-$(document).on('click','#enviatraspaso',function(e){
-	e.preventDefault();
-	e.stopPropagation();
+function enviatraspaso(){
 	var idtraspaso =$("#id").val();
 	$.confirm({
 		title: 'Agregar',
@@ -152,9 +150,6 @@ $(document).on('click','#enviatraspaso',function(e){
 					},
 					url:   "a_inventario/db_.php",
 					type:  'post',
-					beforeSend: function () {
-
-					},
 					success:  function (response) {
 						if (!isNaN(response)){
 							$("#trabajo").load("a_inventario/form_traspaso.php?id="+idtraspaso);
@@ -170,25 +165,19 @@ $(document).on('click','#enviatraspaso',function(e){
 			}
 		}
 	});
-});
-$(document).on('click','#recibir',function(e){
-	e.preventDefault();
-	e.stopPropagation();
+}
+function recibir(id){
 	var idtraspaso =$("#id").val();
-	var id=$(this).closest(".edit-t").attr("id");
-	var unico=$(this).closest(".edit-t").data("unico");
-	alert(unico);
 	$.ajax({
 		data:  {
+			"idtraspaso":idtraspaso,
 			"id":id,
 			"function":"recibir"
 		},
 		url:   "a_inventario/db_.php",
 		type:  'post',
-		beforeSend: function () {
-
-		},
 		success:  function (response) {
+			console.log(response);
 			if (!isNaN(response)){
 				$("#resultadosx").html("");
 				$("#movimientos").load("a_inventario/lista_traspasos.php?id="+idtraspaso);
@@ -198,7 +187,7 @@ $(document).on('click','#recibir',function(e){
 			}
 		}
 	});
-});
+}
 function barras(id){
 	alert(id);
 }

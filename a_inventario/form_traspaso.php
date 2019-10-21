@@ -85,7 +85,7 @@ if($estado!="Activa"){
 							}
 							if($id>0 and $estado=="Activa"){
 								echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_inventario/form_producto'><i class='fas fa-plus'></i> Productos</button>";
-								echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='enviatraspaso'><i class='fas fa-car-side'></i> Enviar</button>";
+								echo "<button type='button' class='btn btn-outline-secondary btn-sm' onclick='enviatraspaso()'><i class='fas fa-car-side'></i> Enviar</button>";
 							}
 							?>
 							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_inventario/traspasos' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
