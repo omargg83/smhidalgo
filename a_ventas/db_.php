@@ -25,16 +25,30 @@ class Venta extends Sagyc{
 		$sth->execute();
 		return $sth->fetch();
 	}
-	public function ventas_lista($idtienda){
+	public function ventas_lista(){
 		self::set_names();
 		$sql="select et_venta.idventa, et_venta.idtienda, et_venta.iddescuento, et_venta.factura, et_cliente.razon_social_prove, et_tienda.nombre, et_venta.total, et_venta.fecha, et_venta.gtotal, et_venta.estado, et_descuento.nombre as descuento from et_venta
 		left outer join et_cliente on et_cliente.idcliente=et_venta.idcliente
 		left outer join et_descuento on et_descuento.iddescuento=et_venta.iddescuento
-		left outer join et_tienda on et_tienda.id=et_venta.idtienda where et_venta.idtienda='$idtienda' order by et_venta.fecha desc";
+		left outer join et_tienda on et_tienda.id=et_venta.idtienda where et_venta.idtienda='".$_SESSION['idtienda']."' and et_venta.estado='Activa' order by et_venta.fecha desc";
 		$sth = $this->dbh->prepare($sql);
 		$sth->execute();
 		return $sth->fetchAll();
 	}
+	public function buscar($texto){
+		self::set_names();
+		$texto=trim($texto);
+		if(strlen($texto)>0){
+			$sql="select et_venta.idventa, et_venta.idtienda, et_venta.iddescuento, et_venta.factura, et_cliente.razon_social_prove, et_tienda.nombre, et_venta.total, et_venta.fecha, et_venta.gtotal, et_venta.estado, et_descuento.nombre as descuento from et_venta
+			left outer join et_cliente on et_cliente.idcliente=et_venta.idcliente
+			left outer join et_descuento on et_descuento.iddescuento=et_venta.iddescuento
+			left outer join et_tienda on et_tienda.id=et_venta.idtienda where et_venta.idtienda='".$_SESSION['idtienda']."' and (et_venta.idventa like '%$texto%' or et_cliente.razon_social_prove like '%$texto%' or et_venta.estado like '%$texto%' or et_venta.total like '%$texto%') order by et_venta.fecha desc";
+			$sth = $this->dbh->prepare($sql);
+			$sth->execute();
+			return $sth->fetchAll();
+		}
+	}
+
 	public function ventas_pedido($id){
 		self::set_names();
 		$sql="select et_bodega.id, et_bodega.clave, et_invent.codigo, et_invent.nombre, et_bodega.cantidad, et_bodega.precio, et_bodega.pventa, et_bodega.total, et_bodega.gtotal, et_bodega.gtotalv, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones, et_bodega.rapido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idventa='$id' order by et_bodega.id desc";

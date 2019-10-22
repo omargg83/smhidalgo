@@ -1,6 +1,21 @@
 <?php
 	require_once("db_.php");
-	$pd = $db->ventas_lista($_SESSION['idtienda']);
+	$pd=array();
+	$nombre="";
+	if (isset($_REQUEST['funcion'])){
+		$nombre=$_REQUEST['funcion'];
+	}
+	if($nombre=="buscar"){
+		$valor=$_REQUEST['valor'];
+		$pd = $db->buscar($valor);
+	}
+	if($nombre==""){
+		$pd = $db->ventas_lista();
+	}
+	if($nombre=="avanzada"){
+		echo $nombre;
+	}
+
 
 	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br>";
