@@ -55,10 +55,8 @@
 					      $x.="<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
 					      $x.="<a class='dropdown-item' href='#a_inventario/index'  ><i class='fas fa-boxes'></i> Inventario</a>";
 					      if($_SESSION['nivel']==1){
-					        $x.="<br>";
-
 					        //$x.="<a class='dropdown-item' href='#a_compras/index' ><i class='fas fa-money-check-alt'></i> Lista de compras</a>";
-					        $x.="<a class='dropdown-item' href='#a_entrada/index' ><i class='fas fa-chalkboard-teacher'></i> Entrada</a>";
+					        //$x.="<a class='dropdown-item' href='#a_entrada/index' ><i class='fas fa-chalkboard-teacher'></i> Entrada</a>";
 					      }
 
 					      $x.="</div>";
@@ -75,11 +73,11 @@
 				        $x.="<a class='dropdown-item' href='#' id='menu_acceso' ><i class='fas fa-user-clock'></i> Acceso</a>";
 				        $x.="<a class='dropdown-item' href='#a_tienda/index'><i class='fas fa-shopping-basket'></i> Tiendas</a>";
 				        $x.="<a class='dropdown-item' href='#a_cliente/index'><i class='fas fa-people-carry'></i> Clientes</a>";
-				        $x.="<a class='dropdown-item' href='#a_proveedores/index' ><i class='fas fa-user-plus'></i> Proveedores</a>";
+				        //$x.="<a class='dropdown-item' href='#a_proveedores/index' ><i class='fas fa-user-plus'></i> Proveedores</a>";
 				        $x.="<hr>";
-				        $x.="<a class='dropdown-item' href='#a_marca/index' ><i class='fas fa-mobile-alt'></i> Marcas</a>";
-				        $x.="<a class='dropdown-item' href='#a_modelo/index' ><i class='fab fa-android'></i> Modelos</a>";
-								$x.="<hr>";
+				        //$x.="<a class='dropdown-item' href='#a_marca/index' ><i class='fas fa-mobile-alt'></i> Marcas</a>";
+				        //$x.="<a class='dropdown-item' href='#a_modelo/index' ><i class='fab fa-android'></i> Modelos</a>";
+								//$x.="<hr>";
 								$x.="<a class='dropdown-item' href='http://sagyc.com.mx/smhidalgo/app/publish.htm' target='_blank'><i class='fas fa-print'></i> Impresion</a>";
 
 				        $x.="</div>";

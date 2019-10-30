@@ -59,48 +59,74 @@
 	}
 ?>
 <div class="container">
+	<form action="" id="form_marca" data-lugar="a_productos/db_" data-funcion="guardar_producto">
+	<input type="hidden" name="id" id="id" value="<?php echo $id?>">
 	<div class='card'>
+		<div class='card-header'>
+			<h4 class="title">Editar Catálogo de productos</h4>
+		</div>
 		<div class='card-body'>
-				<form action="" id="form_marca" data-lugar="a_productos/db_" data-funcion="guardar_producto">
-				<div class="header">
-					<h4 class="title">Editar Catálogo de productos</h4>
-					<input type="hidden" name="id" id="id" value="<?php echo $id?>">
-					<hr>
-				</div>
 
-				<div class="form-group row">
-				 <label class="control-label col-sm-2" for="">Tipo de insumo:</label>
-				  <div class="col-sm-10">
-					<select class="form-control" name="unico" id="unico">
-					  <option value="0"<?php if($unico=="0") echo "selected"; ?> > Almacén (Se controla el inventario por volúmen)</option>
-					  <option value="1"<?php if($unico=="1") echo "selected"; ?> > Unico (se controla inventario por pieza única)</option>
-					  <option value="2"<?php if($unico=="2") echo "selected"; ?> > Registro (solo registra ventas, no es necesario registrar entrada)</option>
-					  <option value="3"<?php if($unico=="3") echo "selected"; ?> > Pago de linea</option>
-					  <option value="4"<?php if($unico=="4") echo "selected"; ?> > Reparación</option>
-					</select>
+				<div class="row">
+					<div class="col-sm-3">
+					 	<label >Tipo de insumo:</label>
+						<select class="form-control" name="unico" id="unico">
+						  <option value="0"<?php if($unico=="0") echo "selected"; ?> > Almacén (Se controla el inventario por volúmen)</option>
+						  <option value="1"<?php if($unico=="1") echo "selected"; ?> > Unico (se controla inventario por pieza única)</option>
+						  <option value="2"<?php if($unico=="2") echo "selected"; ?> > Registro (solo registra ventas, no es necesario registrar entrada)</option>
+						  <option value="3"<?php if($unico=="3") echo "selected"; ?> > Pago de linea</option>
+						  <option value="4"<?php if($unico=="4") echo "selected"; ?> > Reparación</option>
+						</select>
 				  </div>
-				</div>
 
-				<div class="form-group row">
-					<label class="control-label col-sm-2">Código de barras:</label>
-					<div class="col-sm-10">
+					<div class="col-sm-3">
+						<label>Código de barras:</label>
 						<input type="text" class="form-control" name="codigo" id="codigo" value="<?php echo $codigo ;?>" placeholder="Código de Producto">
 					</div>
-				</div>
 
-				<div class="form-group row">
-					<label class="control-label col-sm-2">Acceso rápido:</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" name="rapido" id="rapido" value="<?php echo $rapido ;?>" placeholder="Código de Producto">
+					<div class="col-sm-3">
+						<label >Acceso rápido:</label>
+						<input type="text" class="form-control" name="rapido" id="rapido" value="<?php echo $rapido ;?>" placeholder="Acceso rápido">
 					</div>
-				</div>
 
-				<div class="form-group row">
-					<label class="control-label col-sm-2">Nombre de Producto:</label>
-					<div class="col-sm-10">
+					<div class="col-sm-3">
+						<label >Activo:</label>
+						<select class="form-control" name="activo" id="activo">
+						  <option value="1"<?php if($activo=="1") echo "selected"; ?> >Si</option>
+						  <option value="0"<?php if($activo=="0") echo "selected"; ?> >No</option>
+						</select>
+					</div>
+
+					<div class="col-sm-6">
+						<label>Nombre de Producto:</label>
 						<input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $nombre ;?>" placeholder="Nombre de Producto" required>
 					</div>
+
+					<div class="col-sm-6">
+					 <label>Unidad de Medida:</label>
+						<select class="form-control" name="unidad" id="unidad">
+							<?php
+								echo "<option value='pieza'"; if($unidad=="Pieza"){ echo "selected";} echo ">Pieza</option>";
+							?>
+						</select>
+					</div>
+
+					<div class="col-sm-3">
+						<label>Precio de Compra:</label>
+						<input type="number" class="form-control" name="preciocompra" id="preciocompra" value="<?php echo $preciocompra ;?>" placeholder="Precio de Compra">
+					</div>
+
+					<div class="col-sm-3">
+						<label>Precio venta general:</label>
+						<input type="number" class="form-control" name="pvgeneral" id="pvgeneral" value="<?php echo $pvgeneral ;?>" placeholder="Precio venta general">
+					</div>
 				</div>
+
+
+
+
+
+				<!----
 
 				<div class="form-group row">
 				 <label class="control-label col-sm-2" for="">Descripción:</label>
@@ -110,13 +136,12 @@
 				</div>
 
 				<hr>
-
 				<div class='row'>
 					<div class="form-group col-sm-6">
 						<label class="control-label" for="">Marca:</label>
 						<select class="form-control" id="idmarca" name="idmarca">
 						  <option value="" disabled selected>Selecciona una marca</option>
-							<?php
+
 							for($i=0;$i<count($marca);$i++){
 								echo '<option value="'.$marca[$i]['idmarca'].'"';
 								if($marca[$i]['idmarca']==$idmarca){
@@ -124,7 +149,7 @@
 								}
 								echo '>'.$marca[$i]["marca"].'</option>';
 							}
-							?>
+
 						</select>
 					</div>
 
@@ -132,7 +157,7 @@
 						<label class="control-label" for="">Modelo:</label>
 						<select class="form-control" id="idmodelo" name="idmodelo">
 						  <option value="" disabled selected>Selecciona modelo</option>
-							<?php
+
 							for($i=0;$i<count($modelo);$i++){
 								echo '<option value="'.$modelo[$i]['idmodelo'].'"';
 								if($modelo[$i]['idmodelo']==$idmodelo){
@@ -140,23 +165,10 @@
 								}
 								echo '>'.$modelo[$i]["modelo"].'</option>';
 							}
-							?>
+
 						</select>
 					</div>
 				</div>
-
-
-				<div class='row'>
-					<div class="form-group col-sm-6">
-					 <label class="control-label">Unidad de Medida:</label>
-						<select class="form-control" name="unidad" id="unidad">
-							<?php
-								echo "<option value='pieza'"; if($unidad=="Pieza"){ echo "selected";} echo ">Pieza</option>";
-							?>
-						</select>
-					</div>
-
-
 					<div class="form-group col-sm-3">
 						<label class="control-label " for="">Stock Minimo:</label>
 						<input type="number" class="form-control" name="stockmin" id="stockmin" value="<?php echo $stockmin ;?>" placeholder="Stock Minimo" required>
@@ -166,19 +178,9 @@
 						<label class="control-label" for="">Stock Maximo:</label>
 						<input type="number" class="form-control" name="stockmax" id="stockmax" value="<?php echo $stockmax ;?>" placeholder="Stock Maximo" required>
 					</div>
-				</div>
+					-->
 
-				<div class='row'>
-					<div class="form-group col-sm-3">
-						<label class="control-label" for="">Precio de Compra:</label>
-						<input type="number" class="form-control" name="preciocompra" id="preciocompra" value="<?php echo $preciocompra ;?>" placeholder="Precio de Compra">
-					</div>
-
-					<div class="form-group col-sm-3">
-						<label class="control-label" for="">Precio venta general:</label>
-						<input type="number" class="form-control" name="pvgeneral" id="pvgeneral" value="<?php echo $pvgeneral ;?>" placeholder="Precio venta general">
-					</div>
-
+					<!---
 					<div class="form-group col-sm-3">
 						<label class="control-label" for="">Precio venta distribuidor:</label>
 						<input type="number" class="form-control" name="pvdistr" id="pvdistr" value="<?php echo $pvdistr ;?>" placeholder="$ <?php echo $pvdistr ;?>">
@@ -188,36 +190,25 @@
 						<label class="control-label" for="">Precio venta promoción:</label>
 						<input type="number" class="form-control" name="pvpromo" id="pvpromo" value="<?php echo $pvpromo ;?>" placeholder="$ <?php echo $pvpromo ;?>">
 					</div>
-				</div>
-
-				<div class='row'>
-					<div class="form-group col-sm-3">
-						<label class="control-label" for="">Activo:</label>
-						<select class="form-control" name="activo" id="activo">
-						  <option value="1"<?php if($activo=="1") echo "selected"; ?> >Si</option>
-						  <option value="0"<?php if($activo=="0") echo "selected"; ?> >No</option>
-						</select>
-					</div>
-
 					<div class="form-group col-sm-3">
 						<label class="control-label" for="">Seguimiento:</label>
 						<select class="form-control" name="seguimiento" id="seguimiento">
-						  <option value="1"<?php if($seguimiento=="1") echo "selected"; ?> >Si</option>
-						  <option value="0"<?php if($seguimiento=="0") echo "selected"; ?> >No</option>
+						  <option value="1" if($seguimiento=="1") echo "selected"; ?> >Si</option>
+						  <option value="0" if($seguimiento=="0") echo "selected"; ?> >No</option>
 						</select>
 					</div>
-
+				-->
 				</div>
-
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="btn-group">
-						<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
-						<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_inventario/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
+				<div class='card-footer'>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="btn-group">
+								<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
+								<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_inventario/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
+							</div>
 						</div>
 					</div>
 				</div>
-			</form>
-		</div>
+			</div>
+		</form>
 	</div>
-</form>

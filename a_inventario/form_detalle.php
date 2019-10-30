@@ -10,6 +10,7 @@
 	$pventa=$pd['pvgeneral'];
 	$precio=$pd['preciocompra'];
   $unidad=$pd['unidad'];
+  $unico=$pd['unico'];
 ?>
 
 	<div class='card'>
@@ -20,30 +21,21 @@
 					<label>Numero:</label>
 					<input type="text" class="form-control" name="id" id="id" value="<?php echo $id ;?>" placeholder="Numero de compra" readonly>
 				</div>
-				<div class='col-3'>
-					<label >Nombre:</label>
-					<input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $nombre; ?>" placeholder="Nombre" readonly>
-				</div>
-				<div class='col-3'>
-					<label >Marca:</label>
-					<input type="text" class="form-control" name="marca" id="marca" value="<?php echo $marca; ?>" placeholder="Marca" readonly>
-				</div>
-				<div class='col-3'>
-					<label >Modelo:</label>
-					<input type="text" class="form-control" name="modelo" id="modelo" value="<?php echo $modelo; ?>" placeholder="Modelo" readonly>
-				</div>
-
-				<div class='col-3'>
+				<div class='col-2'>
 					<label >Código:</label>
 					<input type="text" class="form-control" name="codigo" id="codigo" value="<?php echo $codigo; ?>" placeholder="Código" readonly>
 				</div>
 
-				<div class='col-3'>
+				<div class='col-2'>
+					<label >Nombre:</label>
+					<input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $nombre; ?>" placeholder="Nombre" readonly>
+				</div>
+				<div class='col-2'>
 					<label >$ Compra:</label>
 					<input type="text" class="form-control" name="rapido" id="rapido" value="<?php echo $precio; ?>" placeholder="Rápido" readonly>
 				</div>
 
-				<div class='col-3'>
+				<div class='col-2'>
 					<label >$ venta:</label>
 					<input type="text" class="form-control" name="rapido" id="rapido" value="<?php echo $pventa; ?>" placeholder="Rápido" readonly>
 				</div>
@@ -53,7 +45,9 @@
 		<div class='card-footer'>
 			<?php
 				echo "<div class='btn-group'>";
-				echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo'  data-id='0' data-id2='$id' data-lugar='a_inventario/editar_producto' title='Editar'><i class='fas fa-plus'></i> Nuevo</button>";
+				if ($unico==0 or $unico==1){
+					echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo'  data-id='0' data-id2='$id' data-lugar='a_inventario/editar_producto' title='Editar'><i class='fas fa-plus'></i> Nuevo</button>";
+				}
 				echo "<button class='btn btn-outline-secondary btn-sm' id='imprime_comision' title='Imprimir' data-lugar='a_inventario/imprimir' data-tipo='1' type='button'><i class='fas fa-barcode'></i>C. Barras</button>";
 				echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='lista_principal'  data-lugar='a_inventario/lista' title='Editar'><i class='fas fa-undo-alt'></i> Regresar</button>";
 				echo "</div>";
@@ -70,11 +64,10 @@
 			echo "<thead>";
 			echo "<tr>
 			<th>-</th>
-			<th>Clave</th>
+			<th>Clave/IMEI</th>
 			<th>Nombre</th>
 			<th>Color</th>
-			<th># Entrada</th>
-			<th># Venta</th>
+			<th># No. de Venta</th>
 			<th>Entrada</th>
 			<th>Salida</th>
 			<th>Precio Compra</th>
@@ -82,29 +75,34 @@
 			</tr>";
 			echo "</thead>";
 
-			for($i=0;$i<count($pd);$i++){
-				echo "<tr id='".$pd[$i]['id']."' class='edit-t' >";
+			foreach($pd as $key){
+				echo "<tr id='".$key['id']."' class='edit-t' >";
 
 				echo "<td>";
-				if($pd[$i]['cantidad']>0){
-					echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo'  data-id='".$pd[$i]['id']."' data-id2='$id' data-lugar='a_inventario/editar_producto' title='Editar'><i class='fas fa-pencil-alt'></i></button>";
+				if($key['cantidad']>0){
+					echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo'  data-id='".$key['id']."' data-id2='$id' data-lugar='a_inventario/editar_producto' title='Editar'><i class='fas fa-pencil-alt'></i></button>";
 				}
 
 				echo "</td>";
-				echo "<td>".$pd[$i]['clave']."</td>";
-				echo "<td>".$pd[$i]['descripcion']."</td>";
-				echo "<td>".$pd[$i]['color']."</td>";
-				echo "<td>".$pd[$i]['identrada']."</td>";
-				echo "<td>".$pd[$i]['idventa']."</td>";
-				echo "<td><center>";
-				if($pd[$i]['cantidad']>0)
-				echo $pd[$i]['cantidad'];
+				echo "<td>".$key['clave']."</td>";
+				echo "<td>".$key['descripcion']."</td>";
+				echo "<td>".$key['color']."</td>";
+				$fventa="";
+				if($key['idventa']>0){
+					$sql="select * from et_venta where idventa='".$key['idventa']."'";
+					$venta=$db->general($sql);
+					$fventa=fecha($venta[0]['fecha']);
+				}
+				echo "<td>#".$key['idventa']." - $fventa</td>";
 
-				$gtotal+=$pd[$i]['cantidad'];
+				echo "<td><center>";
+				if($key['cantidad']>0)
+				echo $key['cantidad'];
+				$gtotal+=$key['cantidad'];
 				echo "</center></td>";
-				echo "<td>".$pd[$i]['total']."</td>";
-				echo "<td align='right'>".moneda($pd[$i]['precio'])."</td>";
-				echo "<td align='right'>".moneda($pd[$i]['pventa'])."</td>";
+				echo "<td>".$key['total']."</td>";
+				echo "<td align='right'>".moneda($key['precio'])."</td>";
+				echo "<td align='right'>".moneda($key['pventa'])."</td>";
 				echo "</tr>";
 			}
 			echo "<tr>";

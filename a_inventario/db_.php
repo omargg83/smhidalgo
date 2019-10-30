@@ -49,13 +49,16 @@ class Inventario extends Sagyc{
 		self::set_names();
 		if(strlen($key)==0){
 			$sql="SELECT * FROM et_tienda where id!='".$_SESSION['idtienda']."'";
+			$sth = $this->dbh->prepare($sql);
+			$sth->execute();
+			return $sth->fetchAll();
 		}
 		else{
 			$sql="SELECT * FROM et_tienda where id='$key'";
+			$sth = $this->dbh->prepare($sql);
+			$sth->execute();
+			return $sth->fetch();
 		}
-		$sth = $this->dbh->prepare($sql);
-		$sth->execute();
-		return $sth->fetchAll();
 	}
 	public function inventario($id){
 		self::set_names();

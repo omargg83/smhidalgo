@@ -179,7 +179,7 @@ class Venta extends Sagyc{
 
 						$x.= "<td align='right'>";
 						$preciov=number_format($key["pventa"],2);
-						$x.= "<input type='text' class='form-control' name='precio_".$key['id']."' id='precio_".$key['id']."' value='$preciov' placeholder='cantidad' readonly>";
+						$x.= "<input type='text' class='form-control' name='precio_".$key['id']."' id='precio_".$key['id']."' value='$preciov' placeholder='Precio'>";
 						$x.= "</td>";
 
 						$x.= "<td>";
