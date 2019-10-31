@@ -78,7 +78,7 @@
 				        //$x.="<a class='dropdown-item' href='#a_marca/index' ><i class='fas fa-mobile-alt'></i> Marcas</a>";
 				        //$x.="<a class='dropdown-item' href='#a_modelo/index' ><i class='fab fa-android'></i> Modelos</a>";
 								//$x.="<hr>";
-								$x.="<a class='dropdown-item' href='http://sagyc.com.mx/smhidalgo/app/publish.htm' target='_blank'><i class='fas fa-print'></i> Impresion</a>";
+								$x.="<a class='dropdown-item' href='http://sagyc.com.mx/app/smhidalgo/publish.htm' target='_blank'><i class='fas fa-print'></i> Impresion</a>";
 
 				        $x.="</div>";
 				        $x.="</li>";
