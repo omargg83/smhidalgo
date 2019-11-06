@@ -88,11 +88,3 @@
                 </div>
               </div>
             </div>
-
-<script type="text/javascript">
-	$(document).ready(function(){
-		var id;
-		id=document.getElementById("id").value;
-		$("#pedido").load('form/ventas_pedido.php?id='+id);
-	});
- </script>
