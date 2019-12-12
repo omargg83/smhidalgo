@@ -1,18 +1,18 @@
 <?php
 require_once("../control_db.php");
 if (isset($_REQUEST['function'])){$function=$_REQUEST['function'];}	else{ $function="";}
-	
+
 class Usuario extends Sagyc{
-	
+
 	public $nivel_personal;
 	public $nivel_captura;
-	
+
 	public function __construct(){
 		parent::__construct();
 		$this->doc="a_clientes/papeles/";
 
 		if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
-			
+
 		}
 		else{
 			include "../error.php";
@@ -23,31 +23,24 @@ class Usuario extends Sagyc{
 	public function usuario($id){
 		self::set_names();
 		$sql="select * from et_usuario where idusuario='$id'";
-		 foreach ($this->dbh->query($sql) as $res){
-            $this->inventario=$res;
-        }
-        return $this->inventario;
-        $this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetch();
 	}
 	public function usuario_lista(){
-        self::set_names();
+    self::set_names();
 		$sql="select et_usuario.idusuario, et_usuario.idtienda, et_usuario.nombre, et_usuario.user, et_usuario.pass, et_usuario.nivel, et_tienda.nombre as tienda  from et_usuario left outer join et_tienda on et_tienda.id=et_usuario.idtienda";
-        foreach ($this->dbh->query($sql) as $res){
-            $this->comprax[]=$res;
-        }
-        return $this->comprax;
-        $this->dbh=null;
-    }
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
+  }
 
-    public function tiendas_lista(){
+  public function tiendas_lista(){
 		self::set_names();
-		
 		$sql="SELECT * FROM et_tienda";
-		foreach ($this->dbh->query($sql) as $res){
-            $this->tiendas[]=$res;
-        }
-        return $this->tiendas;
-        $this->dbh=null;
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
 	}
 
 	public function guardar_usuario(){
@@ -73,9 +66,9 @@ class Usuario extends Sagyc{
 		if (isset($_REQUEST['nivel'])){
 			$arreglo+=array('nivel'=>$_REQUEST['nivel']);
 		}
-		
+
 		if($id==0){
-			
+
 			$x.=$this->insert('et_usuario', $arreglo);
 		}
 		else{
@@ -83,11 +76,18 @@ class Usuario extends Sagyc{
 		}
 		return $x;
 	}
+
+	public function lista_acceso(){
+    self::set_names();
+		$sql="select *  from et_usuarioreg left outer join et_usuario on et_usuario.idusuario=et_usuarioreg.idpersonal order by fecha desc limit 1000";
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
+  }
+
 }
 
+$db = new Usuario();
 if(strlen($function)>0){
-	$db = new Usuario();
 	echo $db->$function();
 }
-
-

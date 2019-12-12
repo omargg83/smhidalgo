@@ -70,7 +70,7 @@
 				        //$x.="<a class='dropdown-item' href='#a_productos/index' ><i class='fas fa-mobile-alt'></i> Productos</a>";
 				        //$x.="<br>";
 				        $x.="<a class='dropdown-item' href='#a_usuarios/index' ><i class='fas fa-user-astronaut'></i> Usuarios</a>";
-				        $x.="<a class='dropdown-item' href='#' id='menu_acceso' ><i class='fas fa-user-clock'></i> Acceso</a>";
+				        $x.="<a class='dropdown-item' href='#a_usuarios/lista_acceso' id='menu_acceso' ><i class='fas fa-user-clock'></i> Acceso</a>";
 				        $x.="<a class='dropdown-item' href='#a_tienda/index'><i class='fas fa-shopping-basket'></i> Tiendas</a>";
 				        $x.="<a class='dropdown-item' href='#a_cliente/index'><i class='fas fa-people-carry'></i> Clientes</a>";
 				        //$x.="<a class='dropdown-item' href='#a_proveedores/index' ><i class='fas fa-user-plus'></i> Proveedores</a>";
@@ -589,6 +589,11 @@
 					$_SESSION['foco']=mktime(date("H"),date("i"),date("s"),date("m"),date("d"),date("Y"));
 					$_SESSION['cfondo']="white";
 
+					$arreglo =array();
+					$arreglo+=array('idpersonal'=>$_SESSION['idpersona']);
+					$arreglo+=array('fecha'=>date("Y-m-d H:i:s"));
+					$arreglo+=array('descripcion'=>"Acceso al sistema");
+					$this->insert('et_usuarioreg', $arreglo);
 					return "1";
 				}
 			}

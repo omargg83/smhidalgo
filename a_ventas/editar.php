@@ -6,6 +6,7 @@ $clientes = $db->clientes_lista();
 //$tiendas = $db->tiendas_lista();
 //$descuento = $db->descuento_lista();
 $llave=date("YmdHis").rand(1,1983);
+
 if($id==0){
 	$idtienda=$_SESSION['idtienda'];
 	$idcliente=0;
@@ -15,6 +16,7 @@ if($id==0){
 	$dentrega=date("Y-m-d H:i:s");
 	$entregar=0;
 	$estado="Activa";
+	$fecha="";
 }
 else{
 	$pd = $db->venta($id);
@@ -26,6 +28,7 @@ else{
 	$entregar=$pd['entregar'];
 	$dentrega=$pd['dentrega'];
 	$estado=$pd['estado'];
+	$fecha=$pd['fecha'];
 
 }
 ?>
@@ -58,6 +61,11 @@ else{
 					</div>
 
 					<div class='col-3'>
+						<label>Fecha:</label>
+						<input type="text" class="form-control" name="fecha" id="fecha" value="<?php echo $fecha ;?>" placeholder="Fecha" readonly>
+					</div>
+
+					<div class='col-3'>
 						<label>Estado:</label>
 						<input type="text" class="form-control" name="estado" id="estado" value="<?php echo $estado ;?>" placeholder="Lugar de entrega" readonly>
 					</div>
@@ -70,11 +78,10 @@ else{
 						<div class='btn-group'>
 							<?php
 								if($estado=="Activa"){
-									echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
+									//echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
 									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i> Productos</button>";
-
-
 									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='$id' data-lugar='a_ventas/finalizar'><i class='fas fa-cash-register'></i> Finalizar</button>";
+
 
                 }
 								if($estado=="Pagada"){

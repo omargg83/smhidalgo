@@ -4,7 +4,20 @@ $id=$_REQUEST['id'];
 
 $pd = $db->venta($id);
 $total=round($pd['total'],2);
+if ($total>0){
 
+}
+else{
+  echo "<div class='card'>";
+  echo "<br><center>Debe agregar un producto</center>";
+  echo "<div class='card-body'>";
+  echo "</div>";
+  echo "<div class='card-footer'>";
+  echo "<button type='button' class='btn btn-outline-secondary btn-sm' data-dismiss='modal'><i class='fas fa-sign-out-alt'></i>Cancelar</button>";
+  echo "</div>";
+  echo "</div>";
+  exit();
+}
 ?>
 <form action="" id="form_venta" data-lugar="a_ventas/db_" data-funcion="finalizar_venta" data-destino='a_ventas/editar'>
   <input type='hidden' name='id' id='id' placeholder='buscar producto' value='<?php echo $id; ?>' class='form-control'>

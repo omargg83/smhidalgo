@@ -100,8 +100,16 @@
 	}
 	function lista(id) {
 		$('#'+id).DataTable({
+			dom: 'Bfrtip',
+			buttons: [
+					{
+							extend: 'copy',
+							text: 'Copiar'
+					},
+				'csv', 'excel', 'pdf', 'print'
+			],
 			"pageLength": 100,
-            "language": {
+				 "language": {
 				"sSearch": "Buscar aqui",
 				"lengthMenu": "Mostrar _MENU_ registros",
 				"zeroRecords": "No se encontró",
@@ -115,7 +123,7 @@
 					"previous":   "Anterior"
 				},
 			}
-        });
+		});
 	}
 	function fechas () {
 		$.datepicker.regional['es'] = {

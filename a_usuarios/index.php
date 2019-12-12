@@ -1,6 +1,5 @@
 <?php
 	require_once("db_.php");
-	$bdd = new Usuario();
 	
 	echo "<nav class='navbar navbar-expand-lg navbar-light bg-light '>
 	<a class='navbar-brand' ><i class='fas fa-user-check'></i> Usuarios</a>

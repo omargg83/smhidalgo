@@ -1,11 +1,11 @@
-<?php 
+<?php
 	require_once("db_.php");
-	$bdd = new Usuario();
+	$db = new Usuario();
 	if (isset($_POST['id'])){$id=$_POST['id'];} else{ $id=0;}
-	
-	$tienda = $bdd->tiendas_lista();
-	if($id>0){	
-		$pd = $bdd->usuario($id);
+
+	$tienda = $db->tiendas_lista();
+	if($id>0){
+		$pd = $db->usuario($id);
 		$id=$pd['idusuario'];
 		$idtienda=$pd['idtienda'];
 		$user=$pd['user'];
@@ -22,7 +22,7 @@
 		$nivel="1";
 		$nombre="";
 		$estado="1";
-		
+
 	}
 ?>
 
@@ -34,14 +34,14 @@
 				<h4 class="title">Usuarios</h4>
 				<hr>
 				</div>
-			 
+
 				 <div class="form-group row">
 				   <label class="control-label col-sm-2" for="">Numero:</label>
 				   <div class="col-sm-10">
 					 <input type="text" class="form-control" name="id" id="id" value="<?php echo $id ;?>" placeholder="Tienda" readonly>
 				   </div>
 				 </div>
-				 
+
 				 <div class="form-group row">
 				   <label class="control-label col-sm-2" for="">Nombre:</label>
 				   <div class="col-sm-10">
@@ -53,7 +53,7 @@
 				  <label class="control-label col-sm-2" for="">De:</label>
 				  <div class="col-sm-10">
 					<?php
-		
+
 						echo "<select class='form-control' name='idtienda' id='idtienda'>";
 						echo '<option disabled>Seleccione sucursal</option>';
 						for($i=0;$i<count($tienda);$i++){
@@ -64,12 +64,12 @@
 							  echo '>'.$tienda[$i]['nombre'].'</option>';
 						}
 					  echo "</select>";
-					
+
 					?>
 				  </div>
 				</div>
-				
-				
+
+
 				<div class="form-group row">
 				 <label class="control-label col-sm-2" for="">Estado:</label>
 				  <div class="col-sm-10">
@@ -79,21 +79,21 @@
 					</select>
 				  </div>
 				</div>
-				
+
 				 <div class="form-group row">
 				   <label class="control-label col-sm-2" for="">Usuario:</label>
 				   <div class="col-sm-10">
 					 <input type="text" class="form-control" name="user" id="user" value="<?php echo $user ;?>" placeholder="Usuario" required>
 				   </div>
 				 </div>
-				 
+
 				<div class="form-group row">
 				   <label class="control-label col-sm-2" for="">Password:</label>
 				   <div class="col-sm-10">
 					 <input type="text" class="form-control" name="pass" id="pass" value="<?php echo $pass ;?>" placeholder="Contraseña" required>
 				   </div>
 				 </div>
-				 
+
 				 <div class="form-group row">
 				 <label class="control-label col-sm-2" for="">Nivel:</label>
 				  <div class="col-sm-10">
