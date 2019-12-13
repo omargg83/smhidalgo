@@ -373,6 +373,7 @@ class Inventario extends Sagyc{
 		else{
 			$x.=$this->update('et_bodega',array('id'=>$id), $arreglo);
 		}
+		//return $x;
 		return $idprod;
 	}
 	public function enviarproducto(){
