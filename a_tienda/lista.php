@@ -14,6 +14,7 @@
 		<th>Numero</th>
 		<th>Nombre</th>
 		<th>Ubicación</th>
+		<th>Activo</th>
 
 		</thead>
 		<tbody>
@@ -27,6 +28,10 @@
 					echo "</td>";
 					echo "<td>".$pd[$i]["nombre"]."</td>";
 					echo "<td>".$pd[$i]["ubicacion"]."</td>";
+					echo "<td>";
+					if ($pd[$i]["activo"]==1) { echo "Activo"; }
+					else { echo "Inactivo"; }
+					echo "</td>";
 				echo "</tr>";
 			}
 		?>

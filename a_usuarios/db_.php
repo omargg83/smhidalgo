@@ -29,7 +29,7 @@ class Usuario extends Sagyc{
 	}
 	public function usuario_lista(){
     self::set_names();
-		$sql="select et_usuario.idusuario, et_usuario.idtienda, et_usuario.nombre, et_usuario.user, et_usuario.pass, et_usuario.nivel, et_tienda.nombre as tienda  from et_usuario left outer join et_tienda on et_tienda.id=et_usuario.idtienda";
+		$sql="select et_usuario.idusuario, et_usuario.idtienda, et_usuario.nombre, et_usuario.user, et_usuario.pass, et_usuario.nivel, et_usuario.activo, et_tienda.nombre as tienda  from et_usuario left outer join et_tienda on et_tienda.id=et_usuario.idtienda";
 		$sth = $this->dbh->prepare($sql);
 		$sth->execute();
 		return $sth->fetchAll();

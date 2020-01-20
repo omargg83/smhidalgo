@@ -360,6 +360,15 @@ class Inventario extends Sagyc{
 			$arreglo+=array('codigo'=>$_REQUEST['codigo']);
 		}
 		if (isset($_REQUEST['clave']) and strlen($_REQUEST['clave'])>0){
+			$clave=trim($_REQUEST['clave']);
+
+			if($id==0){
+				$sql="SELECT * FROM et_bodega where clave='$clave'";
+				$stmt= $this->dbh->query($sql);
+				if($stmt->rowCount()>0){
+					return "Verificar producto ya existe IMEI";
+				}
+			}
 			$arreglo+=array('clave'=>$_REQUEST['clave']);
 		}
 		else{

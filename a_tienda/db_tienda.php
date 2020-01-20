@@ -1,18 +1,15 @@
 <?php
 require_once("../control_db.php");
 if (isset($_REQUEST['function'])){$function=$_REQUEST['function'];}	else{ $function="";}
-	
+
 class Tienda extends Sagyc{
-	
 	public $nivel_personal;
 	public $nivel_captura;
-	
+
 	public function __construct(){
 		parent::__construct();
 		$this->doc="a_clientes/papeles/";
-
 		if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
-			
 		}
 		else{
 			include "../error.php";
@@ -22,13 +19,12 @@ class Tienda extends Sagyc{
 
 	public function tiendas_lista(){
 		self::set_names();
-		
 		$sql="SELECT * FROM et_tienda";
 		foreach ($this->dbh->query($sql) as $res){
-            $this->tiendas[]=$res;
-        }
-        return $this->tiendas;
-        $this->dbh=null;
+        $this->tiendas[]=$res;
+    }
+    return $this->tiendas;
+    $this->dbh=null;
 	}
 
 	public function tienda($id){
@@ -52,6 +48,9 @@ class Tienda extends Sagyc{
 		if (isset($_REQUEST['ubicacion'])){
 			$arreglo+=array('ubicacion'=>$_REQUEST['ubicacion']);
 		}
+		if (isset($_REQUEST['activo'])){
+			$arreglo+=array('activo'=>$_REQUEST['activo']);
+		}
 		if($id==0){
 			$x.=$this->insert('et_tienda', $arreglo);
 		}
@@ -66,5 +65,3 @@ if(strlen($function)>0){
 	$db = new Tienda();
 	echo $db->$function();
 }
-
-
