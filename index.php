@@ -10,6 +10,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>SMHidalgo</title>
+	<link rel="stylesheet" href="librerias15/load/css-loader.css">
 </head>
 <?php
 	if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
@@ -56,12 +57,13 @@
 </div>
 
 <div class="loader loader-default is-active" id='cargando' data-text="Cargando">
+	<h2><span style='font-color:white'></span></h2>
 </div>
 
 </body>
 <!--   Core JS Files   -->
 <script src="librerias15/jquery-3.4.1.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="librerias15/loader.js"></script>
+
 
 <!--   url   -->
 <script src="librerias15/jquery/jquery-ui.js"></script>
