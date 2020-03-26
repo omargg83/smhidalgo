@@ -2,6 +2,8 @@
 	var intvalx="";
 	var chatx="";
 	var cuenta="";
+	var notif="";
+	var monit="";
 
 	$(function(){
 		$("#cargando").removeClass("is-active");
@@ -15,31 +17,49 @@
 			},
 			url:   'control_db.php',
 			type:  'post',
+			timeout:30000,
 			success:  function (response) {
 				var datos = JSON.parse(response);
 				if (datos.sess=="cerrada"){
 					$("#header").html("");
 					$("#bodyx").html("");
-
-					$("#modallog_form").html(datos.carga);
-					$('#modal_login').modal({backdrop: 'static', keyboard: false})
-					$('#modal_login').modal('show');
+					$("#modal_dispo").removeClass("modal-lg");
+					$("#modal_form").html(datos.carga);
+					$('#myModal').modal({backdrop: 'static', keyboard: false})
+					$('#myModal').modal('show');
 				}
 				if (datos.sess=="abierta"){
 					$("#cargando").addClass("is-active");
-					$("body").css("background-image","url('"+datos.fondo+"')");
+					$("#modal_dispo").addClass("modal-lg");
+					if(datos.fondo.length>0){
+						$("body").css("background-image","url('"+datos.fondo+"')");
+					}
+					else{
+						$("body").css("background-image","url('fondo/ssh.jpg')");
+					}
 					$("#header").html(datos.header);
-					$("#bodyx").html(datos.cuerpo);
-					setTimeout(fondos, 2000);
-					setTimeout(chat_inicia, 3000);
 
+					$("#bodyx").load("dash/menu.php");
+
+					setTimeout(fondos, 2000);
+					setTimeout(correo, 6000);
+					if (datos.admin=="1"){
+						if(notif==""){
+							notif=window.setInterval("notificarx()",30000);
+						}
+					}
+					notifyMe();
 					loadContent(location.hash.slice(1));
 					$("#cargando").removeClass("is-active");
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				if(textStatus==="timeout") {
+					$("#bodyx").html("<div class='container' style='background-color:white; width:300px'><center><img src='img/giphy.gif' width='300px'></center></div><br><center><div class='alert alert-danger' role='alert'>Ocurrio un error intente de nuevo en unos minutos, vuelva a entrar o presione ctrl + F5, para reintentar</div></center> ");
 				}
 			}
 		});
 	}
-
 	$(window).on('hashchange',function(){
 		loadContent(location.hash.slice(1));
 	});
@@ -47,52 +67,180 @@
 	var hash=url.substring(url.indexOf("#")+1);
 
 	if(hash===url || hash===''){
-		hash='escritorio/dashboard';
+		hash='dash/index';
 	}
 	function loadContent(hash){
 		$("#cargando").addClass("is-active");
 		var id=$(this).attr('id');
 		if(hash===''){
-			hash= 'escritorio/dashboard';
+			hash= 'dash/index';
 		}
 		$('html, body').animate({strollTop:0},'600','swing');
 
 		var destino=hash + '.php';
 		$.ajax({
-			data:  {"algo":"algo"},
 			url: destino,
 			type: "POST",
+			timeout:30000,
 			beforeSend: function () {
-				$("#contenido").html("<div class='container' style='background-color:white; width:300px'><center><img src='img/carga.gif' width='300px'></center></div>");
+				$("#bodyx").html("<div class='container' style='background-color:white; width:300px'><center><img src='img/carga.gif' width='300px'></center></div>");
 			},
 			success:  function (response) {
-				$("#contenido").html(response);
+				$("#bodyx").html(response);
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				if(textStatus==="timeout") {
+					$("#contenido").html("<div class='container' style='background-color:white; width:300px'><center><img src='img/giphy.gif' width='300px'></center></div><br><center><div class='alert alert-danger' role='alert'>Ocurrio un error intente de nuevo en unos minutos, vuelva a entrar o presione ctrl + F5, para reintentar</div></center> ");
+				}
 			}
 		});
-
 		$("#cargando").removeClass("is-active");
 	}
 
-	$.ajax({
-		data:  {"algo":"algo"},
-		url: hash + '.php',
-		type: "POST",
-		beforeSend: function () {
-			$("#contenido").html("<div class='container' style='background-color:white; width:300px'><center><img src='img/carga.gif' width='300px'></center></div>");
-		},
-		success:  function (response) {
-			$("#contenido").html(response);
-		}
-	});
-
-	function fondos(){
+	function notificarx(){
 		$.ajax({
 			data:  {
 				"ctrl":"control",
-				"function":"fondo_carga"
+				"function":"notificarx"
 			},
+			url:   'control_db.php',
+			type:  'post',
+			timeout:3000,
+			success:  function (response) {
+				var data = JSON.parse(response);
+				if(data.correo==1){
+					msg_notificacion(data.texto);
+				}
+			}	,
+			error: function(jqXHR, textStatus, errorThrown) {
+				if(textStatus==="timeout") {
+				}
+			}
+		});
+
+		$.ajax({
+			data:  {
+				"ctrl":"control",
+				"function":"alertas"
+			},
+			url:   'control_db.php',
+			type:  'post',
+			timeout:2000,
+			success:  function (response) {
+				var data = JSON.parse(response);
+				if(data.entra==1){
+					msg_notificacion(data.texto);
+					Swal.fire({
+					  title: '¿Aprobar correspondencia?',
+					  text: data.numero+" - >"+data.nombre+" <----> "+data.asunto,
+					  type: 'question',
+					  showCancelButton: true,
+					  confirmButtonColor: '#3085d6',
+					  cancelButtonColor: '#d33',
+					  confirmButtonText: 'Turnar'
+					}).then((result) => {
+					  if (result.value) {
+							if(data.tipo==1){
+								lugar="a_corresp/db_.php";
+							}
+							if(data.tipo==2){
+								lugar="a_corresps/db_.php";
+							}
+							$.ajax({
+								data:  {
+									"id":data.idoficio,
+									"idrel":data.id,
+									"function":"turnasol"
+								},
+								url:   lugar,
+								type:  'post',
+								success:  function (response) {
+									Swal.fire(
+							      'Turnado!'+response,
+							      'Oficio turnado',
+							      'success'
+							    )
+								}
+							});
+
+							$.ajax({
+								data:  {
+									"texto":"Oficio No:"+ data.numero+" Turnado ",
+									"id":data.idpersona,
+									"function":"manda"
+								},
+								url:   "chat/chat.php",
+								type:  'post',
+								success:  function (response) {
+								}
+							});
+					  }
+					});
+				}
+			}
+		});
+	}
+	function msg_notificacion(texto){
+		if  (Notification.permission  ===  "granted")  {
+			var  options  =   {
+					body:   texto,
+					icon:   "img/escudo.jpg",
+					dir :   "ltr"
+			};
+			var  notification  =  new  Notification("Sistema Administrativo de Salud Pública", options);
+		//	hover2.playclip();
+		}
+	}
+	function notifyMe(){
+    if  (!("Notification"  in  window))  {
+
+    }
+    else  if  (Notification.permission  ===  "granted")  {
+
+    }
+    else  if  (Notification.permission  !==  'denied')  {
+        Notification.requestPermission(function (permission)  {
+            if  (!('permission'  in  Notification))  {
+                Notification.permission  =  permission;
+            }
+            if  (permission  ===  "granted")  {
+
+            }
+        });
+    }
+	}
+	function correo(){
+		var parametros={
+			"ctrl":"control",
+			"function":"correo"
+		};
+		$.ajax({
+			data:  parametros,
 			url: "control_db.php",
 			type: "post",
+			beforeSend: function () {
+
+			},
+			success:  function (response) {
+				if(response=="correo"){
+					$('#myModal').modal('show');
+					$("#modal_form").load("escritorio/correo.php");
+				}
+
+			}
+		});
+	}
+	function fondos(){
+		var parametros={
+			"ctrl":"control",
+			"function":"fondo_carga"
+		};
+		$.ajax({
+			data:  parametros,
+			url: "control_db.php",
+			type: "post",
+			beforeSend: function () {
+			},
 			success:  function (response) {
 				$("#fondo").html(response);
 			}
@@ -161,54 +309,46 @@
 			}
 		});
 	}
-
 	$(document).on('submit','#acceso',function(e){
 		e.preventDefault();
 		var tipo=1;
 		var userAcceso=document.getElementById("userAcceso").value;
 		var passAcceso=$.md5(document.getElementById("passAcceso").value);
 
-		var parametros={
-			"ctrl":"control",
-			"tipo":tipo,
-			"function":"acceso",
-			"userAcceso":userAcceso,
-			"passAcceso":passAcceso
-		};
-
-		var btn=$(this).find(':submit');
-		$(btn).attr('disabled', 'disabled');
-		var tmp=$(btn).children("i").attr('class');
-		$(btn).children("i").removeClass();
-		$(btn).children("i").addClass("fas fa-spinner fa-pulse");
-
 		$.ajax({
-			url: "control_db.php",
+		  url: "control_db.php",
 			type: "POST",
-			data: parametros
-		}).done(function(echo){
-			if (echo==1){
-				acceso();
-				$('#modal_login').modal('hide');
-			}
-			else{
-				Swal.fire({
-						type: 'error',
-						title: echo,
-						showConfirmButton: false,
-						timer: 1000
-				})
-			}
-			$(btn).children("i").removeClass();
-			$(btn).children("i").addClass(tmp);
-			$(btn).prop('disabled', false);
-		});
-	});
+		  data: {
+				"tipo":tipo,
+				"ctrl":"control",
+				"function":"acceso",
+				"userAcceso":userAcceso,
+				"passAcceso":passAcceso
+		  },
+		  success: function( response ) {
+				console.log(response);
+				var data = JSON.parse(response);
+				if (data.acceso==1){
+					acceso();
 
+					$('#myModal').modal('hide');
+					$("#modal_dispo").addClass("modal-lg");
+				}
+				else{
+					Swal.fire({
+						  type: 'error',
+						  title: 'Usuario o contraseña incorrecta',
+						  showConfirmButton: false,
+						  timer: 1000
+					})
+				}
+		  }
+		});
+
+	});
 	//////////////////////subir archivos
 	$(document).on("click","[id^='fileup_']",function(e){
 		e.preventDefault();
-
 		var id = $(this).data('id');
 		var ruta = $(this).data('ruta');
 		var tipo = $(this).data('tipo');
@@ -237,11 +377,10 @@
 		   formData.append('photos'+i, file, file.name);
 		}
 		var tam=(fileSelect.files[0].size/1024)/1024;
-		if (tam<10){
+		if (tam<30){
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST','control_db.php?function=subir_file&ctrl=control');
 			xhr.onload = function() {
-
 			};
 			xhr.upload.onprogress = function (event) {
 				var complete = Math.round(event.loaded / event.total * 100);
@@ -288,11 +427,9 @@
 				data:  dataString,
 				url: proceso,
 				type: "post",
-				beforeSend: function () {
-
-				},
 				success:  function (response) {
-					if (!isNaN(response)){
+					var datos = JSON.parse(response);
+					if (datos.error==0){
 						lugar=destino+".php?id="+iddest;
 						$("#trabajo").load(lugar);
 						$('#myModal').modal('hide');
@@ -304,7 +441,7 @@
 						});
 					}
 					else{
-						$.alert(response);
+						$.alert(datos.terror);
 					}
 				}
 			});
@@ -312,9 +449,7 @@
 		else{
 			$.alert('Debe seleccionar un archivo');
 		}
-
 	});
-
 	$(document).on('click','.sidebar a', function() {
        $(".sidebar a").removeClass("activeside");
        $(this).addClass("activeside");
@@ -322,16 +457,15 @@
 	$(document).on("click","#fondocambia",function(e){
 		e.preventDefault();
 		var imagen=$("img", this).attr("src");
-
 		$.ajax({
 			data:  {
-				"ctrl":"control",
 				"imagen":imagen,
+				"ctrl":"control",
 				"function":"fondo"
 			},
 			url:   'control_db.php',
 			type:  'post',
-			success:  function (response) {
+			success:  function () {
 				$("body").css("background-image","url('"+imagen+"')");
 			}
 		});
@@ -342,53 +476,62 @@
         $('#sidebar').toggleClass('active');
     });
 	$(document).on("click","[id^='edit_'], [id^='lista_'], [id^='new_']",function(e){	//////////// para ir a alguna opcion
-		e.preventDefault();
-
-		var id=$(this).attr('id');
-		var funcion="";
-		if ( $(this).data('funcion') ) {
-			funcion = $(this).data('funcion');
-		}
-		var lugar="";
-		var contenido="#trabajo";
-		var xyId=0;
-		var valor="";
-		padre=id.split("_")[0]
-		opcion=id.split("_")[1];
-		$("#cargando").addClass("is-active");
-
-		if ( $(this).data('valor')!=undefined ) {
-			valor=$("#"+$(this).data('valor')).val();
-		}
-
-		if ( $(this).data('div')!=undefined ) {
-			contenido="#"+$(this).data('div');
-		}
-
-		lugar = $("#"+id).data('lugar')+".php";
-		if(padre=="edit"){
-			lugar=$(this).attr("data-lugar")+".php";
-			if ( $(this).closest(".edit-t").attr("id")){
-				xyId = $(this).closest(".edit-t").attr("id");
+			e.preventDefault();
+			monit="";
+			var id=$(this).attr('id');
+			var funcion="";
+			if ( $(this).data('funcion') ) {
+				funcion = $(this).data('funcion');
 			}
-			else{
-				xyId = $("#"+id).data('id');
-			}
-		}
+			var lugar="";
+			var contenido="#trabajo";
+			var xyId=0;
+			var valor="";
+			padre=id.split("_")[0]
+			opcion=id.split("_")[1];
+			$("#cargando").addClass("is-active");
 
-		$.ajax({
-			data:  {"padre":padre,"opcion":opcion,"id":xyId,"nombre":id,"funcion":funcion,"valor":valor},
-			url:   lugar,
-			type:  'post',
-			beforeSend: function () {
-				$(contenido).html("<div class='container' style='background-color:white; width:300px'><center><img src='img/carga.gif' width='300px'></center></div>");
-			},
-			success:  function (response) {
-				$(contenido).html(response);
+			if ( $(this).data('valor')!=undefined ) {
+				valor=$("#"+$(this).data('valor')).val();
 			}
+
+			if ( $(this).data('div')!=undefined ) {
+				contenido="#"+$(this).data('div');
+			}
+
+			if(padre=="edit" || padre=="new" || padre=="lista"){
+				lugar = $("#"+id).data('lugar')+".php";
+				if(padre=="edit"){
+					lugar=$(this).attr("data-lugar")+".php";
+					if ( $(this).closest(".edit-t").attr("id")){
+						xyId = $(this).closest(".edit-t").attr("id");
+					}
+					else{
+						xyId = $("#"+id).data('id');
+					}
+				}
+			}
+			$.ajax({
+				data:  {"algo":"algo","padre":padre,"opcion":opcion,"id":xyId,"nombre":id,"funcion":funcion,"valor":valor},
+				url:   lugar,
+				type:  'post',
+				timeout:30000,
+				beforeSend: function () {
+					$(contenido).html("<div class='container' style='background-color:white; width:300px'><center><img src='img/carga.gif' width='300px'></center></div>");
+				},
+				success:  function (response) {
+
+					$(contenido).html(response);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					if(textStatus==="timeout") {
+						$("#container").html("<div class='container' style='background-color:white; width:300px'><center><img src='img/giphy.gif' width='300px'></center></div><br><center><div class='alert alert-danger' role='alert'>Ocurrio un error intente de nuevo en unos minutos, vuelva a entrar o presione ctrl + F5, para reintentar</div></center> ");
+					}
+				}
+
+			});
+			$("#cargando").removeClass("is-active");
 		});
-		$("#cargando").removeClass("is-active");
-	});
 	$(document).on("click","[id^='select_']",function(e){								//////////// para consulta con combo
 		var combo=$(this).data('combo');
 		var combo2;
@@ -410,16 +553,12 @@
 			data:  {"id":id,"id2":id2},
 			url:   lugar,
 			type:  'post',
-			beforeSend: function () {
-
-			},
 			success:  function (response) {
 				$("#"+div).html(response);
 			}
 		});
-
 	});
-	$(document).on("click","[id^='imprimir_'], [id^='imprime_']",function(e){
+	$(document).on("click","[id^='imprimir_'], [id^='imprime_'], [id^='imprimeid_']",function(e){
 		e.preventDefault();
 		var id=$(this).attr('id');
 		var padre=id.split("_")[0]
@@ -438,6 +577,9 @@
 		if(padre=="imprime"){
 			xyId= $("#id").val();
 		}
+		if(padre=="imprimeid"){
+			xyId=$(this).data('id');
+		}
 
 		if( $("#"+id).data('select') ){
 			var select=$("#"+id).data('select');
@@ -450,10 +592,9 @@
 		var tipo = $("#"+id).data('tipo');
 		VentanaCentrada(lugar+'?id='+xyId+'&tipo='+tipo+'&valor='+valor,'Impresion','','1024','768','true');
 	});
-
 	$(document).on('submit',"[id^='form_']",function(e){
 		e.preventDefault();
-
+		$("#cargando").addClass("is-active");
 		var id=$(this).attr('id');
 		var lugar = $(this).data('lugar')+".php";
 		var destino = $(this).data('destino');
@@ -473,49 +614,76 @@
 		if ( $(this).data('cmodal') ) {
 			cerrar=$(this).data('cmodal');
 		}
-
 		var dataString = $(this).serialize()+"&function="+funcion;
 		$.ajax({
 			data:  dataString,
 			url: lugar,
 			type: "post",
-			beforeSend: function () {
-
-			},
+			timeout:30000,
 			success:  function (response) {
-				if (!isNaN(response)){
-					document.getElementById("id").value=response;
-					if (destino != undefined) {
-						lugar=destino+".php";
-						$.ajax({
-							data:  {"id":response},
-							url:   lugar,
-							type:  'post',
-							beforeSend: function () {
+				console.log(response);
+				if (isJSON(response)){
+					var datos = JSON.parse(response);
+					if (datos.error==0){
+						document.getElementById("id").value=datos.id;
+						if (destino != undefined) {
+							lugar=destino+".php";
+							$.ajax({
+								data:  {
+									"id":datos.id,
+									"param1":datos.param1,
+									"param2":datos.param2,
+									"param3":datos.param3,
+								},
+								url:   lugar,
+								type:  'post',
+								beforeSend: function () {
 
-							},
-							success:  function (response) {
-								$("#"+div).html(response);
-							}
-						});
+								},
+								success:  function (response) {
+									$("#"+div).html(response);
+								}
+							});
+						}
+						if(cerrar==0){
+							$('#myModal').modal('hide');
+						}
+						$("#cargando").removeClass("is-active");
+						Swal.fire({
+							type: 'success',
+							title: "Se guardó correctamente #" + datos.id,
+							showConfirmButton: false,
+							timer: 1000
+						})
 					}
-					if(cerrar==0){
-						$('#myModal').modal('hide');
+					else{
+						$("#cargando").removeClass("is-active");
+						$.alert(datos.terror);
 					}
-					Swal.fire({
-					  type: 'success',
-					  title: "Se guardó correctamente",
-					  showConfirmButton: false,
-					  timer: 1000
-					})
 				}
 				else{
+					$("#cargando").removeClass("is-active");
 					$.alert(response);
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				if(textStatus==="timeout") {
+					$.alert("<div class='container' style='background-color:white; width:300px'><center><img src='img/giphy.gif' width='300px'></center></div><br><center><div class='alert alert-danger' role='alert'>Ocurrio un error intente de nuevo en unos minutos, vuelva a entrar o presione ctrl + F5, para reintentar</div></center> ");
 				}
 			}
 		});
 	});
+	function isJSON (something) {
+		if (typeof something != 'string')
+				something = JSON.stringify(something);
 
+		try {
+				JSON.parse(something);
+				return true;
+		} catch (e) {
+				return false;
+		}
+	}
 	$(document).on('submit',"[id^='consulta_']",function(e){
 		e.preventDefault();
 		var dataString = $(this).serialize();
@@ -527,9 +695,6 @@
 			data:  dataString,
 			url: destino,
 			type: "post",
-			beforeSend: function () {
-
-			},
 			success:  function (response) {
 				$("#"+div).html(response);
 			}
@@ -538,6 +703,8 @@
 	$(document).on("click","[id^='eliminar_']",function(e){
 		e.preventDefault();
 		var id = $(this).data('id');
+		var id2 = $(this).data('id2');
+		var id3 = $(this).data('id3');
 		var lugar = $(this).data('lugar')+".php";
 		var destino = $(this).data('destino')+".php";
 		var iddest = $(this).data('iddest');
@@ -547,6 +714,7 @@
 			var funcion = $(this).data('funcion');
 		}
 		else{
+			console.log("error");
 			return;
 		}
 
@@ -557,12 +725,14 @@
 			div="trabajo";
 		}
 		$.confirm({
-			title: 'Guardar',
+			title: 'Eliminar',
 			content: '¿Desea borrar el registro seleccionado?',
 			buttons: {
 				Aceptar: function () {
 					var parametros={
 						"id":id,
+						"id2":id2,
+						"id3":id3,
 						"iddest":iddest,
 						"function":funcion
 					};
@@ -570,59 +740,68 @@
 						data:  parametros,
 						url: lugar,
 						type:  'post',
+						timeout:10000,
 						beforeSend: function () {
-
+							$("#cargando").addClass("is-active");
 						},
 						success:  function (response) {
-							if (!isNaN(response)){
-								if (destino != undefined) {
-									$("#"+div).html("");
-									$.ajax({
-										data:  {"id":iddest},
-										url:   destino,
-										type:  'post',
-										beforeSend: function () {
-
-										},
-										success:  function (response) {
-											$("#"+div).html(response);
-										}
+							if (isJSON(response)){
+								var datos = JSON.parse(response);
+								if (datos.error==0){
+									if (destino != undefined) {
+										$("#"+div).html("");
+										$.ajax({
+											data:  {"id":iddest},
+											url:   destino,
+											type:  'post',
+											success:  function (response) {
+												$("#"+div).html(response);
+											}
+										});
+									}
+									Swal.fire({
+									  type: 'success',
+									  title: "Se eliminó correctamente",
+									  showConfirmButton: false,
+									  timer: 700
 									});
+									$("#cargando").removeClass("is-active");
 								}
-								Swal.fire({
-								  type: 'success',
-								  title: "Se eliminó correctamente",
-								  showConfirmButton: false,
-								  timer: 700
-								});
-
+								else{
+									$("#cargando").removeClass("is-active");
+									$.alert("error"+datos.terror);
+								}
 							}
 							else{
-								alert(response);
+								$("#cargando").removeClass("is-active");
+								$.alert("error"+response);
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							if(textStatus==="timeout") {
+								$.alert("<div class='container' style='background-color:white; width:300px'><center><img src='img/giphy.gif' width='300px'></center></div><br><center><div class='alert alert-danger' role='alert'>Ocurrio un error intente de nuevo en unos minutos, vuelva a entrar o presione ctrl + F5, para reintentar</div></center> ");
 							}
 						}
 					});
 				},
 				Cancelar: function () {
-					$.alert('Canceled!');
 				}
 			}
 		});
 	});
-
 	$(document).on("change","#yearx_val",function(e){
 		e.preventDefault();
 		var id=$(this).val();
 		$.ajax({
 			data:  {
-				"ctrl":"control",
 				"id":id,
+				"ctrl":"control",
 				"function":"anioc"
 			},
 			url:   "control_db.php",
 			type:  'post',
 			success:  function (response) {
-				$("#contenido").load('escritorio/dashboard.php');
+				$("#contenido").load('dash/index.php');
 				Swal.fire({
 				  type: 'success',
 				  title: response,
@@ -649,7 +828,6 @@
 		}
 
 		var parametros={
-			"ctrl":"control",
 			"ruta":ruta,
 			"keyt":keyt,
 			"key":key,
@@ -657,8 +835,10 @@
 			"campo":campo,
 			"tipo":tipo,
 			"borrafile":borrafile,
+			"ctrl":"control",
 			"function":"eliminar_file"
 		};
+
 		$.confirm({
 			title: 'Eliminar',
 			content: '¿Desea eliminar el archivo?',
@@ -668,9 +848,9 @@
 						url: "control_db.php",
 						type: "POST",
 						data: parametros
-					}).done(function(echo){
-
-						if (!isNaN(echo)){
+					}).done(function(response){
+						var datos = JSON.parse(response);
+						if (datos.error==0){
 							$("#"+divdest).load(dest+iddest);
 							Swal.fire({
 							  type: 'success',
@@ -692,8 +872,6 @@
 	});
 	$(document).on("click","[id^='winmodal_']",function(e){
 		e.preventDefault();
-		$('#myModal').modal({backdrop: 'static', keyboard: false})
-		$('#myModal').modal('show');
 		var id = "0";
 		var id2 = "0";
 		var id3 = "0";
@@ -708,26 +886,17 @@
 		if ( $(this).data('id3') ) {
 			id3 = $(this).data('id3');
 		}
-		$.ajax({
-			data:  {"id":id,"id2":id2,"id3":id3},
-			url:   lugar+".php",
-			type:  'post',
-			beforeSend: function () {
-				$("#modal_form").html("<div class='container' style='background-color:white; width:300px'>Cargando...</div>");
-			},
-			success:  function (response) {
-				$("#modal_form").html(response);
-			}
-		});
+
+		$("#modal_form").load(lugar+".php?id="+id+"&id2="+id2+"&id3="+id3);
+		$('#myModal').modal({backdrop: 'static', keyboard: false})
+		$('#myModal').modal('show');
 	});
-
-
 	$(document).on("click",'#recuperar',function(e){
 		e.preventDefault();
 		$.ajax({
 			url:   'acceso/recuperar.php',
 			  beforeSend: function () {
-				$("#data").html("Procesando, espere por favor...");
+					$("#data").html("Procesando, espere por favor...");
 			  },
 			  success:  function (response) {
 				$("#data").html('');
@@ -788,3 +957,34 @@
 				$( "#telefono" ).val("");
 			}
 		});
+
+	var html5_audiotypes={
+		"mp3": "audio/mpeg",
+		"mp4": "audio/mp4",
+		"ogg": "audio/ogg",
+		"wav": "audio/wav"
+	}
+	function createsoundbite(sound){
+		var html5audio=document.createElement('audio')
+		if (html5audio.canPlayType){ //Comprobar soporte para audio HTML5
+			for (var i=0; i<arguments.length; i++){
+				var sourceel=document.createElement('source')
+				sourceel.setAttribute('src', arguments[i])
+				if (arguments[i].match(/.(w+)$/i))
+				sourceel.setAttribute('type', html5_audiotypes[RegExp.$1])
+				html5audio.appendChild(sourceel)
+			}
+			html5audio.load()
+			html5audio.playclip=function(){
+				html5audio.pause()
+				html5audio.currentTime=0
+				html5audio.play()
+			}
+			return html5audio
+		}
+		else{
+		return {playclip:function(){throw new Error('Su navegador no soporta audio HTML5')}}
+		}
+	}
+	var hover2 = createsoundbite('chat/newmsg.mp3');
+	var hover3 = createsoundbite('chat/010762485_prev.mp3');

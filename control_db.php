@@ -127,8 +127,11 @@
 								</div>
 								<button class='btn btn-secondary btn-block' type='submit'><i class='fa fa-check'></i>Aceptar</button>
 								<button class='btn btn-secondary btn-block' type='button' id='recuperar'><i class='fas fa-key'></i>Recuperar contraseña</button>
+
 						</div>
 					</form>";
+
+			
 				$arreglo=array('sess'=>"cerrada", 'fondo'=>$valor, 'carga'=>$x);
 				//////////////////////////fin login
 			}
@@ -140,6 +143,7 @@
 		}
 
 		public function insert($DbTableName, $values = array()){
+			$arreglo=array();
 			try{
 				self::set_names();
 				$this->dbh->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
@@ -154,72 +158,114 @@
 				foreach ($values as $f => $v){
 					$sth->bindValue(':' . $f, $v);
 				}
-				$sth->execute();
-				return $this->lastId = $this->dbh->lastInsertId();
+				if ($sth->execute()){
+					$arreglo+=array('id'=>$this->lastId = $this->dbh->lastInsertId());
+					$arreglo+=array('error'=>0);
+					$arreglo+=array('terror'=>'');
+					$arreglo+=array('param1'=>'');
+					$arreglo+=array('param2'=>'');
+					$arreglo+=array('param3'=>'');
+					return json_encode($arreglo);
+				}
 			}
 			catch(PDOException $e){
-				return "Database access FAILED!".$e->getMessage();
+				$arreglo+=array('id'=>0);
+				$arreglo+=array('error'=>1);
+				$arreglo+=array('terror'=>$e->getMessage());
+				return json_encode($arreglo);
 			}
 		}
-		public function update($DbTableName, $id = array(), $values = array(), $key=""){
+		public function update($DbTableName, $id = array(), $values = array()){
+			$arreglo=array();
 			try{
 				self::set_names();
 				$this->dbh->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-				if($key==""){
-					$dataid=$id;
-				}
+				$x="";
+				$idx="";
 				foreach ($id as $field => $v){
-					$condicion[] = $field.'= :' . $field;
+					$condicion[] = $field.'= :' . $field."_c";
 				}
 				$condicion = implode(' and ', $condicion);
-				$cond = implode(',', array_keys($id));
-
 				foreach ($values as $field => $v){
 					$ins[] = $field.'= :' . $field;
 				}
-
 				$ins = implode(',', $ins);
-				$fields = implode(',', array_keys($values));
 
-				$sql="update $DbTableName set $ins where $condicion";
-				$sth = $this->dbh->prepare($sql);
+				$sql2="update $DbTableName set $ins where $condicion";
+				$sth = $this->dbh->prepare($sql2);
 				foreach ($values as $f => $v){
 					$sth->bindValue(':' . $f, $v);
 				}
 				foreach ($id as $f => $v){
-					$sth->bindValue(':' . $f, $v);
+					if(strlen($idx)==0){
+						$idx=$v;
+					}
+					$sth->bindValue(':' . $f."_c", $v);
 				}
-				$sth->execute();
-
-				$sql="select * from $DbTableName where $condicion";
-				$updax = $this->dbh->prepare($sql);
-				foreach ($id as $f => $v){
-					$updax->bindValue(':' . $f, $v);
-				}
-				$updax->execute();
-				$res=$updax->fetch();
-
-				if($key==""){
-					$campo=key($dataid);
-					return $dataid[$campo];
-				}
-				else{
-					return $res[$key];
+				if($sth->execute()){
+					$arreglo+=array('id'=>$idx);
+					$arreglo+=array('error'=>0);
+					$arreglo+=array('terror'=>'');
+					$arreglo+=array('param1'=>'');
+					$arreglo+=array('param2'=>'');
+					$arreglo+=array('param3'=>'');
+					return json_encode($arreglo);
 				}
 			}
 			catch(PDOException $e){
-				return "------->$sql <------------- Database access FAILED!".$e->getMessage();
+				$arreglo+=array('id'=>0);
+				$arreglo+=array('error'=>1);
+				$arreglo+=array('terror'=>$e->getMessage());
+				return json_encode($arreglo);
 			}
 		}
-		public function borrar($DbTableName, $key,$id){
+		public function borrar($DbTableName, $key, $id){
+			$arreglo=array();
 			try{
 				self::set_names();
-				$sql="delete from $DbTableName where $key='$id'";
-				$x=$this->dbh->query($sql);
-				return 1;
+				$sql="delete from $DbTableName where $key=$id";
+				$sth = $this->dbh->prepare($sql);
+				$a=$sth->execute();
+				if($a){
+					$arreglo+=array('id'=>$id);
+					$arreglo+=array('error'=>0);
+					$arreglo+=array('terror'=>'');
+					$arreglo+=array('param1'=>'');
+					$arreglo+=array('param2'=>'');
+					$arreglo+=array('param3'=>'');
+					return json_encode($arreglo);
+				}
+				else{
+					$arreglo+=array('id'=>$id);
+					$arreglo+=array('error'=>1);
+					$arreglo+=array('terror'=>$sql.$sth->errorInfo());
+					$arreglo+=array('param1'=>'');
+					$arreglo+=array('param2'=>'');
+					$arreglo+=array('param3'=>'');
+					return json_encode($arreglo);
+				}
 			}
 			catch(PDOException $e){
-				return "------->$sql <------------- Database access FAILED!".$e->getMessage();
+				$arreglo+=array('id'=>0);
+				$arreglo+=array('error'=>1);
+				$arreglo+=array('terror'=>$e->getMessage());
+				return json_encode($arreglo);
+			}
+		}
+		public function general($sql,$key=""){
+			try{
+				self::set_names();
+				$sth = $this->dbh->prepare($sql);
+				$sth->execute();
+				if(strlen($key)==0){
+					return $sth->fetchAll();
+				}
+				else{
+					return $sth->fetch();
+				}
+			}
+			catch(PDOException $e){
+				return "Database access FAILED!".$e->getMessage();
 			}
 		}
 
@@ -262,20 +308,6 @@
 					$this->accesox[]=$res;
 				}
 				return $this->accesox;
-				$this->dbh=null;
-			}
-			catch(PDOException $e){
-				return "Database access FAILED!".$e->getMessage();
-			}
-		}
-		public function general($sql){
-			try{
-				self::set_names();
-				$this->geral=array();
-				 foreach ($this->dbh->query($sql) as $res){
-					$this->geral[]=$res;
-				}
-				return $this->geral;
 				$this->dbh=null;
 			}
 			catch(PDOException $e){
@@ -594,11 +626,16 @@
 					$arreglo+=array('fecha'=>date("Y-m-d H:i:s"));
 					$arreglo+=array('descripcion'=>"Acceso al sistema");
 					$this->insert('et_usuarioreg', $arreglo);
-					return "1";
+
+					$arr=array();
+					$arr=array('acceso'=>1,'idpersona'=>$_SESSION['idpersona']);
+					return json_encode($arr);
 				}
 			}
 			else {
-				return "Usuario o Contraseña incorrecta";
+				$arr=array();
+				$arr=array('acceso'=>0,'idpersona'=>0);
+				return json_encode($arr);	return "Usuario o Contraseña incorrecta";
 			}
 		}
 		public function guardar_file(){

@@ -60,7 +60,7 @@
 
 </body>
 <!--   Core JS Files   -->
-<script src="librerias15/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script src="librerias15/jquery-3.4.1.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="librerias15/loader.js"></script>
 
 <!--   url   -->
@@ -95,7 +95,7 @@
 <script src="librerias15/jqueryconfirm/js/jquery-confirm.js"></script>
 
 <!--   iconos   -->
-<link rel="stylesheet" href="librerias15/fontawesome-free-5.8.1-web/css/all.css">
+<link rel="stylesheet" href="librerias15/fontawesome-free-5.12.1-web/css/all.css">
 <link rel="stylesheet" href="librerias15/jquery/jquery-ui-1.10.0.custom.css" />
 
 <script src="chat/chat.js" type="text/javascript"></script>
