@@ -37,7 +37,7 @@
 					else{
 						$("body").css("background-image","url('fondo/ssh.jpg')");
 					}
-					$("#header").html(datos.header);
+					$("#header").load("dash/header.php");
 
 					$("#bodyx").load("dash/menu.php");
 
@@ -60,6 +60,8 @@
 			}
 		});
 	}
+
+
 	$(window).on('hashchange',function(){
 		loadContent(location.hash.slice(1));
 	});
@@ -83,10 +85,10 @@
 			type: "POST",
 			timeout:30000,
 			beforeSend: function () {
-				$("#bodyx").html("<div class='container' style='background-color:white; width:300px'><center><img src='img/carga.gif' width='300px'></center></div>");
+				$("#contenido").html("<div class='container' style='background-color:white; width:300px'><center><img src='img/carga.gif' width='300px'></center></div>");
 			},
 			success:  function (response) {
-				$("#bodyx").html(response);
+				$("#contenido").html(response);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				if(textStatus==="timeout") {
@@ -520,7 +522,6 @@
 					$(contenido).html("<div class='container' style='background-color:white; width:300px'><center><img src='img/carga.gif' width='300px'></center></div>");
 				},
 				success:  function (response) {
-
 					$(contenido).html(response);
 				},
 				error: function(jqXHR, textStatus, errorThrown) {

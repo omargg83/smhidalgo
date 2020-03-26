@@ -16,6 +16,7 @@
   $material="";
   $codigo=$pd['codigo'];
   $rapido=$pd['rapido'];
+  $imei=$pd['imei'];
   if($id>0){
     $inven=$db->bodega_edit($id);
     $descripcion=$inven['descripcion'];
@@ -27,6 +28,7 @@
     $material=$inven['material'];
     $codigo=$inven['codigo'];
     $rapido=$inven['rapido'];
+    $imei=$inven['imei'];
   }
 
   echo "<form action='' id='form_venta' data-lugar='a_inventario/db_' data-funcion='guardar_bodega'  data-destino='a_inventario/form_detalle' >";
@@ -101,7 +103,7 @@
 
       <div class="col-4">
         <label>Clave/IMEI</label>
-        <input type="text" class="form-control" name="clave" id='clave' value='<?php echo $clave; ?>'>
+        <input type="text" class="form-control" name="imei" id='imei' value='<?php echo $imei; ?>'>
       </div>
     </div>
   </div>

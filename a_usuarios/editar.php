@@ -87,13 +87,6 @@
 				   </div>
 				 </div>
 
-				<div class="form-group row">
-				   <label class="control-label col-sm-2" for="">Password:</label>
-				   <div class="col-sm-10">
-					 <input type="text" class="form-control" name="pass" id="pass" value="<?php echo $pass ;?>" placeholder="Contraseña" required>
-				   </div>
-				 </div>
-
 				 <div class="form-group row">
 				 <label class="control-label col-sm-2" for="">Nivel:</label>
 				  <div class="col-sm-10">
@@ -108,6 +101,11 @@
 					<div class="col-sm-12">
 						<div class="btn-group">
 						<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
+						<?php
+							if($id>0){
+								echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_pass' data-id='$id' data-lugar='a_usuarios/form_pass' title='Cambiar contraseña' ><i class='fas fa-key'></i>Contraseña</button>";
+							}
+						?>
 						<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_usuarios/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
 						</div>
 					</div>

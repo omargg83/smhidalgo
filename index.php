@@ -1,15 +1,23 @@
 <?php
+	session_start();
 	require_once("control_db.php");
 	$bdd = new Sagyc();
+
 ?>
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="es">
 <head>
-	<meta charset="utf-8" />
+	<title>SMHidalgo</title>
 	<link rel="icon" type="image/png" href="img/favicon.ico">
+	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>SMHidalgo</title>
+
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Last-Modified" content="0">
+	<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+
 	<link rel="stylesheet" href="librerias15/load/css-loader.css">
 </head>
 <?php
@@ -34,24 +42,16 @@
 ?>
 
 <header class="d-block p-2" id='header'>
+	<h2><span style='font-color:white'>el sistema se ha actualizado, presionar ctrl+f5 para continuar...</span></h2>
 </header>
 
 <div class="page-wrapper d-block p-2" id='bodyx'>
 </div>
 
 <div class="modal animated fadeInDown" tabindex="-1" role="dialog" id="myModal">
-	<div class="modal-dialog modal-lg" role="document">
-	<div class="modal-content" id='modal_form' style='max-height:580px;overflow: auto;'>
+	<div class="modal-dialog" role="document" id='modal_dispo'>
+		<div class="modal-content" id='modal_form'>
 
-	</div>
-	</div>
-</div>
-
-<div class='modal animated fadeInDown ' tabindex='-1' role='dialog' id='modal_login'>
-	<div class='modal-dialog' role='document'>
-		<div class='modal-content'>
-			<div class='modal-body' id='modallog_form'>
-			</div>
 		</div>
 	</div>
 </div>
@@ -61,63 +61,76 @@
 </div>
 
 </body>
-<!--   Core JS Files   -->
-<script src="librerias15/jquery-3.4.1.min.js" type="text/javascript"></script>
+	<!--   Core JS Files   -->
+	<script src="librerias15/jquery-3.4.1.min.js" type="text/javascript"></script>
 
+	<!--   url   -->
+	<script src="librerias15/jquery/jquery-ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="librerias15/jquery/jquery-ui.min.css" />
 
-<!--   url   -->
-<script src="librerias15/jquery/jquery-ui.js"></script>
+	<!-- Animation library for notifications   -->
+  <link href="librerias15/animate.css" rel="stylesheet"/>
 
-<!--   Tablas  -->
-<script type="text/javascript" src="librerias15/DataTables/datatables.js"></script>
-<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.min.js"></script>
-<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/buttons.flash.min.js"></script>
-<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/jszip.min.js"></script>
-<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/pdfmake.min.js"></script>
-<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/vfs_fonts.js"></script>
-<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/buttons.html5.min.js"></script>
-<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/buttons.print.min.js"></script>
+	<!-- WYSWYG   -->
+	<link href="librerias15/summernote8.12/summernote-lite.css" rel="stylesheet" type="text/css">
+  <script src="librerias15/summernote8.12/summernote-lite.js"></script>
+	<script src="librerias15/summernote8.12/lang/summernote-es-ES.js"></script>
 
-<link rel="stylesheet" type="text/css" href="librerias15/DataTables/datatables.min.css"/>
-<link rel="stylesheet" type="text/css" href="librerias15/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css"/>
+	<!--   Alertas   -->
+	<script src="librerias15/swal/dist/sweetalert2.min.js"></script>
+	<link rel="stylesheet" href="librerias15/swal/dist/sweetalert2.min.css">
 
-<!-- Animation library for notifications   -->
-<link href="librerias15/animate.min.css" rel="stylesheet"/>
+	<!--   para imprimir   -->
+	<script src="librerias15/VentanaCentrada.js" type="text/javascript"></script>
 
-<!--   Alertas   -->
-<script src="librerias15/swal/dist/sweetalert2.min.js"></script>
-<link rel="stylesheet" href="librerias15/swal/dist/sweetalert2.min.css">
+	<!--   Cuadros de confirmación y dialogo   -->
+	<link rel="stylesheet" href="librerias15/jqueryconfirm/css/jquery-confirm.css">
+	<script src="librerias15/jqueryconfirm/js/jquery-confirm.js"></script>
 
-<!--   para imprimir   -->
-<script src="librerias15/VentanaCentrada.js" type="text/javascript"></script>
+	<!--   iconos   -->
+	<link rel="stylesheet" href="librerias15/fontawesome-free-5.12.1-web/css/all.css">
 
-<!--   Cuadros de confirmación y dialogo   -->
-<link rel="stylesheet" href="librerias15/jqueryconfirm/css/jquery-confirm.css">
-<script src="librerias15/jqueryconfirm/js/jquery-confirm.js"></script>
+	<!--   carrusel de imagenes   -->
+	<link rel="stylesheet" href="librerias15/baguetteBox.js-dev/baguetteBox.css">
+	<script src="librerias15/baguetteBox.js-dev/baguetteBox.js" async></script>
+	<script src="librerias15/baguetteBox.js-dev/highlight.min.js" async></script>
 
-<!--   iconos   -->
-<link rel="stylesheet" href="librerias15/fontawesome-free-5.12.1-web/css/all.css">
-<link rel="stylesheet" href="librerias15/jquery/jquery-ui-1.10.0.custom.css" />
+	<script src="librerias15/popper.js"></script>
+	<script src="librerias15/tooltip.js"></script>
 
-<script src="chat/chat.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="chat/chat.css"/>
+	<!--   Chat   -->
+	<!--<script src="chat/chat.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="chat/chat.css"/>
+-->
+	<!--   Propios   -->
+	<script src="sagyc.js"></script>
+	<link rel="stylesheet" type="text/css" href="librerias15/modulos.css"/>
 
-<!--   carrusel de imagenes   -->
-<link rel="stylesheet" href="librerias15/baguetteBox.js-dev/baguetteBox.css">
-<script src="librerias15/baguetteBox.js-dev/baguetteBox.js" async></script>
-<script src="librerias15/baguetteBox.js-dev/highlight.min.js" async></script>
+	<script src="librerias15/chartjs/Chart.js"></script>
+	<link href='librerias15/fullcalendar-4.0.1/packages/core/main.css' rel='stylesheet' />
+	<link href='librerias15/fullcalendar-4.0.1/packages/daygrid/main.css' rel='stylesheet' />
+	<script src='librerias15/fullcalendar-4.0.1/packages/core/main.js'></script>
+	<script src='librerias15/fullcalendar-4.0.1/packages/interaction/main.js'></script>
+	<script src='librerias15/fullcalendar-4.0.1/packages/daygrid/main.js'></script>
 
-<script src="librerias15/popper.js"></script>
-<script src="librerias15/tooltip.js"></script>
+	<!--   Tablas  -->
+	<script type="text/javascript" src="librerias15/DataTables/datatables.js"></script>
+	<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.min.js"></script>
+	<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/buttons.flash.min.js"></script>
+	<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/jszip.min.js"></script>
+	<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/pdfmake.min.js"></script>
+	<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/vfs_fonts.js"></script>
+	<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/buttons.html5.min.js"></script>
+	<script type="text/javascript" src="librerias15/DataTables/DataTables-1.10.18/js/buttons.print.min.js"></script>
 
-<!--   Boostrap   -->
-<link rel="stylesheet" href="librerias15/css/bootstrap.min.css">
-<script src="librerias15/js/bootstrap.js"></script>
+	<link rel="stylesheet" type="text/css" href="librerias15/DataTables/datatables.min.css"/>
+	<link rel="stylesheet" type="text/css" href="librerias15/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css"/>
 
-<!--   Propios   -->
-<script src="sagyc.js"></script>
-<link rel="stylesheet" type="text/css" href="librerias15/modulos.css"/>
+	<!--   Boostrap   -->
+	<link rel="stylesheet" href="librerias15/css/bootstrap.min.css">
+	<script src="librerias15/js/bootstrap.js"></script>
 
-<script src="librerias15/jQuery-MD5-master/jquery.md5.js"></script>
+	<script src="librerias15/jQuery-MD5-master/jquery.md5.js"></script>
+
 </html>

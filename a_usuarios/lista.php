@@ -5,7 +5,7 @@
 	echo "<br>";
 ?>
 
-	<table class="table table-hover table-striped" id="x_lista">
+	<table id='x_user' class='dataTable compact hover row-border' style='font-size:10pt;'>
 	<thead>
 	<th>Numero</th>
 	<th>Nombre</th>
@@ -42,6 +42,6 @@
 
 <script>
 	$(document).ready( function () {
-		lista("x_lista");
+		lista("x_user");
 	});
 </script>

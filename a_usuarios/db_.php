@@ -60,9 +60,6 @@ class Usuario extends Sagyc{
 		if (isset($_REQUEST['user'])){
 			$arreglo+=array('user'=>$_REQUEST['user']);
 		}
-		if (isset($_REQUEST['pass'])){
-			$arreglo+=array('pass'=>$_REQUEST['pass']);
-		}
 		if (isset($_REQUEST['nivel'])){
 			$arreglo+=array('nivel'=>$_REQUEST['nivel']);
 		}
@@ -84,7 +81,21 @@ class Usuario extends Sagyc{
 		$sth->execute();
 		return $sth->fetchAll();
   }
-
+	public function password(){
+		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
+		if (isset($_REQUEST['pass1'])){$pass1=$_REQUEST['pass1'];}
+		if (isset($_REQUEST['pass2'])){$pass2=$_REQUEST['pass2'];}
+		if(trim($pass1)==($pass2)){
+			$arreglo=array();
+			$passPOST=md5(trim($pass1));
+			$arreglo=array('pass'=>$passPOST);
+			$x=$this->update('et_usuario',array('idusuario'=>$id), $arreglo);
+			return $x;
+		}
+		else{
+			return "La contraseña no coincide";
+		}
+	}
 }
 
 $db = new Usuario();

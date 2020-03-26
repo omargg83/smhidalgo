@@ -2,162 +2,207 @@
 require_once("../control_db.php");
 if (isset($_REQUEST['function'])){$function=$_REQUEST['function'];}	else{ $function="";}
 
-class Inventario extends Sagyc{
-
-	public $nivel_personal;
-	public $nivel_captura;
+class Productos extends Sagyc{
 
 	public function __construct(){
 		parent::__construct();
-		$this->doc="a_clientes/papeles/";
 
-		if(isset($_SESSION['idpersona']) and $_SESSION['autoriza'] == 1) {
-
+		$this->doc="a_imagenextra/";
+	}
+	public function productos_lista(){
+		try{
+			parent::set_names();
+			if (isset($_REQUEST['buscar']) and strlen(trim($_REQUEST['buscar']))>0){
+				$texto=trim(htmlspecialchars($_REQUEST['buscar']));
+				$sql="SELECT * from productos where codigo like '%$texto%' or nombre like '%$texto%' or marca like '%$texto%' or modelo like '%$texto%' or imei like '%$texto%' limit 100";
+			}
+			else{
+				$sql="SELECT * from productos where activo=1 limit 100";
+			}
+			$sth = $this->dbh->prepare($sql);
+			$sth->execute();
+			return $sth->fetchAll();
 		}
-		else{
-			include "../error.php";
-			die();
+		catch(PDOException $e){
+			return "Database access FAILED! ".$e->getMessage();
 		}
 	}
-
-	public function inventario($id){
-		self::set_names();
-		$sql="select * from et_invent where id_invent='$id'
-		order by id_invent asc";
-		 foreach ($this->dbh->query($sql) as $res){
-            $this->inventario=$res;
-        }
-        return $this->inventario;
-        $this->dbh=null;
+	public function producto_editar($id){
+		try{
+			parent::set_names();
+			$sql="select * from productos where id=:id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(':id', "$id");
+			$sth->execute();
+			return $sth->fetch(PDO::FETCH_OBJ);
+		}
+		catch(PDOException $e){
+			return "Database access FAILED!".$e->getMessage();
+		}
 	}
-	public function inventario_detalle($id){
-		self::set_names();
-		$sql="select * from et_bodega where id_invent='$id'";
-		 foreach ($this->dbh->query($sql) as $res){
-            $this->inventario[]=$res;
-        }
-        return $this->inventario;
-        $this->dbh=null;
-	}
-	public function inventario_lista(){
-		self::set_names();
-
-			$sql="select * from et_invent	left outer join et_marca on et_marca.idmarca=et_invent.idmarca
-				left outer join et_modelo on et_modelo.idmodelo=et_invent.idmodelo";
-      foreach ($this->dbh->query($sql) as $res){
-          $this->ventas[]=$res;
-      }
-      return $this->ventas;
-      $this->dbh=null;
-	}
-	public function categoria_lista(){
-		self::set_names();
-		$sql="select * from et_categoria";
-				foreach ($this->dbh->query($sql) as $res){
-						$this->ventas[]=$res;
-				}
-				return $this->ventas;
-				$this->dbh=null;
-	}
-	public function marca_lista(){
-		self::set_names();
-		$this->marca=array();
-		$sql="SELECT * FROM et_marca";
-		 foreach ($this->dbh->query($sql) as $res){
-						$this->marca[]=$res;
-				}
-				return $this->marca;
-				$this->dbh=null;
-	}
-	public function modelo_lista(){
-		self::set_names();
-		 $this->modelo=array();
-		$sql="SELECT * FROM et_modelo";
-		 foreach ($this->dbh->query($sql) as $res){
-						$this->modelo[]=$res;
-				}
-				return $this->modelo;
-				$this->dbh=null;
-	}
-
 	public function guardar_producto(){
-		$x="";
-		parent::set_names();
-		$arreglo =array();
-		if (isset($_POST['id'])){$id=$_POST['id'];}
-		if (isset($_REQUEST['codigo']) and strlen($_REQUEST['codigo'])>0){
-			$arreglo+=array('codigo'=>$_REQUEST['codigo']);
-		}
-		else{
-			$arreglo+=array('codigo'=>NULL);
-		}
+		try{
+			parent::set_names();
+			$id=$_REQUEST['id'];
 
-		if (isset($_REQUEST['rapido']) and strlen($_REQUEST['rapido'])>0){
-			$arreglo+=array('rapido'=>$_REQUEST['rapido']);
+			$arreglo =array();
+			if (isset($_REQUEST['codigo'])){
+				$arreglo += array('codigo'=>$_REQUEST['codigo']);
+			}
+			if (isset($_REQUEST['nombre'])){
+				$arreglo += array('nombre'=>$_REQUEST['nombre']);
+			}
+			if (isset($_REQUEST['unidad'])){
+				$arreglo += array('unidad'=>$_REQUEST['unidad']);
+			}
+			if (isset($_REQUEST['precio'])){
+				$arreglo += array('precio'=>$_REQUEST['precio']);
+			}
+			if (isset($_REQUEST['marca'])){
+				$arreglo += array('marca'=>$_REQUEST['marca']);
+			}
+			if (isset($_REQUEST['marca'])){
+				$arreglo += array('marca'=>$_REQUEST['marca']);
+			}
+			if (isset($_REQUEST['modelo'])){
+				$arreglo += array('modelo'=>$_REQUEST['modelo']);
+			}
+			if (isset($_REQUEST['descripcion'])){
+				$arreglo += array('descripcion'=>$_REQUEST['descripcion']);
+			}
+			if (isset($_REQUEST['tipo'])){
+				$arreglo += array('tipo'=>$_REQUEST['tipo']);
+			}
+			if (isset($_REQUEST['activo'])){
+				$arreglo += array('activo'=>$_REQUEST['activo']);
+			}
+			if (isset($_REQUEST['rapido'])){
+				$arreglo += array('rapido'=>$_REQUEST['rapido']);
+			}
+			if (isset($_REQUEST['color'])){
+				$arreglo += array('color'=>$_REQUEST['color']);
+			}
+			if (isset($_REQUEST['material'])){
+				$arreglo += array('material'=>$_REQUEST['material']);
+			}
+			if (isset($_REQUEST['imei'])){
+				$arreglo += array('imei'=>$_REQUEST['imei']);
+			}
+			if (isset($_REQUEST['cantidad']) and strlen($_REQUEST['cantidad'])>0){
+				$arreglo += array('cantidad'=>$_REQUEST['cantidad']);
+			}
+			else{
+				$arreglo += array('cantidad'=>0);
+			}
+				/*
+			if($id==0){
+				$sql="SELECT * FROM et_bodega where clave='$clave'";
+				$stmt= $this->dbh->query($sql);
+				if($stmt->rowCount()>0){
+					return "Verificar producto ya existe IMEI";
+				}
+			}
+			*/
+			$x="";
+			if($id==0){
+				$arreglo+=array('fechaalta'=>date("Y-m-d H:i:s"));
+				$x=$this->insert('productos', $arreglo);
+			}
+			else{
+				$arreglo+=array('fechamod'=>date("Y-m-d H:i:s"));
+				$x=$this->update('productos',array('id'=>$id), $arreglo);
+			}
+			return $x;
 		}
-		else{
-			$arreglo+=array('rapido'=>NULL);
+		catch(PDOException $e){
+			return "Database access FAILED!".$e->getMessage();
 		}
-
-		if (isset($_REQUEST['nombre'])){
-			$arreglo+=array('nombre'=>$_REQUEST['nombre']);
-		}
-		if (isset($_REQUEST['unidad'])){
-			$arreglo+=array('unidad'=>$_REQUEST['unidad']);
-		}
-		if (isset($_REQUEST['stockmin'])){
-			$arreglo+=array('stockmin'=>$_REQUEST['stockmin']);
-		}
-		if (isset($_REQUEST['stockmax'])){
-			$arreglo+=array('stockmax'=>$_REQUEST['stockmax']);
-		}
-		if (isset($_REQUEST['preciocompra'])){
-			$arreglo+=array('preciocompra'=>$_REQUEST['preciocompra']);
-		}
-		if (isset($_REQUEST['pvdistr'])){
-			$arreglo+=array('pvdistr'=>$_REQUEST['pvdistr']);
-		}
-		if (isset($_REQUEST['pvgeneral'])){
-			$arreglo+=array('pvgeneral'=>$_REQUEST['pvgeneral']);
-		}
-		if (isset($_REQUEST['pvpromo'])){
-			$arreglo+=array('pvpromo'=>$_REQUEST['pvpromo']);
-		}
-		if (isset($_REQUEST['descripcion'])){
-			$arreglo+=array('descripcion'=>$_REQUEST['descripcion']);
-		}
-		if (isset($_REQUEST['categoria'])){
-			$arreglo+=array('categoria'=>$_REQUEST['categoria']);
-		}
-		if (isset($_REQUEST['seguimiento'])){
-			$arreglo+=array('seguimiento'=>$_REQUEST['seguimiento']);
-		}
-		if (isset($_REQUEST['unico'])){
-			$arreglo+=array('unico'=>$_REQUEST['unico']);
-		}
-		if (isset($_REQUEST['idmarca'])){
-			$arreglo+=array('idmarca'=>$_REQUEST['idmarca']);
-		}
-		if (isset($_REQUEST['idmodelo'])){
-			$arreglo+=array('idmodelo'=>$_REQUEST['idmodelo']);
-		}
-		if (isset($_REQUEST['activo'])){
-			$arreglo+=array('activo'=>$_REQUEST['activo']);
-		}
-		if($id==0){
-				$fecha=date("Y-m-d H:i:s");
-				$arreglo+=array('fechamod'=>$fecha);
-				$arreglo+=array('fechaalta'=>$fecha);
-				$x.=$this->insert('et_invent', $arreglo);
-		}
-		else{
-			$x.=$this->update('et_invent',array('id_invent'=>$id), $arreglo);
-		}
-		return $x;
 	}
-}
 
+	public function genera_barras(){
+		try{
+			parent::set_names();
+			$id=$_REQUEST['id'];
+
+
+			$codigo="9".str_pad($id, 6, "0", STR_PAD_LEFT);
+
+
+			$arreglo =array();
+
+			$arreglo = array('codigo'=>$codigo);
+			$arreglo+=array('fechamod'=>date("Y-m-d H:i:s"));
+			$x=$this->update('productos',array('id'=>$id), $arreglo);
+
+			return $x;
+		}
+		catch(PDOException $e){
+			return "Database access FAILED!".$e->getMessage();
+		}
+
+	}
+	public function existencia_agrega(){
+		try{
+			parent::set_names();
+			$id=$_REQUEST['id'];
+			$idproducto=$_REQUEST['idproducto'];
+			$arreglo =array();
+			$arreglo = array('idproducto'=>$idproducto);
+			if (isset($_REQUEST['cantidad'])){
+				$arreglo += array('cantidad'=>$_REQUEST['cantidad']);
+			}
+			if (isset($_REQUEST['nota'])){
+				$arreglo += array('nota'=>$_REQUEST['nota']);
+			}
+			if (isset($_REQUEST['fecha'])){
+				$fx=explode("-",$_REQUEST['fecha']);
+				$arreglo+=array('fecha'=>$fx['2']."-".$fx['1']."-".$fx['0']);
+			}
+			$x="";
+			if($id==0){
+				$arreglo+=array('fechaalta'=>date("Y-m-d H:i:s"));
+				$arreglo+=array('idpersona'=>$_SESSION['idpersona']);
+				$x=$this->insert('bodega', $arreglo);
+			}
+			else{
+				$arreglo+=array('fechamod'=>date("Y-m-d H:i:s"));
+				$x=$this->update('bodega',array('id'=>$id), $arreglo);
+			}
+
+			$ped=json_decode($x);
+			if($ped->error==0){
+				$arreglo =array();
+				$arreglo+=array('id'=>$idproducto);
+				$arreglo+=array('error'=>0);
+				$arreglo+=array('terror'=>0);
+				$arreglo+=array('param1'=>"");
+				$arreglo+=array('param2'=>"");
+				$arreglo+=array('param3'=>"");
+				return json_encode($arreglo);
+			}
+			return $x;
+		}
+		catch(PDOException $e){
+			return "Database access FAILED!".$e->getMessage();
+		}
+	}
+	public function productos_inventario($id){
+		try{
+			parent::set_names();
+			$sql="select * from bodega where idproducto=:id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(':id', "$id");
+			$sth->execute();
+			return $sth->fetchAll(PDO::FETCH_OBJ);
+		}
+		catch(PDOException $e){
+			return "Database access FAILED!".$e->getMessage();
+		}
+	}
+
+}
+$db = new Productos();
 if(strlen($function)>0){
-	$db = new Inventario();
 	echo $db->$function();
 }
+?>

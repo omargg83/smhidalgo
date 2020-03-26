@@ -16,7 +16,8 @@
 		public function __construct(){
 			date_default_timezone_set("America/Mexico_City");
 			$this->Salud = array();
-			$this->dbh = new PDO('mysql:host=sagyc.com.mx;dbname=sagycrmr_smhidalgo', "sagyccom_esponda", "esponda123$");
+			$this->dbh = new PDO('mysql:host=localhost;dbname=sagycrmr_smhidalgo', "root", "root");
+			//$this->dbh = new PDO('mysql:host=sagyc.com.mx;dbname=sagycrmr_smhidalgo', "sagyccom_esponda", "esponda123$");
 		}
 		public function set_names(){
 			return $this->dbh->query("SET NAMES 'utf8'");
@@ -42,6 +43,7 @@
 								$x.="</a>";
 								$x.="<div class='dropdown-menu' aria-labelledby='navbarDropdown'>";
 									$x.="<a class='dropdown-item' href='#a_ventas/index' ><i class='fas fa-shopping-cart'></i> Ventas</a>";
+									$x.="<a class='dropdown-item' href='#a_productos/index' ><i class='fas fa-shopping-cart'></i> Productos</a>";
 										// $x.="<a class='dropdown-item' href='#' id='menu_lineas'><i class='fas fa-clipboard-check'></i> S. de lineas</a>";
 								 		// $x.="<a class='dropdown-item' href='#' id='menu_reparaciones'><i class='fas fa-wrench'></i> Reparaciones</a>";
 										// $x.="<a class='dropdown-item' href='../app/publish.htm' target='_blank'><i class='fas fa-download'></i> Escritorio</a>";
@@ -131,7 +133,7 @@
 						</div>
 					</form>";
 
-			
+
 				$arreglo=array('sess'=>"cerrada", 'fondo'=>$valor, 'carga'=>$x);
 				//////////////////////////fin login
 			}
