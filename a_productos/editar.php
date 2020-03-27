@@ -95,8 +95,6 @@
 					 <label>Descripción</label>
 					 <input type="text" class="form-control form-control-sm" id="descripcion" name='descripcion' placeholder="Descripción" value="<?php echo $descripcion; ?>">
 					</div>
-
-
 				</div>
 				<div class='row'>
 					<div class="col-4">
@@ -105,8 +103,8 @@
 					</div>
 
 					<div class="col-4">
-					 <label>Cantidad</label>
-					 <input type="text" class="form-control form-control-sm" id="cantidad" name='cantidad' placeholder="Cantidad" value="<?php echo $cantidad; ?>">
+					 <label>Existencia</label>
+					 <input type="text" readonly class="form-control form-control-sm" id="cantidad" name='cantidad' placeholder="Cantidad" value="<?php echo $cantidad; ?>">
 					</div>
 
 				</div>
@@ -159,21 +157,25 @@
 				$row=$db->productos_inventario($id);
 				echo "<div class='card-body'>";
 					echo "<table class='table table-sm'>";
-					echo "<tr><th>-</th><th>Cantidad</th><th>Nota</th></tr>";
+					echo "<tr><th>-</th><th>Fecha</th><th>Cantidad</th><th>Nota de venta</th></tr>";
 					$total=0;
 					foreach($row as $key){
-						echo "<tr id='".$key['id']."' class='edit-t'>";
+						echo "<tr id='".$key->id."' class='edit-t'>";
 							echo "<td>";
 								echo "<div class='btn-group'>";
-									echo "<button class='btn btn-outline-secondary btn-sm' id='eliminar_prodn".$key['id']."' data-lugar='a_pedidos/db_' data-destino='a_pedidos/editar' data-id='".$key['id']."' data-iddest='$id' data-funcion='borrar_prodped' data-div='trabajo'><i class='far fa-trash-alt'></i></i></button>";
+									echo "<button class='btn btn-outline-secondary btn-sm' id='eliminar_prodn".$key->id."' data-lugar='a_productos/db_' data-destino='a_productos/editar' data-id='".$key->id."' data-iddest='$id' data-funcion='borrar_ingreso' data-div='trabajo'><i class='far fa-trash-alt'></i></i></button>";
 								echo "</div>";
 							echo "</td>";
 							echo "<td>";
-								echo $key['cantidad'];
+								echo fecha($key->fecha);
 							echo "</td>";
 							echo "<td>";
-								echo $key['nota'];
+								echo $key->cantidad;
 							echo "</td>";
+							echo "<td>";
+								echo $key->nota;
+							echo "</td>";
+
 						echo "</tr>";
 					}
 				}

@@ -30,6 +30,16 @@ class Productos extends Sagyc{
 	public function producto_editar($id){
 		try{
 			parent::set_names();
+			$sql="select sum(cantidad) as total from bodega where idproducto=$id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->execute();
+			$total=$sth->fetch(PDO::FETCH_OBJ);
+			$existencia=$total->total;
+			$arreglo =array();
+			$arreglo = array('cantidad'=>$existencia);
+			$this->update('productos',array('id'=>$id), $arreglo);
+
+
 			$sql="select * from productos where id=:id";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(':id', "$id");
@@ -44,8 +54,10 @@ class Productos extends Sagyc{
 		try{
 			parent::set_names();
 			$id=$_REQUEST['id'];
-
 			$arreglo =array();
+			$tipo=$_REQUEST['tipo'];
+			$arreglo += array('tipo'=>$tipo);
+
 			if (isset($_REQUEST['codigo'])){
 				$arreglo += array('codigo'=>$_REQUEST['codigo']);
 			}
@@ -70,9 +82,7 @@ class Productos extends Sagyc{
 			if (isset($_REQUEST['descripcion'])){
 				$arreglo += array('descripcion'=>$_REQUEST['descripcion']);
 			}
-			if (isset($_REQUEST['tipo'])){
-				$arreglo += array('tipo'=>$_REQUEST['tipo']);
-			}
+
 			if (isset($_REQUEST['activo'])){
 				$arreglo += array('activo'=>$_REQUEST['activo']);
 			}
@@ -88,23 +98,15 @@ class Productos extends Sagyc{
 			if (isset($_REQUEST['imei'])){
 				$arreglo += array('imei'=>$_REQUEST['imei']);
 			}
-			if (isset($_REQUEST['cantidad']) and strlen($_REQUEST['cantidad'])>0){
-				$arreglo += array('cantidad'=>$_REQUEST['cantidad']);
-			}
-			else{
-				$arreglo += array('cantidad'=>0);
-			}
-				/*
-			if($id==0){
-				$sql="SELECT * FROM et_bodega where clave='$clave'";
-				$stmt= $this->dbh->query($sql);
-				if($stmt->rowCount()>0){
-					return "Verificar producto ya existe IMEI";
-				}
-			}
-			*/
+
 			$x="";
 			if($id==0){
+				if($tipo==0){
+						$arreglo += array('cantidad'=>0);
+				}
+				else{
+					$arreglo += array('cantidad'=>1);
+				}
 				$arreglo+=array('fechaalta'=>date("Y-m-d H:i:s"));
 				$x=$this->insert('productos', $arreglo);
 			}
@@ -168,7 +170,6 @@ class Productos extends Sagyc{
 				$arreglo+=array('fechamod'=>date("Y-m-d H:i:s"));
 				$x=$this->update('bodega',array('id'=>$id), $arreglo);
 			}
-
 			$ped=json_decode($x);
 			if($ped->error==0){
 				$arreglo =array();
@@ -189,7 +190,7 @@ class Productos extends Sagyc{
 	public function productos_inventario($id){
 		try{
 			parent::set_names();
-			$sql="select * from bodega where idproducto=:id";
+			$sql="select * from bodega where idproducto=:id order by fecha desc";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(':id', "$id");
 			$sth->execute();
@@ -199,7 +200,10 @@ class Productos extends Sagyc{
 			return "Database access FAILED!".$e->getMessage();
 		}
 	}
-
+	public function borrar_ingreso(){
+		if (isset($_POST['id'])){$id=$_POST['id'];}
+		return $this->borrar('bodega',"id",$id);
+	}
 }
 $db = new Productos();
 if(strlen($function)>0){

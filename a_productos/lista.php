@@ -10,6 +10,7 @@
 				<thead>
 				<tr>
 					<th>#</th>
+					<th>Tipo</th>
 					<th>Clave</th>
 					<th>Nombre</th>
 					<th>Marca</th>
@@ -30,6 +31,7 @@
 							echo "</div>";
 						echo "</td>";
 
+						echo "<td>".$key["tipo"]."</td>";
 						echo "<td>".$key["codigo"]."</td>";
 						echo "<td>".$key["nombre"]."</td>";
 						echo "<td>".$key["marca"]."</td>";
