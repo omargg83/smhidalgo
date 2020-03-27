@@ -17,7 +17,7 @@
 			},
 			url:   'control_db.php',
 			type:  'post',
-			timeout:30000,
+			timeout:3000,
 			success:  function (response) {
 				var datos = JSON.parse(response);
 				if (datos.sess=="cerrada"){
@@ -38,11 +38,8 @@
 						$("body").css("background-image","url('fondo/ssh.jpg')");
 					}
 					$("#header").load("dash/header.php");
-
 					$("#bodyx").load("dash/menu.php");
-
 					setTimeout(fondos, 2000);
-
 					loadContent(location.hash.slice(1));
 					$("#cargando").removeClass("is-active");
 				}

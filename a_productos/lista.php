@@ -10,8 +10,9 @@
 				<thead>
 				<tr>
 					<th>#</th>
+					<th>#</th>
 					<th>Tipo</th>
-					<th>Clave</th>
+					<th>C. barras</th>
 					<th>Nombre</th>
 					<th>Marca</th>
 					<th>Modelo</th>
@@ -22,16 +23,29 @@
 			<tbody>
 			<?php
 				if (count($pd)>0){
+					$contar=1;
 					foreach($pd as $key){
 						echo "<tr id='".$key['id']."' class='edit-t'>";
 						echo "<td>";
+						echo $contar;
+						$contar++;
+						echo "</td>";
+						echo "<td>";
+
 							echo "<div class='btn-group'>";
 								echo "<button class='btn btn-outline-info btn-sm' id='edit_comision' title='Editar' data-lugar='a_productos/editar'><i class='fas fa-pencil-alt'></i></i></button>";
 								echo "<button class='btn btn-outline-info btn-sm' id='eliminar_comision' data-lugar='a_productos/db_' data-destino='a_productos/lista' data-id='".$key['id']."' data-funcion='borrar_oficio' data-div='trabajo'><i class='far fa-trash-alt'></i></i></button>";
 							echo "</div>";
 						echo "</td>";
 
-						echo "<td>".$key["tipo"]."</td>";
+						echo "<td>";
+						if($key["tipo"]=="0") echo "Volúmen";
+						if($key["tipo"]=="1") echo "Unico";
+						if($key["tipo"]=="2") echo "Registro";
+						if($key["tipo"]=="3") echo "Pago de linea";
+						if($key["tipo"]=="4") echo "Reparación";
+						echo "</td>";
+
 						echo "<td>".$key["codigo"]."</td>";
 						echo "<td>".$key["nombre"]."</td>";
 						echo "<td>".$key["marca"]."</td>";
