@@ -1,29 +1,29 @@
 <?php
 	require_once("db_.php");
-
-	echo "<nav class='navbar navbar-expand-lg navbar-light bg-light '>
+?>
+<nav class='navbar navbar-expand-lg navbar-light bg-light '>
 	<a class='navbar-brand' ><i class='fas fa-user-check'></i> Ventas</a>
 	  <button class='navbar-toggler navbar-toggler-right' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='principal' aria-expanded='false' aria-label='Toggle navigation'>
 		<span class='navbar-toggler-icon'></span>
 	  </button>
 		  <div class='collapse navbar-collapse' id='navbarSupportedContent'>
 			<ul class='navbar-nav mr-auto'>";
-			echo"<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_ventas/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>";
-			echo"<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_ventas/editar'><i class='fas fa-plus'></i><span>Nuevo</span></a></li>";
-			echo"<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='lista_ventas' data-lugar='a_ventas/ventas'><i class='fas fa-plus'></i><span>Reporte</span></a></li>";
-			echo "</ul>";
+				<div class='form-inline my-2 my-lg-0' id='daigual' action='' >
+					<div class="input-group  mr-sm-2">
+						<input type="text" class="form-control form-control-sm" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2"  id='buscar' onkeyup='Javascript: if (event.keyCode==13) buscarx()'>
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary btn-sm" type="button" onclick='buscarx()'><i class='fas fa-search'></i></button>
+						</div>
+					</div>
+				</div>
 
-			echo "<form class='form-inline my-2 my-lg-0' id='form_correspxx' action='' >
-			<input class='form-control mr-sm-2' type='search' placeholder='Busqueda global' aria-label='Search' name='buscar' id='buscar'>
-			<div class='btn-group'>
-			<button class='btn btn-outline-secondary btn-sm' type='submit' id='lista_buscar' data-lugar='a_ventas/lista' data-valor='buscar' data-funcion='buscar'><i class='fas fa-search'></i></button>
-			</div>
-			</form>";
-		echo "
+				<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_ventas/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>
+				<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_ventas/editar'><i class='fas fa-plus'></i><span>Nuevo</span></a></li>
+				<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='lista_ventas' data-lugar='a_ventas/ventas'><i class='fas fa-plus'></i><span>Reporte</span></a></li>
+			</ul>
 	  </div>
-	</nav>";
+	</nav>"
 
-?>
 <div id='trabajo'>
 	<?php
 	include 'lista.php';
@@ -32,7 +32,7 @@
 
 <script type="text/javascript">
 
-function buscar_venta(){
+function buscar_producto(idventa){
 	var texto=$("#prod_venta").val();
 	var idtienda=$("#idtienda").val();
 	if(texto.length>=-1){
@@ -40,6 +40,7 @@ function buscar_venta(){
 			data:  {
 				"texto":texto,
 				"idtienda":idtienda,
+				"idventa":idventa,
 				"function":"busca_producto"
 			},
 			url:   "a_ventas/db_.php",
@@ -54,82 +55,19 @@ function buscar_venta(){
 		});
 	}
 }
-function ventraprod(idx,tipo){
-	var idventa =$("#id").val();
-	var idcliente =$("#idcliente").val();
-	var idbodega="";
-	var id_invent="";
-	if(tipo==1){
-		idbodega=idx;
-	}
-	if(tipo==2){
-		id_invent=idx;
-	}
-	var precio=parseInt($("#precio_"+idx).val());
-	var observa=$("#observa_"+idx).val();
-
+function sel_prod(idproducto,idventa){
 	$.ajax({
 		data:  {
+			"idproducto":idproducto,
 			"idventa":idventa,
-			"idcliente":idcliente,
-			"precio":precio,
-			"observa":observa,
-			"idbodega":idbodega,
-			"id_invent":id_invent,
-			"tipo":tipo,
-			"function":"agregaventa"
+			"function":"selecciona_producto"
 		},
 		url:   "a_ventas/db_.php",
 		type:  'post',
 		success:  function (response) {
-			var data = JSON.parse(response);
-			$("#id").val(data.idventa);
-			$("#sub_x").val(data.subtotal);
-			$("#iva_x").val(data.iva);
-			$("#total_x").val(data.total);
-
-			$("#tablax").append(data.datax);
-
-			Swal.fire({
-				type: 'success',
-				title: "Se agregó correctamente",
-				showConfirmButton: false,
-				timer: 500
-			});
+			$("#resultadosx").html(response);
 		}
 	});
-}
-function imprime(id){
-	$.ajax({
-		data:  {
-			"id":id,
-			"function":"imprimir"
-		},
-		url:   "a_ventas/db_.php",
-		type:  'post',
-		beforeSend: function () {
-
-		},
-		success:  function (response) {
-			if (isNaN(response)){
-				alert(response);
-			}
-			else {
-				Swal.fire({
-					type: 'success',
-					title: "Se mandó imprimir correctamente",
-					showConfirmButton: false,
-					timer: 1000
-				});
-			}
-		}
-	});
-}
-function cambio_total(){
-	var total_g=$("#total_g").val();
-	var efectivo_g=$("#efectivo_g").val();
-	var total=(efectivo_g-total_g)*100;
-	$("#cambio_g").val(Math.round(total)/100);
 }
 function borra_venta(id){
 
@@ -169,5 +107,96 @@ function borra_venta(id){
 	});
 
 }
+
+
+function ventraprod(idx,tipo){
+	var idventa =$("#id").val();
+	var idcliente =$("#idcliente").val();
+	var idbodega="";
+	var id_invent="";
+	if(tipo==1){
+		idbodega=idx;
+	}
+	if(tipo==2){
+		id_invent=idx;
+	}
+	var precio=parseInt($("#precio_"+idx).val());
+	var observa=$("#observa_"+idx).val();
+
+	$.confirm({
+		title: 'Producto',
+		content: '¿Desea agregar el producto para su venta?',
+		buttons: {
+			Aceptar: function () {
+					$.ajax({
+						data:  {
+							"idventa":idventa,
+							"idcliente":idcliente,
+							"precio":precio,
+							"observa":observa,
+							"idbodega":idbodega,
+							"id_invent":id_invent,
+							"tipo":tipo,
+							"function":"agregaventa"
+						},
+						url:   "a_ventas/db_.php",
+						type:  'post',
+						success:  function (response) {
+							var data = JSON.parse(response);
+							$("#id").val(data.idventa);
+							$("#sub_x").val(data.subtotal);
+							$("#iva_x").val(data.iva);
+							$("#total_x").val(data.total);
+
+							$("#tablax").append(data.datax);
+
+							Swal.fire({
+								type: 'success',
+								title: "Se agregó correctamente",
+								showConfirmButton: false,
+								timer: 500
+							});
+						}
+					});
+			},
+			Cancelar: function () {
+
+			}
+		}
+	});
+}
+function imprime(id){
+	$.ajax({
+		data:  {
+			"id":id,
+			"function":"imprimir"
+		},
+		url:   "a_ventas/db_.php",
+		type:  'post',
+		beforeSend: function () {
+
+		},
+		success:  function (response) {
+			if (isNaN(response)){
+				alert(response);
+			}
+			else {
+				Swal.fire({
+					type: 'success',
+					title: "Se mandó imprimir correctamente",
+					showConfirmButton: false,
+					timer: 1000
+				});
+			}
+		}
+	});
+}
+function cambio_total(){
+	var total_g=$("#total_g").val();
+	var efectivo_g=$("#efectivo_g").val();
+	var total=(efectivo_g-total_g)*100;
+	$("#cambio_g").val(Math.round(total)/100);
+}
+
 
 </script>

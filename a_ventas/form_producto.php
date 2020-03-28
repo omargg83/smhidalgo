@@ -1,7 +1,6 @@
 <?php
 	require_once("db_.php");
 	$id2=$_REQUEST['id2'];
-	echo "<input type='hidden' name='idpedido' id='idpedido' placeholder='buscar producto' value='$id2' class='form-control'>";
 ?>
 <div class="modal-header">
   <h5 class="modal-title">Buscar producto</h5>
@@ -13,9 +12,9 @@
 <div class="modal-body" style='max-height:580px;overflow: auto;'>
 	<div clas='row'>
 			<div class="input-group mb-3">
-			<input type="text" class="form-control" name="prod_venta" id='prod_venta' placeholder='buscar producto' aria-label="buscar producto" aria-describedby="basic-addon2" onchange='buscar_venta()'>
+			<input type="text" class="form-control" name="prod_venta" id='prod_venta' placeholder='buscar producto' aria-label="buscar producto" aria-describedby="basic-addon2" onkeyup='Javascript: if (event.keyCode==13) buscar_producto(<?php echo $id2;  ?>)'>
 			<div class="input-group-append">
-				<button class="btn btn-outline-secondary btn-sm" type="button" onclick='buscar_venta()'><i class='fas fa-search'></i>Buscar</button>
+				<button class="btn btn-outline-secondary btn-sm" type="button" onclick='buscar_producto(<?php echo $id2;  ?>)'><i class='fas fa-search'></i>Buscar</button>
 			</div>
 		</div>
 	</div>

@@ -25,6 +25,290 @@ class Venta extends Sagyc{
 		$sth->execute();
 		return $sth->fetch();
 	}
+	public function busca_producto(){
+		try{
+			$texto=$_REQUEST['texto'];
+			$idventa=$_REQUEST['idventa'];
+
+			$sql="SELECT * from productos where idtienda=:tienda and
+			(nombre like :texto or
+				descripcion like :texto or
+				codigo like :texto  or
+				imei like :texto or
+				rapido like :texto or
+				marca like :texto or
+				modelo like :texto
+			) limit 10";
+
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":texto","%$texto%");
+			$sth->bindValue(":tienda",$_SESSION['idtienda']);
+			$sth->execute();
+			$res=$sth->fetchAll();
+
+			echo "<div class='row'>";
+			echo "<table class='table table-sm' style='font-size:12px'>";
+			echo  "<tr>";
+			echo  "<th>-</th>";
+			echo  "<th>Código</th>";
+			echo  "<th>Nombre</th>";
+			echo  "<th>Marca</th>";
+			echo  "<th>Modelo</th>";
+			echo  "<th>Existencias</th>";
+			echo  "<th>Precio</th>";
+			echo "</tr>";
+			if(count($res)>0){
+				foreach ($res as $key) {
+					echo  "<tr id=".$key['id']." class='edit-t'>";
+					echo  "<td>";
+					echo  "<div class='btn-group'>";
+					echo  "<button type='button' onclick='sel_prod(".$key['id'].",$idventa)' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='far fa-hand-pointer'></i></button>";
+					echo  "</div>";
+					echo  "</td>";
+
+					echo  "<td>";
+						echo  "<span style='font-size:12px'>";
+						echo  "<B>IMEI: </B>".$key["imei"]."  ";
+						echo  "<br><B>BARRAS: </B>".$key["codigo"]."  ";
+						echo  "<br><B>RAPIDO: </B>".$key["rapido"];
+						echo  "</span>";
+					echo  "</td>";
+
+					echo  "<td>";
+					echo  $key["nombre"];
+					echo  "</td>";
+
+					echo  "<td>";
+					echo  $key["marca"];
+					echo  "</td>";
+
+					echo  "<td>";
+					echo  $key["modelo"];
+					echo  "</td>";
+
+					echo  "<td class='text-center'>";
+					echo  $key["cantidad"];
+					echo  "</td>";
+
+					echo  "<td align='right'>";
+						echo 	moneda($key["precio"]);
+					echo  "</td>";
+
+					echo  "</tr>";
+				}
+			}
+		}
+		catch(PDOException $e){
+			return "Database access FAILED! ".$e->getMessage();
+		}
+	}
+	public function selecciona_producto(){
+		try{
+			parent::set_names();
+			$idproducto=$_REQUEST['idproducto'];
+			$idventa=$_REQUEST['idventa'];
+
+			$sql="SELECT * from productos where id=:id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":id",$idproducto);
+			$sth->execute();
+			$res=$sth->fetch(PDO::FETCH_OBJ);
+			echo "<form id='form_producto' action='' data-lugar='a_ventas/db_' data-destino='a_ventas/editar' data-funcion='agregaventa'>";
+			echo "<input type='hidden' name='idventa' id='idventa' value='$idventa' readonly>";
+			echo "<input type='hidden' name='idproducto' id='idproducto' value='$idproducto' readonly>";
+			echo "<div class='row'>";
+			/*
+				echo "<div class='col-12'>";
+					echo "<label>Tipo:</label>";
+						if($res->tipo=="0") echo $res->tipo."Registro (solo registra ventas, no es necesario registrar entrada, tiempo aire)";
+						if($res->tipo=="1") echo $res->tipo."Pago de linea";
+						if($res->tipo=="2") echo $res->tipo."Reparación";
+						if($res->tipo=="3") echo $res->tipo."Volúmen (Se controla el inventario por volúmen, fundas, accesorios)";
+						if($res->tipo=="4") echo $res->tipo."Unico (se controla inventario por pieza única, Fichas Amigo, Equipos)";
+					echo "</select>";
+				echo "</div>";
+*/
+				echo "<div class='col-12'>";
+					echo "<label>Nombre:</label>".$res->tipo;
+					echo "<input type='text' class='form-control form-control-sm' name='nombre' id='nombre' value='".$res->nombre."' readonly>";
+				echo "</div>";
+
+				if($res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+					echo "<div class='col-3'>";
+						echo "<label>Barras</label>";
+						echo "<input type='text' class='form-control form-control-sm' name='codigo' id='codigo' value='".$res->codigo."' readonly>";
+					echo "</div>";
+				}
+				if($res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+					echo "<div class='col-3'>";
+						echo "<label>Marca</label>";
+						echo "<input type='text' class='form-control form-control-sm' name='marca' id='marca' value='".$res->marca."' readonly>";
+					echo "</div>";
+				}
+
+				if($res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+					echo "<div class='col-3'>";
+						echo "<label>Modelo</label>";
+						echo "<input type='text' class='form-control form-control-sm' name='modelo' id='modelo' value='".$res->nombre."' readonly>";
+					echo "</div>";
+				}
+
+				if($res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+					echo "<div class='col-3'>";
+						echo "<label>IMEI</label>";
+						echo "<input type='text' class='form-control form-control-sm' name='imei' id='imei' value='".$res->imei."' readonly>";
+					echo "</div>";
+				}
+
+				if($res->tipo==0 or $res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+
+					echo "<div class='col-3'>";
+						echo "<label>Cantidad</label>";
+						echo "<input type='text' class='form-control form-control-sm' name='cantidad' id='cantidad' value='1'";
+							if($res->tipo==0){
+								echo " readonly";
+							}
+						echo ">";
+					echo "</div>";
+				}
+				if($res->tipo==0 or $res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+					echo "<div class='col-3'>";
+						echo "<label>Precio</label>";
+						echo "<input type='text' class='form-control form-control-sm' name='precio' id='precio' value='".$res->precio."' ";
+							if($res->tipo==0){
+								echo "";
+							}
+						echo ">";
+					echo "</div>";
+				}
+
+
+				if($res->tipo==0 or $res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+					echo "<div class='col-12'>";
+						echo "<label>Observaciones</label>";
+						echo "<input type='text' class='form-control form-control-sm' name='observaciones' id='observaciones' value=''>";
+					echo "</div>";
+				}
+			echo "</div>";
+			echo "<button type='submit' class='btn btn-outline-info btn-sm'><i class='fas fa-shopping-basket'></i>Agregar</button>";
+			echo "</form>";
+
+		}
+		catch(PDOException $e){
+			return "Database access FAILED! ".$e->getMessage();
+		}
+	}
+	public function agregaventa(){
+		parent::set_names();
+		$x="";
+		$idventa=$_REQUEST['idventa'];
+		$idproducto=$_REQUEST['idproducto'];
+		if (isset($_REQUEST['observaciones'])){
+			$observaciones=$_REQUEST['observaciones'];
+		}
+		if (isset($_REQUEST['cantidad'])){
+			$cantidad=$_REQUEST['cantidad'];
+		}
+		if (isset($_REQUEST['precio'])){
+			$precio=$_REQUEST['precio'];
+		}
+
+		try{
+			parent::set_names();
+			if($idventa==0){
+				$arreglo=array();
+				$arreglo+=array('idcliente'=>1);
+				$arreglo+=array('estado'=>"Activa");
+				$date=date("Y-m-d H:i:s");
+				$arreglo+=array('fecha'=>$date);
+				$arreglo+=array('idusuario'=>$_SESSION['idpersona']);
+				$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+				$x=$this->insert('et_venta', $arreglo);
+				$ped=json_decode($x);
+				if($ped->error==0){
+					$idventa=$ped->id;
+				}
+				else{
+						return $x;
+				}
+			}
+
+			$sql="SELECT * from productos where id=:id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":id",$idproducto);
+			$sth->execute();
+			$res=$sth->fetch(PDO::FETCH_OBJ);
+
+
+			$arreglo=array();
+			$arreglo+=array('idventa'=>$idventa);
+			$arreglo+=array('idproducto'=>$idproducto);
+			$arreglo+=array('nombre'=>$res->nombre);
+			$arreglo+=array('observaciones'=>$observaciones);
+			$arreglo+=array('cantidad'=>$cantidad*-1);
+			$arreglo+=array('v_cantidad'=>$cantidad);
+			$arreglo+=array('v_precio'=>$precio);
+			$total=$precio*$cantidad;
+			$arreglo+=array('v_total'=>$total);
+
+			$x=$this->insert('bodega', $arreglo);
+			$ped=json_decode($x);
+
+			if($ped->error==0){
+				{
+					$sql="select sum(v_total) as gtotal from bodega where idventa=:texto";
+					$sth = $this->dbh->prepare($sql);
+					$sth->bindValue(":texto",$idventa);
+					$sth->execute();
+					$res=$sth->fetch();
+					$gtotal=$res['gtotal'];
+
+					$subtotal=$gtotal/1.16;
+					$iva=$gtotal-$subtotal;
+
+					$values = array('subtotal'=>$subtotal, 'iva'=>$iva, 'total'=>$gtotal, 'gtotal'=>$gtotal );
+					$this->update('et_venta',array('idventa'=>$idventa), $values);
+				}
+
+
+
+				$arreglo =array();
+				$arreglo+=array('id'=>$idventa);
+				$arreglo+=array('error'=>0);
+				$arreglo+=array('terror'=>0);
+				$arreglo+=array('param1'=>"");
+				$arreglo+=array('param2'=>"");
+				$arreglo+=array('param3'=>"");
+				return json_encode($arreglo);
+			}
+			else{
+					return $x;
+			}
+
+
+
+
+
+		}
+		catch(PDOException $e){
+			return "Database access FAILED! ".$e->getMessage();
+		}
+	}
+	public function borrar_venta(){
+		self::set_names();
+
+		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
+		return $this->borrar('bodega',"id",$id);
+
+	}
+	public function ventas_pedido($id){
+		self::set_names();
+		$sql="select * from bodega where idventa='$id' order by id desc";
+		$sth = $this->dbh->prepare($sql);
+		$sth->execute();
+		return $sth->fetchAll();
+	}
+
 	public function ventas_lista(){
 		self::set_names();
 		$sql="select et_venta.idventa, et_venta.idtienda, et_venta.iddescuento, et_venta.factura, et_cliente.razon_social_prove, et_tienda.nombre, et_venta.total, et_venta.fecha, et_venta.gtotal, et_venta.estado, et_descuento.nombre as descuento from et_venta
@@ -47,14 +331,6 @@ class Venta extends Sagyc{
 			$sth->execute();
 			return $sth->fetchAll();
 		}
-	}
-
-	public function ventas_pedido($id){
-		self::set_names();
-		$sql="select et_bodega.id, et_bodega.clave, et_invent.codigo, et_invent.nombre, et_bodega.cantidad, et_bodega.precio, et_bodega.pventa, et_bodega.total, et_bodega.gtotal, et_bodega.gtotalv, et_bodega.idtienda, et_bodega.id_invent, et_bodega.observaciones, et_bodega.rapido from et_bodega left outer join et_invent on et_invent.id_invent=et_bodega.id_invent where idventa='$id' order by et_bodega.id desc";
-		$sth = $this->dbh->prepare($sql);
-		$sth->execute();
-		return $sth->fetchAll();
 	}
 	public function clientes_lista(){
 		self::set_names();
@@ -137,285 +413,10 @@ class Venta extends Sagyc{
 		}
 		return $x;
 	}
-	public function busca_producto(){
-		try{
-			$x="";
-			if (isset($_REQUEST['texto'])){$texto=$_REQUEST['texto'];}
-			if (isset($_REQUEST['idtienda'])){$idtienda=$_REQUEST['idtienda'];}
-			parent::set_names();
-
-			$sql="SELECT et_bodega.* from et_bodega where idtienda='".$_SESSION['idtienda']."' and (descripcion like :texto or clave like :texto  or codigo like :texto or rapido like :texto ) limit 10";
-			$sth = $this->dbh->prepare($sql);
-			$sth->bindValue(":texto","%$texto%");
-			$sth->execute();
-			$res=$sth->fetchAll();
-
-			$x.="<div class='row'>";
-			$x.="<table class='table table-sm'>";
-			$x.= "<tr>";
-			$x.= "<th>-</th>";
-			$x.= "<th>Descripción</th>";
-			$x.= "<th>Precio</th>";
-			$x.= "<th>Observaciones</th>";
-			$x.="</tr>";
-			if(count($res)>0){
-				foreach ($res as $key) {
-					if($key["cantidad"]>0){
-						$x.= "<tr id=".$key['id']." class='edit-t'>";
-						$x.= "<td>";
-						$x.= "<div class='btn-group'>";
-						$x.= "<button type='button' onclick='ventraprod(".$key['id'].",1)' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
-						$x.= "</div>";
-						$x.= "</td>";
-
-						$x.= "<td>";
-						$x.= $key["descripcion"];
-						$x.= "<br><span style='font-size:12px'>";
-						$x.= "<B>IMEI:</B>".$key["clave"]." / ";
-						$x.= "<B>BARRAS:</B>".$key["codigo"]." / ";
-						$x.= "<B>RAPIDO:</B>".$key["rapido"];
-						$x.= "</span>";
-						$x.= "</td>";
-
-						$x.= "<td align='right'>";
-						$preciov=number_format($key["pventa"],2);
-						$x.= "<input type='text' class='form-control' name='precio_".$key['id']."' id='precio_".$key['id']."' value='$preciov' placeholder='Precio'>";
-						$x.= "</td>";
-
-						$x.= "<td>";
-						$x.= "<input type='text' class='form-control' name='observa_".$key['id']."' id='observa_".$key['id']."' value='' placeholder='Observaciones'>";
-						$x.= "</td>";
-						$x.= "</tr>";
-					}
-				}
-			}
-
-			$sql="SELECT * from et_invent where unico>1 and (nombre like :texto or codigo like :texto or rapido like :texto) limit 10";
-			$sth = $this->dbh->prepare($sql);
-			$sth->bindValue(":texto","%$texto%");
-			$sth->execute();
-			$res=$sth->fetchAll();
-
-			foreach ($res as $key) {
-				$x.= "<tr id=".$key['id_invent']." class='edit-t'>";
-				$x.= "<td>";
-				$x.= "<div class='btn-group'>";
-				$x.= "<button type='button' onclick='ventraprod(".$key['id_invent'].",2)' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='fas fa-plus'></i></button>";
-				$x.= "</div>";
-				$x.= "</td>";
-
-
-				$x.= "<td>";
-				$x.= $key["nombre"];
-
-				$x.= "<br><span style='font-size:10px'>";
-				$x.= "<B>BARRAS:</B>".$key["codigo"]." / ";
-				$x.= "<B>RAPIDO:</B>".$key["rapido"];
-				$x.= "</span>";
-				$x.= "</td>";
-
-
-				$x.= "<td align='right'>";
-				$preciov=$key['pvgeneral'];
-				$x.= "<input type='text' class='form-control' name='precio_".$key['id_invent']."' id='precio_".$key['id_invent']."' value='$preciov' placeholder='Precio'>";
-				$x.= "</td>";
-
-				$x.= "<td>";
-				$x.= "<input type='text' class='form-control' name='observa_".$key['id_invent']."' id='observa_".$key['id_invent']."' value='' placeholder='Observaciones'>";
-				$x.= "</td>";
 
 
 
-				$x.= "</tr>";
-			}
 
-
-			$x.= "</table>";
-			$x.="</div>";
-			return $x;
-		}
-		catch(PDOException $e){
-			return "Database access FAILED! ".$e->getMessage();
-		}
-		return $texto;
-	}
-	public function agregaventa(){
-		parent::set_names();
-		$x="";
-		$idventa=$_REQUEST['idventa'];
-		$idcliente=$_REQUEST['idcliente'];
-		$idbodega=$_REQUEST['idbodega'];
-		$id_invent=$_REQUEST['id_invent'];
-
-		$precio=$_REQUEST['precio'];
-		$observa=$_REQUEST['observa'];
-		$tipo=$_REQUEST['tipo'];
-
-		if($idventa==0){
-			$arreglo=array();
-			$arreglo+=array('idcliente'=>$idcliente);
-			$arreglo+=array('estado'=>"Activa");
-			$date=date("Y-m-d H:i:s");
-			$arreglo+=array('fecha'=>$date);
-			$arreglo+=array('idusuario'=>$_SESSION['idpersona']);
-			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
-			$x=$this->insert('et_venta', $arreglo);
-			$idventa=$x;
-		}
-		$nombre="";
-		$clave="";
-		$codigo="";
-		$rapido="";
-		$total=0;
-		$pventa=0;
-
-		if($tipo==1){
-			$sql="select * from et_bodega where id=:texto";
-			$sth = $this->dbh->prepare($sql);
-			$sth->bindValue(":texto",$idbodega);
-			$sth->execute();
-			$res=$sth->fetch();
-			$nombre=$res['descripcion'];
-			$codigo=$res['codigo'];
-			$rapido=$res['rapido'];
-			$clave=$res['clave'];
-			$pventa=$res['pventa'];
-
-			$total=1;
-			$arreglo =array();
-			$arreglo+=array('idventa'=>$idventa);
-			$arreglo+=array('cantidad'=>0);
-			$arreglo+=array('pendiente'=>0);
-			$arreglo+=array('total'=>1);
-			$arreglo+=array('gtotalv'=>$res['pventa']);
-			$x.=$this->update('et_bodega',array('id'=>$idbodega), $arreglo);
-			$id=$idbodega;
-		}
-		if($tipo==2){
-			$sql="select * from et_invent where id_invent=:texto";
-			$sth = $this->dbh->prepare($sql);
-			$sth->bindValue(":texto",$id_invent);
-			$sth->execute();
-			$res=$sth->fetch();
-			$arreglo =array();
-			$nombre=$res['nombre'];
-			$codigo=$res['codigo'];
-			$rapido=$res['rapido'];
-			$pventa=$precio;
-			$clave="";
-			$total=1;
-
-			$arreglo+=array('observaciones'=>$observa);
-			$arreglo+=array('idventa'=>$idventa);
-			$arreglo+=array('id_invent'=>$id_invent);
-			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
-			$arreglo+=array('descripcion'=>$res['nombre']);
-			$arreglo+=array('total'=>1);
-			$arreglo+=array('gtotalv'=>1*$precio);
-			$arreglo+=array('precio'=>$precio);
-			$arreglo+=array('pventa'=>$precio);
-			$arreglo+=array('cantidad'=>0);
-			$arreglo+=array('pendiente'=>0);
-			$arreglo+=array('tipo'=>0);
-			$id=$this->insert('et_bodega', $arreglo);
-		}
-
-		{
-			$sql="select sum(gtotalv) as gtotal from et_bodega where idventa=:texto";
-			$sth = $this->dbh->prepare($sql);
-			$sth->bindValue(":texto",$idventa);
-			$sth->execute();
-			$res=$sth->fetch();
-			$gtotal=$res['gtotal'];
-
-			$subtotal=$gtotal/1.16;
-			$iva=$gtotal-$subtotal;
-
-			$values = array('subtotal'=>$subtotal, 'iva'=>$iva, 'total'=>$gtotal, 'gtotal'=>$gtotal );
-			$this->update('et_venta',array('idventa'=>$idventa), $values);
-		}
-		///////
-		$estado="";
-		$observaciones="";
-
-		$data="<div class='row' id='div_$id'>";
-			$data.= "<div class='col-1'>";
-				$data.= "<button class='btn btn-outline-secondary btn-sm' id='eliminar_pedido' onclick='borra_venta($id)'><i class='far fa-trash-alt'></i></i></button>";
-			$data.= "</div>";
-			$data.= "<div class='col-3'>";
-				$data.= $nombre;
-				if(strlen($observa)>0){
-					$data.= "<br><span style='font-size:10px;font-weight: bold;'>".$observa."</span>";
-				}
-			$data.= "</div>";
-
-			$data.= "<div class='col-2'>";
-				$data.= "<span style='font-size:12px'>";
-				$data.= "<B>IMEI:</B>".$clave." / ";
-				$data.= "<B>BARRAS:</B>".$codigo." / ";
-				$data.= "<B>RAPIDO:</B>".$rapido;
-			$data.= "</div>";
-
-			$data.= "<div class='col-2 text-center'>";
-				$data.= number_format($total);
-			$data.= "</div>";
-
-			$data.= "<div class='col-2 text-right'>";
-				$data.= number_format($pventa,2);
-			$data.= "</div>";
-
-			$data.= "<div class='col-2 text-right'>";
-				$data.= number_format($pventa,2);
-			$data.= "</div>";
-		$data.= "</div>";
-
-		$row = array('idventa' =>$idventa,'subtotal' =>round($subtotal,2), 'iva'=>round($iva,2), 'total'=>round($gtotal,2), 'datax'=>$data);
-		return json_encode($row);
-	}
-
-	public function borrar_venta(){
-		self::set_names();
-		$arreglo =array();
-		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
-		$res="";
-		$sql="select * from et_bodega where id=:texto";
-		$sth = $this->dbh->prepare($sql);
-		$sth->bindValue(":texto",$id);
-		$sth->execute();
-		$res=$sth->fetch();
-
-		$idventa=$res['idventa'];
-
-		if ($res['tipo']==0){
-			if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
-			$res=$this->borrar('et_bodega',"id",$id);
-		}
-		else{
-			$arreglo+=array('idventa'=>null);
-			$arreglo+=array('cantidad'=>1);
-			$arreglo+=array('pendiente'=>0);
-			$arreglo+=array('total'=>0);
-			$arreglo+=array('gtotalv'=>null);
-			$res=$this->update('et_bodega',array('id'=>$id), $arreglo);
-		}
-
-		{
-			$sql="select sum(gtotalv) as gtotal from et_bodega where idventa=:texto";
-			$sth = $this->dbh->prepare($sql);
-			$sth->bindValue(":texto",$idventa);
-			$sth->execute();
-			$resx=$sth->fetch();
-			$gtotal=$resx['gtotal'];
-
-			$subtotal=$gtotal/1.16;
-			$iva=$gtotal-$subtotal;
-
-			$values = array('subtotal'=>$subtotal, 'iva'=>$iva, 'total'=>$gtotal, 'gtotal'=>$gtotal );
-			$this->update('et_venta',array('idventa'=>$idventa), $values);
-		}
-		$row = array('id' =>$id,'subtotal' =>round($subtotal,2), 'iva'=>round($iva,2), 'total'=>round($gtotal,2));
-		return json_encode($row);
-	}
 	public function imprimir(){
 		self::set_names();
 		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}

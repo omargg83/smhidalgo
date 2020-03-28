@@ -1,8 +1,8 @@
-<?php 
+<?php
 	require_once("db_cliente.php");
 	$bdd = new Cliente();
 	if (isset($_POST['id'])){$id=$_POST['id'];} else{ $id=0;}
-	echo $id;
+	
 	if($id>0){
 		$pd = $bdd->cliente($id);
 		$id=$pd['idcliente'];
@@ -28,7 +28,7 @@
 		$sucursal=$pd['sucursal_prove'];
 		$clabe=$pd['clabe_prove'];
 		$credito=$pd['credito_prove'];
-		$plazo=$pd['plazo_prove'];		
+		$plazo=$pd['plazo_prove'];
 	}
 	else{
 		$numero = $bdd->numero("et_cliente","idcliente");
@@ -107,14 +107,14 @@
 						<input type="text" class="form-control" name="colonia" id="colonia" value="<?php echo $colonia;?>" placeholder="Colonia">
 					</div>
 				</div>
-				
+
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for=""># Exterior</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="no_ext" id="no_ext" value="<?php echo $no_ext;?>" placeholder="# Exterior">
 					</div>
 
-				
+
 					<label class="control-label col-sm-2" for=""># Interior</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="no_int" id="no_int" value="<?php echo $no_int;?>" placeholder="# Interior">
@@ -126,7 +126,7 @@
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="cp" id="cp" value="<?php echo $cp;?>" placeholder="C.P.">
 					</div>
-				
+
 					<label class="control-label col-sm-2" for="">Localidad</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="localidad" id="localidad" value="<?php echo $localidad;?>" placeholder="Localidad">
@@ -138,7 +138,7 @@
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="municipio" id="municipio" value="<?php echo $municipio;?>" placeholder="Municipio">
 					</div>
-				
+
 					<label class="control-label col-sm-2" for="">Estado</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="estado" id="estado" value="<?php echo $estado;?>" placeholder="Estado">
@@ -150,7 +150,7 @@
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="tel" id="tel" value="<?php echo $tel;?>" placeholder="Teléfono">
 					</div>
-			
+
 					<label class="control-label col-sm-2" for="">Celular 1</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="cel1" id="cel1" value="<?php echo $cel1;?>" placeholder="Celular 1">
@@ -163,13 +163,13 @@
 						<input type="text" class="form-control" name="cel2" id="cel2" value="<?php echo $cel2;?>" placeholder="Celular 2">
 					</div>
 				</div>
-				
+
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Email</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="email" id="email" value="<?php echo $email;?>" placeholder="Email">
 					</div>
-				
+
 					<label class="control-label col-sm-2" for="">Página Web</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="web" id="web" value="<?php echo $web;?>" placeholder="Página Web">
@@ -183,7 +183,7 @@
 					</div>
 				</div>
 
-				
+
 
 				<div class="header" style="text-align: center;">
 					<h4 class="title"><b>Datos Bancarios</b></h4>
@@ -252,7 +252,7 @@
 						<option value="IXE BANCO" <?php if($banco=="IXE BANCO") echo "selected"; ?> > IXE BANCO</option>
 						</select>
 					</div>
-				
+
 					<label class="control-label col-sm-2" for="">Cuenta:</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="cuenta" id="cuenta" value="<?php echo $cuenta;?>" placeholder="Cuenta">
@@ -264,7 +264,7 @@
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="sucursal" id="sucursal" value="<?php echo $sucursal;?>" placeholder="Sucursal">
 					</div>
-				
+
 					<label class="control-label col-sm-2" for="">Clabe</label>
 					<div class="col-sm-4">
 						<input type="text" class="form-control" name="clabe" id="clabe" value="<?php echo $clabe;?>" placeholder="Clabe">
@@ -286,13 +286,13 @@
 						<option value="No" <?php if($credito=="No") echo "selected"; ?> >No</option>
 						</select>
 					</div>
-				
+
 					<label class="control-label col-sm-2" for="">Plazo en días</label>
 					<div class="col-sm-4">
 						<input type="number" class="form-control" name="plazo" id="plazo" value="<?php echo $plazo;?>" placeholder="Plazo en días">
 					</div>
 				</div>
-				
+
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="btn-group">
@@ -301,7 +301,7 @@
 						</div>
 					</div>
 				</div>
-			</form>	
+			</form>
 		</div>
 	</div>
 </div>

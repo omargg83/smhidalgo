@@ -15,13 +15,13 @@
 	$material="";
 	$cantidad="";
 	$imei="";
+	$preciocompra="";
 
 	if($id>0){
 		$per = $db->producto_editar($id);
 		$codigo=$per->codigo;
 		$nombre=$per->nombre;
 		$unidad=$per->unidad;
-		$precio=$per->precio;
 		$marca=$per->marca;
 		$modelo=$per->modelo;
 		$descripcion=$per->descripcion;
@@ -32,7 +32,23 @@
 		$material=$per->material;
 		$cantidad=$per->cantidad;
 		$imei=$per->imei;
+		$precio=$per->precio;
+		$preciocompra=$per->preciocompra;
 	}
+	if($id>0){
+		if($tipo==3){
+			$sql="select sum(cantidad) as total from bodega where idproducto=$id";
+			$sth = $db->dbh->prepare($sql);
+			$sth->execute();
+			$total=$sth->fetch(PDO::FETCH_OBJ);
+			$existencia=$total->total;
+			$arreglo =array();
+			$arreglo = array('cantidad'=>$existencia);
+			$db->update('productos',array('id'=>$id), $arreglo);
+			$cantidad=$existencia;
+		}
+	}
+
 ?>
 <div class='container'>
 	<form id='form_producto' action='' data-lugar='a_productos/db_' data-destino='a_productos/editar' data-funcion='guardar_producto'>
@@ -45,12 +61,12 @@
 				<div class='row'>
 					<div class="col-12">
 					 <label>Tipo de producto</label>
-						<select class="form-control form-control-sm" name="tipo" id="tipo" <?php if ($id>0){ echo "disabled";}  ?> >
-							<option value="0"<?php if($tipo=="0") echo "selected"; ?> > Volúmen (Se controla el inventario por volúmen, fundas, accesorios)</option>
-							<option value="1"<?php if($tipo=="1") echo "selected"; ?> > Unico (se controla inventario por pieza única, Fichas Amigo, Equipos)</option>
-							<option value="2"<?php if($tipo=="2") echo "selected"; ?> > Registro (solo registra ventas, no es necesario registrar entrada, tiempo aire)</option>
-							<option value="3"<?php if($tipo=="3") echo "selected"; ?> > Pago de linea</option>
-							<option value="4"<?php if($tipo=="4") echo "selected"; ?> > Reparación</option>
+						<select class="form-control form-control-sm" name="tipo" id="tipo" <?php //if ($id>0){ echo "disabled";}  ?> >
+							<option value="0"<?php if($tipo=="0") echo "selected"; ?> > Registro (solo registra ventas, no es necesario registrar entrada, tiempo aire)</option>
+							<!-- <option value="1"<?php if($tipo=="1") echo "selected"; ?> > Pago de linea</option> -->
+							<option value="2"<?php if($tipo=="2") echo "selected"; ?> > Reparación</option>
+							<option value="3"<?php if($tipo=="3") echo "selected"; ?> > Volúmen (Se controla el inventario por volúmen, fundas, accesorios)</option>
+							<option value="4"<?php if($tipo=="4") echo "selected"; ?> > Unico (se controla inventario por pieza única, Fichas Amigo, Equipos)</option>
 						</select>
 					</div>
 				</div>
@@ -98,6 +114,10 @@
 				</div>
 				<div class='row'>
 					<div class="col-4">
+					 <label>Precio compra</label>
+					 <input type="text" class="form-control form-control-sm" id="preciocompra" name='preciocompra' placeholder="Precio" value="<?php echo $preciocompra; ?>">
+					</div>
+					<div class="col-4">
 					 <label>Precio</label>
 					 <input type="text" class="form-control form-control-sm" id="precio" name='precio' placeholder="Precio" value="<?php echo $precio; ?>">
 					</div>
@@ -141,9 +161,10 @@
 				<div class='btn-group'>
 		  		<button type="submit" class="btn btn-outline-info btn-sm"><i class='far fa-save'></i>Guardar</button>
 					<?php
+						echo "<button type='button' class='btn btn-outline-info btn-sm' id='barras' title='Generar código de barras' onclick='barras_generar($id)'><i class='fas fa-barcode'></i>Barras</button>";
 						if($id>0){
-							echo "<button type='button' class='btn btn-outline-info btn-sm' id='barras' title='Generar código de barras' onclick='barras_generar($id)'><i class='fas fa-barcode'></i>Barras</button>";
-							if($tipo==0){
+
+							if($tipo==3){
 								echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_pass' data-id='0' data-id2='$id' data-lugar='a_productos/form_agrega' title='Cambiar contraseña' ><i class='far fa-plus-square'></i></i>Agregar existencias</button>";
 							}
 						}
@@ -153,7 +174,7 @@
 			</div>
 
 			<?php
-			if($id>0){
+			if($id>0 and $tipo==3){
 				$row=$db->productos_inventario($id);
 				echo "<div class='card-body'>";
 					echo "<table class='table table-sm'>";

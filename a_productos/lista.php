@@ -13,9 +13,11 @@
 					<th>#</th>
 					<th>Tipo</th>
 					<th>C. barras</th>
+					<th>Busqueda rápida</th>
 					<th>Nombre</th>
 					<th>Marca</th>
 					<th>Modelo</th>
+					<th>Cantidad</th>
 					<th>Precio compra</th>
 					<th>Precio venta</th>
 				</tr>
@@ -34,22 +36,23 @@
 
 							echo "<div class='btn-group'>";
 								echo "<button class='btn btn-outline-info btn-sm' id='edit_comision' title='Editar' data-lugar='a_productos/editar'><i class='fas fa-pencil-alt'></i></i></button>";
-								echo "<button class='btn btn-outline-info btn-sm' id='eliminar_comision' data-lugar='a_productos/db_' data-destino='a_productos/lista' data-id='".$key['id']."' data-funcion='borrar_oficio' data-div='trabajo'><i class='far fa-trash-alt'></i></i></button>";
 							echo "</div>";
 						echo "</td>";
 
 						echo "<td>";
-						if($key["tipo"]=="0") echo "Volúmen";
-						if($key["tipo"]=="1") echo "Unico";
-						if($key["tipo"]=="2") echo "Registro";
-						if($key["tipo"]=="3") echo "Pago de linea";
-						if($key["tipo"]=="4") echo "Reparación";
+							if($key["tipo"]=="0") echo "Registro";
+							if($key["tipo"]=="1") echo "Pago de linea";
+							if($key["tipo"]=="2") echo "Reparación";
+							if($key["tipo"]=="3") echo "Volúmen";
+							if($key["tipo"]=="4") echo "Unico";
 						echo "</td>";
 
 						echo "<td>".$key["codigo"]."</td>";
+						echo "<td>".$key["rapido"]."</td>";
 						echo "<td>".$key["nombre"]."</td>";
 						echo "<td>".$key["marca"]."</td>";
 						echo "<td>".$key["modelo"]."</td>";
+						echo "<td>".$key["cantidad"]."</td>";
 						echo "<td class='text-right'>".moneda($key["preciocompra"])."</td>";
 						echo "<td class='text-right'>".moneda($key["precio"])."</td>";
 						echo "</tr>";

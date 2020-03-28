@@ -17,7 +17,7 @@ class Productos extends Sagyc{
 				$sql="SELECT * from productos where codigo like '%$texto%' or nombre like '%$texto%' or marca like '%$texto%' or modelo like '%$texto%' or imei like '%$texto%' limit 100";
 			}
 			else{
-				$sql="SELECT * from productos where activo=1 order by tipo desc limit 100";
+				$sql="SELECT * from productos where activo=1 order by tipo asc limit 100";
 			}
 			$sth = $this->dbh->prepare($sql);
 			$sth->execute();
@@ -30,15 +30,6 @@ class Productos extends Sagyc{
 	public function producto_editar($id){
 		try{
 			parent::set_names();
-			$sql="select sum(cantidad) as total from bodega where idproducto=$id";
-			$sth = $this->dbh->prepare($sql);
-			$sth->execute();
-			$total=$sth->fetch(PDO::FETCH_OBJ);
-			$existencia=$total->total;
-			$arreglo =array();
-			$arreglo = array('cantidad'=>$existencia);
-			$this->update('productos',array('id'=>$id), $arreglo);
-
 
 			$sql="select * from productos where id=:id";
 			$sth = $this->dbh->prepare($sql);
@@ -55,9 +46,7 @@ class Productos extends Sagyc{
 			parent::set_names();
 			$id=$_REQUEST['id'];
 			$arreglo =array();
-			$tipo=$_REQUEST['tipo'];
-			$arreglo += array('tipo'=>$tipo);
-
+			$tipo="";
 			if (isset($_REQUEST['codigo'])){
 				$arreglo += array('codigo'=>$_REQUEST['codigo']);
 			}
@@ -66,9 +55,6 @@ class Productos extends Sagyc{
 			}
 			if (isset($_REQUEST['unidad'])){
 				$arreglo += array('unidad'=>$_REQUEST['unidad']);
-			}
-			if (isset($_REQUEST['precio'])){
-				$arreglo += array('precio'=>$_REQUEST['precio']);
 			}
 			if (isset($_REQUEST['marca'])){
 				$arreglo += array('marca'=>$_REQUEST['marca']);
@@ -98,16 +84,29 @@ class Productos extends Sagyc{
 			if (isset($_REQUEST['imei'])){
 				$arreglo += array('imei'=>$_REQUEST['imei']);
 			}
-
+			if (isset($_REQUEST['precio'])){
+				$arreglo += array('precio'=>$_REQUEST['precio']);
+			}
+			if (isset($_REQUEST['preciocompra'])){
+				$arreglo += array('preciocompra'=>$_REQUEST['preciocompra']);
+			}
+			if (isset($_REQUEST['tipo'])){
+				$tipo=$_REQUEST['tipo'];
+				$arreglo += array('tipo'=>$_REQUEST['tipo']);
+			}
 			$x="";
 			if($id==0){
-				if($tipo==0){
-						$arreglo += array('cantidad'=>0);
+				if($tipo==0 or $tipo==1  or $tipo==2){
+						$arreglo += array('cantidad'=>NULL);
 				}
-				else{
+				if($tipo==3){
+					$arreglo += array('cantidad'=>0);
+				}
+				if($tipo==4){
 					$arreglo += array('cantidad'=>1);
 				}
 				$arreglo+=array('fechaalta'=>date("Y-m-d H:i:s"));
+				$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
 				$x=$this->insert('productos', $arreglo);
 			}
 			else{
@@ -164,6 +163,7 @@ class Productos extends Sagyc{
 			if($id==0){
 				$arreglo+=array('fechaalta'=>date("Y-m-d H:i:s"));
 				$arreglo+=array('idpersona'=>$_SESSION['idpersona']);
+				$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
 				$x=$this->insert('bodega', $arreglo);
 			}
 			else{

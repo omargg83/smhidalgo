@@ -35,19 +35,19 @@ else{
 <div class="container">
 	<div class='card'>
 		<form action="" id="form_venta" data-lugar="a_ventas/db_" data-funcion="guardar_venta" data-destino='a_ventas/editar'>
-			<input type="hidden" class="form-control" name="llave" id="llave" value="<?php echo $llave ;?>" placeholder="Numero de compra">
+			<input type="hidden" class="form-control form-control-sm" name="llave" id="llave" value="<?php echo $llave ;?>" placeholder="Numero de compra">
 			<div class='card-header'>Venta <?php echo $id; ?></div>
 			<div class='card-body'>
 				<div class='row'>
 					<div class='col-2'>
 						<label >Numero:</label>
-						<input type="text" class="form-control" name="id" id="id" value="<?php echo $id ;?>" placeholder="Numero de compra" required readonly>
+						<input type="text" class="form-control form-control-sm" name="id" id="id" value="<?php echo $id ;?>" placeholder="Numero de compra" required readonly>
 					</div>
 
 					<div class='col-4'>
 						<label >Cliente:</label>
 						<?php
-						echo "<select class='form-control' name='idcliente' id='idcliente'>";
+						echo "<select class='form-control form-control-sm' name='idcliente' id='idcliente'>";
 						echo '<option disabled>Seleccione el cliente</option>';
 						foreach($clientes as $key){
 							echo '<option value="'.$key['idcliente'].'"';
@@ -62,12 +62,12 @@ else{
 
 					<div class='col-3'>
 						<label>Fecha:</label>
-						<input type="text" class="form-control" name="fecha" id="fecha" value="<?php echo $fecha ;?>" placeholder="Fecha" readonly>
+						<input type="text" class="form-control form-control-sm" name="fecha" id="fecha" value="<?php echo $fecha ;?>" placeholder="Fecha" readonly>
 					</div>
 
 					<div class='col-3'>
 						<label>Estado:</label>
-						<input type="text" class="form-control" name="estado" id="estado" value="<?php echo $estado ;?>" placeholder="Lugar de entrega" readonly>
+						<input type="text" class="form-control form-control-sm" name="estado" id="estado" value="<?php echo $estado ;?>" placeholder="Lugar de entrega" readonly>
 					</div>
 
 				</div>
@@ -79,8 +79,10 @@ else{
 							<?php
 								if($estado=="Activa"){
 									//echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
-									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i> Productos</button>";
-									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_cargo' data-id='$id' data-lugar='a_ventas/finalizar'><i class='fas fa-cash-register'></i> Finalizar</button>";
+
+									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_producto' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i>Agregar Producto</button>";
+
+									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_finalizar' data-id='$id' data-lugar='a_ventas/finalizar'><i class='fas fa-cash-register'></i> Finalizar Venta</button>";
 
 
                 }
