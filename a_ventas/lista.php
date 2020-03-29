@@ -1,20 +1,6 @@
 <?php
 	require_once("db_.php");
-	$pd=array();
-	$nombre="";
-	if (isset($_REQUEST['funcion'])){
-		$nombre=$_REQUEST['funcion'];
-	}
-	if($nombre=="buscar"){
-		$valor=$_REQUEST['valor'];
-		$pd = $db->buscar($valor);
-	}
-	if($nombre==""){
-		$pd = $db->ventas_lista();
-	}
-	if($nombre=="avanzada"){
-		echo $nombre;
-	}
+	$pd = $db->ventas_lista();
 
 	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
 	echo "<br><h5>Ventas abiertas</h5>";

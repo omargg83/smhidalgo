@@ -299,7 +299,7 @@ class Venta extends Sagyc{
 				$arreglo+=array('v_modelo'=>$res->modelo);
 				$arreglo+=array('v_imei'=>$res->imei);
 			}
-
+			//$arreglo+=array('v_total'=>$total);
 			$x=$this->insert('bodega', $arreglo);
 			$ped=json_decode($x);
 
@@ -494,6 +494,69 @@ class Venta extends Sagyc{
 		}
 		else{
 			return "Debe de agregar un producto";
+		}
+	}
+
+	public function emitidas(){
+		try{
+			parent::set_names();
+			$desde=$_REQUEST['desde'];
+			$hasta=$_REQUEST['hasta'];
+
+			$desde = date("Y-m-d", strtotime($desde))." 00:00:00";
+			$hasta = date("Y-m-d", strtotime($hasta))." 23:59:59";
+
+			$sql="select et_venta.idventa, et_venta.idtienda, et_venta.iddescuento, et_venta.factura, et_cliente.razon_social_prove, et_tienda.nombre, et_venta.total, et_venta.fecha, et_venta.gtotal, et_venta.estado from et_venta
+			left outer join et_cliente on et_cliente.idcliente=et_venta.idcliente
+			left outer join et_tienda on et_tienda.id=et_venta.idtienda where (et_venta.fecha BETWEEN :fecha1 AND :fecha2)";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":fecha1",$desde);
+			$sth->bindValue(":fecha2",$hasta);
+			$sth->execute();
+			return $sth->fetchAll();
+		}
+		catch(PDOException $e){
+			return "Database access FAILED! ".$e->getMessage();
+		}
+	}
+	public function productos_vendidos(){
+		try{
+			parent::set_names();
+			$desde=$_REQUEST['desde'];
+			$hasta=$_REQUEST['hasta'];
+
+			$desde = date("Y-m-d", strtotime($desde))." 00:00:00";
+			$hasta = date("Y-m-d", strtotime($hasta))." 23:59:59";
+
+			$sql="SELECT
+					et_venta.idventa,
+					et_venta.idtienda,
+					et_venta.iddescuento,
+					et_venta.factura,
+					et_cliente.razon_social_prove,
+					et_tienda.nombre,
+					et_venta.total,
+					et_venta.fecha,
+					et_venta.gtotal,
+					et_venta.estado,
+					bodega.nombre,
+					bodega.observaciones,
+				bodega.cliente
+				FROM
+					bodega
+				LEFT OUTER JOIN et_venta ON et_venta.idventa = bodega.idventa
+				left outer join productos on productos.id=bodega.idproducto
+				LEFT OUTER JOIN et_cliente ON et_cliente.idcliente = et_venta.idcliente
+				LEFT OUTER JOIN et_tienda ON et_tienda.id = et_venta.idtienda
+				where bodega.idventa and (et_venta.fecha BETWEEN :fecha1 AND :fecha2) order by idventa desc";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":fecha1",$desde);
+			$sth->bindValue(":fecha2",$hasta);
+			$sth->execute();
+			return $sth->fetchAll(PDO::FETCH_OBJ);
+		}
+		catch(PDOException $e){
+			return "Database access FAILED! ".$e->getMessage();
 		}
 	}
 }

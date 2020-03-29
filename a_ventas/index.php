@@ -18,12 +18,13 @@
 				</div>
 
 				<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_ventas/editar'><i class='fas fa-plus'></i><span>Nueva venta</span></a></li>
+
 				<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_ventas/lista'><i class='fas fa-list-ul'></i><span>Abiertas</span></a></li>
 
-				<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_ventas/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>
+				<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_reporte' data-lugar='a_ventas/reporte1'><i class='fas fa-list-ul'></i><span>Reporte</span></a></li>
 
+			<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_reporte2' data-lugar='a_ventas/reporte2'><i class='fas fa-list-ul'></i><span>Reporte 2</span></a></li>
 
-				<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='lista_ventas' data-lugar='a_ventas/ventas'><i class='fas fa-plus'></i><span>Reporte</span></a></li>
 			</ul>
 	  </div>
 	</nav>

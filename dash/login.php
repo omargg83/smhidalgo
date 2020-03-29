@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-        <button class='btn btn-secondary btn-block btn-sm' type='submit'><i class='fa fa-check'></i>Aceptar</button>
+        <button class='btn btn-outline-primary btn-block btn-sm' type='submit'><i class='fa fa-check'></i>Aceptar</button>
     </form>
   </div>
 </div>

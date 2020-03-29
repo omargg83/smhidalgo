@@ -4,72 +4,11 @@
 
 <div class='container-fluid'>
 	<div class="card-group ">
-  	<div class="card bg-dark text-white">
+  	<div class="card bg-dark text-white col-3">
 	    <h5 class="card-title">Card title</h5>
-	    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+	    <p class="card-text">Ventas.</p>
 	    <p class="card-text">Last updated 3 mins ago</p>
+			<a class="btn btn-outline-primary btn-sm" id='menu_ventas' href='#a_ventas/index'>Ir</a>
 	  </div>
 	</div>
 </div>
-
-
-
-<div class='container-fluid'>
-		<div class="card-group ">
-			<div class="card bg-light acceso col-3">
-			  <div class="card-header">
-				Ventas
-			  </div>
-			  <div class="card-body">
-				<h5 class="card-title">Ventas</h5>
-
-				<a href="#" class="btn btn-primary" id='menu_ventas'>Ir</a>
-			  </div>
-			</div>
-
-			<div class="card bg-light acceso col-3">
-			  <div class="card-header">
-				Reparaciones
-			  </div>
-			  <div class="card-body">
-				<h5 class="card-title">Reparaciones</h5>
-
-				<a href="#" class="btn btn-primary" id='menu_reparaciones'>Ir</a>
-			  </div>
-			</div>
-
-			<div class="card bg-light acceso col-3">
-			  <div class="card-header">
-				Lineas
-			  </div>
-			  <div class="card-body">
-				<h5 class="card-title">Seguimiento a lineas</h5>
-
-				<a href="#" class="btn btn-primary" id='menu_lineas'>Ir</a>
-			  </div>
-			</div>
-
-			<div class="card bg-light acceso col-3">
-			  <div class="card-header">
-				Productos
-			  </div>
-			  <div class="card-body">
-				<h5 class="card-title">Productos</h5>
-
-				<a href="#" class="btn btn-primary" id='menu_inventario'>Ir</a>
-			  </div>
-			</div>
-		</div>
-		<div class="card-group ">
-			<div class="card bg-light acceso col-3">
-			  <div class="card-header">
-				Traspasos
-			  </div>
-			  <div class="card-body">
-				<h5 class="card-title">Traspasos</h5>
-
-				<a href="#" class="btn btn-primary" id='menu_traspaso'>Ir</a>
-			  </div>
-			</div>
-		</div>
-	</div>
