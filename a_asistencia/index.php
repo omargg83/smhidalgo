@@ -5,8 +5,9 @@
 	echo "<br>";
 ?>
 
-	<table class="table table-hover table-striped" id="x_lista">
+	<table id='x_lista' class='dataTable compact hover row-border' style='font-size:10pt;'>
 	<thead>
+	<th>-</th>
 	<th>Fecha</th>
 	<th>Usuario</th>
 	<th>Nombre</th>
@@ -14,10 +15,11 @@
 	</thead>
 	<tbody>
 		<?php
+			$contar=1;
 			for($i=0;$i<count($pd);$i++){
-
 				echo '<tr id="'.$pd[$i]['idusuario'].'" class="edit-t">';
-
+				echo "<td>".$contar."</th>";
+				$contar++;
 				echo '<td>'.$pd[$i]['fecha'].'</td>';
 				echo '<td>'.$pd[$i]['user'].'</td>';
 				echo '<td>'.$pd[$i]['nombre'].'</td>';

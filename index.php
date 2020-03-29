@@ -104,6 +104,8 @@
 -->
 	<!--   Propios   -->
 	<script src="sagyc.js"></script>
+
+	<link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="librerias15/modulos.css"/>
 
 

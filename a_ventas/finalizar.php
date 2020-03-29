@@ -13,7 +13,7 @@ else{
   echo "<div class='card-body'>";
   echo "</div>";
   echo "<div class='card-footer'>";
-  echo "<button type='button' class='btn btn-outline-secondary btn-sm' data-dismiss='modal'><i class='fas fa-sign-out-alt'></i>Cancelar</button>";
+  echo "<button type='button' class='btn btn-outline-primary btn-sm' data-dismiss='modal'><i class='fas fa-sign-out-alt'></i>Cancelar</button>";
   echo "</div>";
   echo "</div>";
   exit();
@@ -49,8 +49,8 @@ else{
 
   <div class="modal-footer">
     <div class='btn-group'>
-      <button type="submit" class="btn btn-outline-secondary btn-sm"><i class="fas fa-cash-register"></i>Finalizar</button>
-      <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Cancelar</button>
+      <button type="submit" class="btn btn-outline-primary btn-sm"><i class="fas fa-cash-register"></i>Finalizar</button>
+      <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Cancelar</button>
     </div>
   </div>
 </form>

@@ -78,20 +78,18 @@ else{
 						<div class='btn-group'>
 							<?php
 								if($estado=="Activa"){
-									//echo "<button class='btn btn-outline-secondary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
+									//echo "<button class='btn btn-outline-primary btn-sm' type='submit'><i class='far fa-save'></i>Guardar</button>";
 
-									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_producto' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i>Agregar Producto</button>";
+									echo "<button type='button' class='btn btn-outline-primary btn-sm' id='winmodal_producto' data-id='0' data-id2='$id' data-lugar='a_ventas/form_producto'><i class='fas fa-plus'></i>Agregar Producto</button>";
 
-									echo "<button type='button' class='btn btn-outline-secondary btn-sm' id='winmodal_finalizar' data-id='$id' data-lugar='a_ventas/finalizar'><i class='fas fa-cash-register'></i> Finalizar Venta</button>";
-
-
+									echo "<button type='button' class='btn btn-outline-primary btn-sm' id='winmodal_finalizar' data-id='$id' data-lugar='a_ventas/finalizar'><i class='fas fa-cash-register'></i> Finalizar Venta</button>";
                 }
 								if($estado=="Pagada"){
-									echo "<button type='button' class='btn btn-outline-secondary btn-sm' onclick='imprime($id)'><i class='fas fa-print'></i>Imprimir</button>";
-									echo "<button type='button' class='btn btn-outline-secondary btn-sm' title='Nuevo' id='new_personal' data-lugar='a_ventas/editar'><i class='fas fa-plus'></i><span>Nuevo</span></a></button>";
+									echo "<button type='button' class='btn btn-outline-primary btn-sm' onclick='imprime($id)'><i class='fas fa-print'></i>Imprimir</button>";
+									echo "<button type='button' class='btn btn-outline-primary btn-sm' title='Nuevo' id='new_personal' data-lugar='a_ventas/editar'><i class='fas fa-plus'></i><span>Nuevo</span></a></button>";
 								}
               ?>
-							<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_ventas/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
+							<button class='btn btn-outline-primary btn-sm' id='lista_penarea' data-lugar='a_ventas/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
 						</div>
 					</div>
 				</div>

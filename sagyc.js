@@ -52,13 +52,11 @@
 		});
 	}
 
-
 	$(window).on('hashchange',function(){
 		loadContent(location.hash.slice(1));
 	});
 	var url=window.location.href;
 	var hash=url.substring(url.indexOf("#")+1);
-
 	if(hash===url || hash===''){
 		hash='dash/index';
 	}
@@ -89,6 +87,7 @@
 		});
 		$("#cargando").removeClass("is-active");
 	}
+
 	function fondos(){
 		var parametros={
 			"ctrl":"control",
@@ -473,60 +472,72 @@
 			cerrar=$(this).data('cmodal');
 		}
 		var dataString = $(this).serialize()+"&function="+funcion;
-		$.ajax({
-			data:  dataString,
-			url: lugar,
-			type: "post",
-			timeout:30000,
-			success:  function (response) {
-				console.log(response);
-				if (isJSON(response)){
-					var datos = JSON.parse(response);
-					if (datos.error==0){
-						document.getElementById("id").value=datos.id;
-						if (destino != undefined) {
-							lugar=destino+".php";
-							$.ajax({
-								data:  {
-									"id":datos.id,
-									"param1":datos.param1,
-									"param2":datos.param2,
-									"param3":datos.param3,
-								},
-								url:   lugar,
-								type:  'post',
-								beforeSend: function () {
+		$.confirm({
+			title: 'Guardar',
+			content: '¿Desea guardar los cambios realizados?',
+			type: 'orange',
+			buttons: {
+				Aceptar: function () {
+					$.ajax({
+						data:  dataString,
+						url: lugar,
+						type: "post",
+						timeout:30000,
+						success:  function (response) {
+							console.log(response);
+							if (isJSON(response)){
+								var datos = JSON.parse(response);
+								if (datos.error==0){
+									document.getElementById("id").value=datos.id;
+									if (destino != undefined) {
+										lugar=destino+".php";
+										$.ajax({
+											data:  {
+												"id":datos.id,
+												"param1":datos.param1,
+												"param2":datos.param2,
+												"param3":datos.param3,
+											},
+											url:   lugar,
+											type:  'post',
+											beforeSend: function () {
 
-								},
-								success:  function (response) {
-									$("#"+div).html(response);
+											},
+											success:  function (response) {
+												$("#"+div).html(response);
+											}
+										});
+									}
+									if(cerrar==0){
+										$('#myModal').modal('hide');
+									}
+									$("#cargando").removeClass("is-active");
+									Swal.fire({
+										type: 'success',
+										title: "Se guardó correctamente #" + datos.id,
+										showConfirmButton: false,
+										timer: 1000
+									})
 								}
-							});
+								else{
+									$("#cargando").removeClass("is-active");
+									$.alert(datos.terror);
+								}
+							}
+							else{
+								$("#cargando").removeClass("is-active");
+								$.alert(response);
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							if(textStatus==="timeout") {
+								$.alert("<div class='container' style='background-color:white; width:300px'><center><img src='img/giphy.gif' width='300px'></center></div><br><center><div class='alert alert-danger' role='alert'>Ocurrio un error intente de nuevo en unos minutos, vuelva a entrar o presione ctrl + F5, para reintentar</div></center> ");
+							}
 						}
-						if(cerrar==0){
-							$('#myModal').modal('hide');
-						}
+					});
+				},
+				Cancelar: function () {
 						$("#cargando").removeClass("is-active");
-						Swal.fire({
-							type: 'success',
-							title: "Se guardó correctamente #" + datos.id,
-							showConfirmButton: false,
-							timer: 1000
-						})
-					}
-					else{
-						$("#cargando").removeClass("is-active");
-						$.alert(datos.terror);
-					}
-				}
-				else{
-					$("#cargando").removeClass("is-active");
-					$.alert(response);
-				}
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-				if(textStatus==="timeout") {
-					$.alert("<div class='container' style='background-color:white; width:300px'><center><img src='img/giphy.gif' width='300px'></center></div><br><center><div class='alert alert-danger' role='alert'>Ocurrio un error intente de nuevo en unos minutos, vuelva a entrar o presione ctrl + F5, para reintentar</div></center> ");
 				}
 			}
 		});
@@ -585,6 +596,7 @@
 		$.confirm({
 			title: 'Eliminar',
 			content: '¿Desea borrar el registro seleccionado?',
+			type: 'purple',
 			buttons: {
 				Aceptar: function () {
 					var parametros={
@@ -700,6 +712,7 @@
 		$.confirm({
 			title: 'Eliminar',
 			content: '¿Desea eliminar el archivo?',
+			type: 'purple',
 			buttons: {
 				Aceptar: function () {
 					$.ajax({

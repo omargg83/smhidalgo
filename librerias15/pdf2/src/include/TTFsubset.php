@@ -57,7 +57,7 @@ class TTFsubset
     public function doSubset($fontFile, $chars, $gids)
     {
         $this->unmarshal($fontFile);
-    
+
     // Initialize TTFchars array
         $this->TTFchars = array();
     // Push index 0 (missing character) anyhow
@@ -177,7 +177,7 @@ class TTFsubset
         } else {
             $this->newNumberOfHMetrics = $i + 1;
         }
-    
+
         $metrics = array();
         $lsbs = array();
         for ($i = 0; $i < $numAllMetrics; $i++) {
@@ -230,7 +230,7 @@ class TTFsubset
                 $newStartCountArray[] = 0;
                 $newIdDeltaArray[] = 0;
                 $newIdRangeOffsetArray[] = 0;
-        
+
                 while ($i < $cnt) {
                     //XXX something better here
                     // Collect a sequence with increasing charCode and newIndex
@@ -251,7 +251,7 @@ class TTFsubset
                 $newStartCountArray[] = 65535;
                 $newIdDeltaArray[] = 1;
                 $newIdRangeOffsetArray[] = 0;
-        
+
                 $newSegCount = count($newEndCountArray);
 
                 if (self::VERBOSE) {
@@ -380,7 +380,7 @@ class TTFsubset
     {
     // Collect the unicode encoding table
         $unicodeEncodingTable = TTF::getEncodingTable($this->cmap, 3, 1);
-    
+
         for ($i = 0; $i < count($gids); $i++) {
             $orgIndex = $gids[$i];
             $description = $this->glyf[$orgIndex];
@@ -452,7 +452,7 @@ class TTFsubset
             $newDescription = TTF::replaceComponentsOfCompositeGlyph($description, $replacements);
             $this->TTFchars[$i]->description = $newDescription;
         }
-    
+
         if (self::VERBOSE) {
             foreach ($this->TTFchars as $TTFchar) {
                 echo sprintf("%4d %4d %4d %4d\n", $TTFchar->charCode, $TTFchar->orgIndex, $TTFchar->newIndex, strlen($TTFchar->description));
@@ -491,7 +491,7 @@ class TTFsubset
     {
         $val = 0;
         for ($i = 0; $i < strlen($str); $i++) {
-            $val = 256 * $val + ord($str{$i});
+            $val = 256 * $val + ord($str[$i]);
         }
         return $val;
     }

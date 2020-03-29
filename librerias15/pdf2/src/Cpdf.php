@@ -1034,7 +1034,7 @@ class Cpdf
                     foreach ($cid_widths as $k => $v) {
                         $nextv = next($cid_widths);
                         $nextk = key($cid_widths);
-            
+
                         if (($k + 1) == $nextk) {
                             if (!$opened) {
                                 $res .= " $k [$v";
@@ -1695,7 +1695,7 @@ class Cpdf
         if (strlen($key) == 0) {
             return;
         }
-        
+
         $s = array();
         for ($i = 0; $i < 256; $i++) {
             $s[$i] = $i;
@@ -1906,7 +1906,7 @@ class Cpdf
             $uname = $helper->getName();
             $hhea = $helper->getHhead();
             $post = $helper->getPost();
-            
+
             $charToGlyph = $helper->getCIDMap();
 
             $cachedFont = array(
@@ -1948,7 +1948,7 @@ class Cpdf
                                         intval($head['yMax'] / ($head['unitsPerEm'] / 1000)),
                                     );
             $cachedFont['UnitsPerEm'] = $head['unitsPerEm'];
-           
+
             $cachedFont['C'] = $helper->getWidths();
             $cachedFont['CIDtoGID'] = $charToGlyph;
         } elseif (file_exists($fullFontPath.'.afm')) {
@@ -2364,12 +2364,12 @@ class Cpdf
         // fill color
         $color = str_replace('#', '', $hex);
         if (strlen($color) == 3) {
-            $color = $color{0}
-            .$color{0}
-            .$color{1}
-            .$color{1}
-            .$color{2}
-            .$color{2};
+            $color = $color[0]
+            .$color[0]
+            .$color[1]
+            .$color[1]
+            .$color[2]
+            .$color[2];
         }
         $r = number_format(hexdec(substr($color, 0, 2)) / 255, 4);
         $g = number_format(hexdec(substr($color, 2, 2)) / 255, 4);
@@ -2385,12 +2385,12 @@ class Cpdf
         // stroke color
         $color = str_replace('#', '', $hex);
         if (strlen($color) == 3) {
-            $color = $color{0}
-            .$color{0}
-            .$color{1}
-            .$color{1}
-            .$color{2}
-            .$color{2};
+            $color = $color[0]
+            .$color[0]
+            .$color[1]
+            .$color[1]
+            .$color[2]
+            .$color[2];
         }
         $r = number_format(hexdec(substr($color, 0, 2)) / 255, 4);
         $g = number_format(hexdec(substr($color, 2, 2)) / 255, 4);
@@ -2795,7 +2795,7 @@ class Cpdf
 
         return $text;
     }
-    
+
     private function getDirectives(&$text, $x, $y, $size, &$width, $justification = 'left', $angle = 0, $wordSpaceAdjust = 0)
     {
         $orgTextState = $this->currentTextState;
@@ -2813,7 +2813,7 @@ class Cpdf
                 $isCustom = !empty($regs[1][0]) ? true : false;
                 $isEnd = (stripos($regs[0][0], '</') !== false) ? true : false;
                 $noClose = ($regs[1] == 'C:') ? true : false;
-    
+
                 if ($p=strpos($regs[2][0], ':')) {
                     $func = substr($regs[2][0], 0, $p);
                     $params = substr($regs[2][0], $p + 1);
@@ -2981,7 +2981,7 @@ class Cpdf
         foreach ($parts as $p) {
             $nspaces += $p['nspaces'];
             $place_text = $this->filterText($p['text'], false);
-            
+
             if ($xOffset > 0) {
                 $this->addContent(sprintf(' %.3F %.3F Td', $xOffset, 0));
                 $xOffset = 0;
@@ -3000,7 +3000,7 @@ class Cpdf
                     $tmp = $info['x'] + $wordSpaceAdjust * $nspaces;
                     $this->addContent(' ET');
                     $this->{$info['func']}($info);
-                    
+
                     if ($angle == 0) {
                         $this->addContent("\n" . sprintf('BT %.3F %.3F Td', $tmp, $y));
                     } else {
@@ -3036,19 +3036,19 @@ class Cpdf
         if (strlen($c) <= 0) {
             return false;
         }
-        $ord0 = isset($c{0}) ? ord($c{0}) : -1;
+        $ord0 = isset($c[0]) ? ord($c[0]) : -1;
         if ($ord0 >= 0 && $ord0 <= 127) {
             return $ord0;
         }
-        $ord1 = isset($c{1}) ? ord($c{1}) : -1;
+        $ord1 = isset($c[1]) ? ord($c[1]) : -1;
         if ($ord0 >= 192 && $ord0 <= 223) {
             return ($ord0 - 192) * 64 + ($ord1 - 128);
         }
-        $ord2 = isset($c{2}) ? ord($c{2}) : -1;
+        $ord2 = isset($c[2]) ? ord($c[2]) : -1;
         if ($ord0 >= 224 && $ord0 <= 239) {
             return ($ord0 - 224) * 4096 + ($ord1 - 128) * 64 + ($ord2 - 128);
         }
-        $ord3 = isset($c{3}) ? ord($c{3}) : -1;
+        $ord3 = isset($c[3]) ? ord($c[3]) : -1;
         if ($ord0 >= 240 && $ord0 <= 247) {
             return ($ord0 - 240) * 262144 + ($ord1 - 128) * 4096 + ($ord2 - 128) * 64 + ($ord3 - 128);
         }

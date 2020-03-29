@@ -16,9 +16,9 @@
 		echo $nombre;
 	}
 
-
 	echo "<div class='container-fluid' style='background-color:".$_SESSION['cfondo']."; '>";
-	echo "<br>";
+	echo "<br><h5>Ventas abiertas</h5>";
+	echo "<hr>";
 ?>
 
 <div class="content table-responsive table-full-width">
@@ -44,7 +44,7 @@
 					<tr id="<?php echo $pd[$i]['idventa']; ?>" class="edit-t">
 						<td>
 							<div class="btn-group">
-								<button class='btn btn-outline-secondary btn-sm'  id='edit_persona' title='Editar' data-lugar='a_ventas/editar'><i class="fas fa-pencil-alt"></i></button>
+								<button class='btn btn-outline-primary btn-sm'  id='edit_persona' title='Editar' data-lugar='a_ventas/editar'><i class="fas fa-pencil-alt"></i></button>
 							</div>
 						</td>
 						<td  ><?php echo $pd[$i]["idventa"]; ?></td>

@@ -30,7 +30,7 @@ class Venta extends Sagyc{
 			$texto=$_REQUEST['texto'];
 			$idventa=$_REQUEST['idventa'];
 
-			$sql="SELECT * from productos where idtienda=:tienda and
+			$sql="SELECT * from productos where idtienda=:tienda and cantidad>0 and
 			(nombre like :texto or
 				descripcion like :texto or
 				codigo like :texto  or
@@ -38,7 +38,7 @@ class Venta extends Sagyc{
 				rapido like :texto or
 				marca like :texto or
 				modelo like :texto
-			) limit 10";
+			) order by tipo limit 20";
 
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindValue(":texto","%$texto%");
@@ -47,7 +47,7 @@ class Venta extends Sagyc{
 			$res=$sth->fetchAll();
 
 			echo "<div class='row'>";
-			echo "<table class='table table-sm' style='font-size:12px'>";
+			echo "<table class='table table-sm' style='font-size:14px'>";
 			echo  "<tr>";
 			echo  "<th>-</th>";
 			echo  "<th>Código</th>";
@@ -62,7 +62,10 @@ class Venta extends Sagyc{
 					echo  "<tr id=".$key['id']." class='edit-t'>";
 					echo  "<td>";
 					echo  "<div class='btn-group'>";
-					echo  "<button type='button' onclick='sel_prod(".$key['id'].",$idventa)' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='far fa-hand-pointer'></i></button>";
+					if($key['tipo']==0 or $key['tipo']==2 or ($key['tipo']==3 and $key['cantidad']>0) or ($key['tipo']==4 and strlen($key['idventa'])==0)){
+							echo  "<button type='button' onclick='sel_prod(".$key['id'].",$idventa)' class='btn btn-outline-secondary btn-sm' title='Seleccionar articulo'><i class='far fa-hand-pointer'></i></button>";
+					}
+					echo $key['tipo'];
 					echo  "</div>";
 					echo  "</td>";
 
@@ -113,11 +116,13 @@ class Venta extends Sagyc{
 			$sth->bindValue(":id",$idproducto);
 			$sth->execute();
 			$res=$sth->fetch(PDO::FETCH_OBJ);
+
 			echo "<form id='form_producto' action='' data-lugar='a_ventas/db_' data-destino='a_ventas/editar' data-funcion='agregaventa'>";
 			echo "<input type='hidden' name='idventa' id='idventa' value='$idventa' readonly>";
 			echo "<input type='hidden' name='idproducto' id='idproducto' value='$idproducto' readonly>";
+			echo "<input type='hidden' name='tipo' id='tipo' value='".$res->tipo."' readonly>";
 			echo "<div class='row'>";
-			/*
+				/*
 				echo "<div class='col-12'>";
 					echo "<label>Tipo:</label>";
 						if($res->tipo=="0") echo $res->tipo."Registro (solo registra ventas, no es necesario registrar entrada, tiempo aire)";
@@ -127,33 +132,33 @@ class Venta extends Sagyc{
 						if($res->tipo=="4") echo $res->tipo."Unico (se controla inventario por pieza única, Fichas Amigo, Equipos)";
 					echo "</select>";
 				echo "</div>";
-*/
+				*/
 				echo "<div class='col-12'>";
 					echo "<label>Nombre:</label>".$res->tipo;
 					echo "<input type='text' class='form-control form-control-sm' name='nombre' id='nombre' value='".$res->nombre."' readonly>";
 				echo "</div>";
 
-				if($res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+				if($res->tipo==1 or $res->tipo==3 or $res->tipo==4){
 					echo "<div class='col-3'>";
 						echo "<label>Barras</label>";
 						echo "<input type='text' class='form-control form-control-sm' name='codigo' id='codigo' value='".$res->codigo."' readonly>";
 					echo "</div>";
 				}
-				if($res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+				if($res->tipo==1 or $res->tipo==3 or $res->tipo==4){
 					echo "<div class='col-3'>";
 						echo "<label>Marca</label>";
 						echo "<input type='text' class='form-control form-control-sm' name='marca' id='marca' value='".$res->marca."' readonly>";
 					echo "</div>";
 				}
 
-				if($res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+				if($res->tipo==1 or $res->tipo==3 or $res->tipo==4){
 					echo "<div class='col-3'>";
 						echo "<label>Modelo</label>";
 						echo "<input type='text' class='form-control form-control-sm' name='modelo' id='modelo' value='".$res->nombre."' readonly>";
 					echo "</div>";
 				}
 
-				if($res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
+				if($res->tipo==1 or $res->tipo==3 or $res->tipo==4){
 					echo "<div class='col-3'>";
 						echo "<label>IMEI</label>";
 						echo "<input type='text' class='form-control form-control-sm' name='imei' id='imei' value='".$res->imei."' readonly>";
@@ -161,11 +166,10 @@ class Venta extends Sagyc{
 				}
 
 				if($res->tipo==0 or $res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
-
 					echo "<div class='col-3'>";
 						echo "<label>Cantidad</label>";
 						echo "<input type='text' class='form-control form-control-sm' name='cantidad' id='cantidad' value='1'";
-							if($res->tipo==0){
+							if($res->tipo==0 or $res->tipo==2 or $res->tipo==4){
 								echo " readonly";
 							}
 						echo ">";
@@ -181,16 +185,29 @@ class Venta extends Sagyc{
 						echo ">";
 					echo "</div>";
 				}
-
-
 				if($res->tipo==0 or $res->tipo==1 or $res->tipo==2 or $res->tipo==3 or $res->tipo==4){
 					echo "<div class='col-12'>";
 						echo "<label>Observaciones</label>";
-						echo "<input type='text' class='form-control form-control-sm' name='observaciones' id='observaciones' value=''>";
+						echo "<input type='text' class='form-control form-control-sm' name='observaciones' id='observaciones' value='' placeholder='Observaciones'>";
 					echo "</div>";
 				}
+				if($res->tipo==2){
+					echo "<div class='col-12'>";
+						echo "<label>Cliente:</label>";
+						echo "<input type='text' class='form-control form-control-sm' name='cliente' id='cliente' value='' placeholder='Cliente'>";
+					echo "</div>";
+				}
+
 			echo "</div>";
-			echo "<button type='submit' class='btn btn-outline-info btn-sm'><i class='fas fa-shopping-basket'></i>Agregar</button>";
+			echo "<hr>";
+			echo "<div class='row'>";
+				echo "<div class='col-12'>";
+					echo "<div class='btn-group'>";
+						echo "<button type='submit' class='btn btn-outline-info btn-sm'><i class='fas fa-cart-plus'></i>Agregar</button>";
+						echo "<button type='button' class='btn btn-outline-primary btn-sm' data-dismiss='modal'><i class='fas fa-sign-out-alt'></i>Cerrar</button>";
+					echo "</div>";
+				echo "</div>";
+			echo "</div>";
 			echo "</form>";
 
 		}
@@ -203,6 +220,12 @@ class Venta extends Sagyc{
 		$x="";
 		$idventa=$_REQUEST['idventa'];
 		$idproducto=$_REQUEST['idproducto'];
+		$cliente="";
+		$observaciones="";
+		$cantidad="0";
+		$precio="0";
+		$tipo="0";
+
 		if (isset($_REQUEST['observaciones'])){
 			$observaciones=$_REQUEST['observaciones'];
 		}
@@ -212,6 +235,12 @@ class Venta extends Sagyc{
 		if (isset($_REQUEST['precio'])){
 			$precio=$_REQUEST['precio'];
 		}
+		if (isset($_REQUEST['cliente'])){
+			$cliente=$_REQUEST['cliente'];
+		}
+		$tipo=$_REQUEST['tipo'];
+
+
 
 		try{
 			parent::set_names();
@@ -239,17 +268,37 @@ class Venta extends Sagyc{
 			$sth->execute();
 			$res=$sth->fetch(PDO::FETCH_OBJ);
 
+			///////////////////////////////////////////////////actualiza producto tipo idn_to_unicode
 
+			$sql="update productos set idventa=:idventa where id=:id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":idventa",$idventa);
+			$sth->bindValue(":id",$idproducto);
+			$sth->execute();
+
+
+			////////////////////////////////////////////////////////
 			$arreglo=array();
 			$arreglo+=array('idventa'=>$idventa);
 			$arreglo+=array('idproducto'=>$idproducto);
+			$arreglo+=array('idpersona'=>$_SESSION['idpersona']);
+			$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
+			$arreglo+=array('tipo'=>$tipo);
 			$arreglo+=array('nombre'=>$res->nombre);
 			$arreglo+=array('observaciones'=>$observaciones);
-			$arreglo+=array('cantidad'=>$cantidad*-1);
+			$arreglo+=array('cliente'=>$cliente);
+			if($tipo==3){
+				$arreglo+=array('cantidad'=>$cantidad*-1);
+			}
 			$arreglo+=array('v_cantidad'=>$cantidad);
 			$arreglo+=array('v_precio'=>$precio);
 			$total=$precio*$cantidad;
 			$arreglo+=array('v_total'=>$total);
+			if($tipo==4){
+				$arreglo+=array('v_marca'=>$res->marca);
+				$arreglo+=array('v_modelo'=>$res->modelo);
+				$arreglo+=array('v_imei'=>$res->imei);
+			}
 
 			$x=$this->insert('bodega', $arreglo);
 			$ped=json_decode($x);
@@ -270,8 +319,6 @@ class Venta extends Sagyc{
 					$this->update('et_venta',array('idventa'=>$idventa), $values);
 				}
 
-
-
 				$arreglo =array();
 				$arreglo+=array('id'=>$idventa);
 				$arreglo+=array('error'=>0);
@@ -284,11 +331,6 @@ class Venta extends Sagyc{
 			else{
 					return $x;
 			}
-
-
-
-
-
 		}
 		catch(PDOException $e){
 			return "Database access FAILED! ".$e->getMessage();
@@ -296,10 +338,21 @@ class Venta extends Sagyc{
 	}
 	public function borrar_venta(){
 		self::set_names();
+		$id=$_REQUEST['id'];
 
-		if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
+		$sql="SELECT * from bodega where id=:id";
+		$sth = $this->dbh->prepare($sql);
+		$sth->bindValue(":id",$id);
+		$sth->execute();
+		$res=$sth->fetch(PDO::FETCH_OBJ);
+
+		if($res->tipo==4){
+			$sql="update productos set idventa=NULL where id=:id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindValue(":id",$res->idproducto);
+			$sth->execute();
+		}
 		return $this->borrar('bodega',"id",$id);
-
 	}
 	public function ventas_pedido($id){
 		self::set_names();
@@ -413,9 +466,6 @@ class Venta extends Sagyc{
 		}
 		return $x;
 	}
-
-
-
 
 	public function imprimir(){
 		self::set_names();

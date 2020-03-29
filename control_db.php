@@ -241,33 +241,6 @@
 			return $mes;
 		}
 
-		public function color(){
-			try{
-				self::set_names();
-				$sql="select * from color";
-				$sth = $this->dbh->prepare($sql);
-				$sth->execute();
-				return $sth->fetchAll();
-			}
-			catch(PDOException $e){
-				return "Database access FAILED!".$e->getMessage();
-			}
-		}
-		public function colores(){
-			try{
-				self::set_names();
-				$sql="select * from colores";
-				$this->areax=array();
-				foreach ($this->dbh->query($sql) as $res){
-					$this->areax[]=$res;
-				}
-				return $this->areax;
-				$this->dbh=null;
-			}
-			catch(PDOException $e){
-				return "Database access FAILED!".$e->getMessage();
-			}
-		}
 		public function letranum($numero){
 
 				if($numero>0){
@@ -445,46 +418,6 @@
 			}
 		}
 
-		public function despachos(){
-			try{
-				self::set_names();
-				$sql="SELECT * FROM despachos";
-				$sth = $this->dbh->prepare($sql);
-				$sth->execute();
-				$res=$sth->fetchAll();
-				return $res;
-			}
-			catch(PDOException $e){
-				return "Database access FAILED! ".$e->getMessage();
-			}
-		}
-		public function empresas(){
-			try{
-				self::set_names();
-				$sql="SELECT * FROM empresas";
-				$sth = $this->dbh->prepare($sql);
-				$sth->execute();
-				$res=$sth->fetchAll();
-				return $res;
-			}
-			catch(PDOException $e){
-				return "Database access FAILED! ".$e->getMessage();
-			}
-		}
-		public function tipos(){
-			try{
-				self::set_names();
-				$sql="SELECT * FROM producto_tipo";
-				$sth = $this->dbh->prepare($sql);
-				$sth->execute();
-				$res=$sth->fetchAll();
-				return $res;
-			}
-			catch(PDOException $e){
-				return "Database access FAILED! ".$e->getMessage();
-			}
-		}
-
 ////////////////////
 		public function fondo(){
 			if (isset($_REQUEST['imagen'])){$imagen=$_REQUEST['imagen'];}
@@ -588,11 +521,6 @@
 				$x.=$this->borrar($tabla,$keyt,$key);
 			}
 			return "$x";
-		}
-		public function anioc(){
-			if (isset($_REQUEST['id'])){$id=$_REQUEST['id'];}
-			$_SESSION['anio']=$id;
-			return "Se establecio $id como año de trabajo";
 		}
 		public function subir_file(){
 			$contarx=0;
@@ -713,7 +641,7 @@
 			$dirint = dir($directory);
 			$x.= "<ul class='nav navbar-nav navbar-right'>";
 				$x.= "<li class='nav-item dropdown'>";
-					$x.= "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='fas fa-desktop'></i>Fondos</a>";
+					$x.= "<a class='nav-link dropdown-toggle text-white' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='fas fa-desktop'></i>Fondos</a>";
 					$x.= "<div class='dropdown-menu' aria-labelledby='navbarDropdown' style='width: 200px;max-height: 400px !important;overflow: scroll;overflow-x: scroll;overflow-x: hidden;'>";
 						while (($archivo = $dirint->read()) !== false){
 							if ($archivo != "." && $archivo != ".." && $archivo != "" && substr($archivo,-4)==".jpg"){
@@ -727,6 +655,24 @@
 
 			return $x;
 		}
+
+		public function cantidad_update($id){
+			try{
+				$sql="select sum(cantidad) as total from bodega where idproducto=$id";
+				$sth = $db->dbh->prepare($sql);
+				$sth->execute();
+				$total=$sth->fetch(PDO::FETCH_OBJ);
+				$existencia=$total->total;
+
+				$arreglo =array();
+				$arreglo = array('cantidad'=>$existencia);
+				$db->update('productos',array('id'=>$id), $arreglo);
+			}
+			catch(PDOException $e){
+				return "Database access FAILED!".$e->getMessage();
+			}
+		}
+
 	}
 
 	if(strlen($ctrl)>0){

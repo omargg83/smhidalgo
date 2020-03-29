@@ -33,7 +33,7 @@ class TTF
 
     // For debugging
     const VERBOSE = false;
-    
+
     private $b; // Array of bytes
     private $tables; // Tables
 
@@ -104,7 +104,7 @@ class TTF
 
         return $name;
     }
-    
+
     public function unmarshalHead()
     {
         $head = array(); // To return
@@ -464,7 +464,7 @@ class TTF
     public static function marshalCmap($cmap)
     {
         $lengths = array(); // To hold the length of each table
-    
+
         $sz = 4 + 8 * count($cmap['tables']);
         foreach ($cmap['tables'] as $table) {
             $format = $table['format'];
@@ -491,7 +491,7 @@ class TTF
         $off = 0;
         self::setUshort($b, $off, $cmap['version']);
         self::setUshort($b, $off, $cmap['numTables']);
-    
+
         $offset = 4 + 8 * count($cmap['tables']);
         $i = 0;
         foreach ($cmap['tables'] as $table) {
@@ -504,7 +504,7 @@ class TTF
         $offset = 4 + 8 * count($cmap['tables']);
         foreach ($cmap['tables'] as $table) {
             $off = $offset;
-        
+
             $format = $table['format'];
             $length = $lengths[$i];
             $version = $table['version'];
@@ -523,7 +523,7 @@ class TTF
                 $idDeltaArray = $table['idDeltaArray'];
                 $idRangeOffsetArray = $table['idRangeOffsetArray'];
                 $glyphIdArray = $table['glyphIdArray'];
-        
+
                 // Calculate searchRange, entrySelector and rangeShift
                 $binarySearchRegisters = self::calculateBinarySearchRegisters($segCount, 2, 1);
 
@@ -701,7 +701,7 @@ class TTF
     ('head', 'hhea', 'maxp', 'OS/2', 'hmtx', 'LTSH', 'VDMX', 'hdmx', 'cmap', 'fpgm',
      'prep', 'cvt ', 'loca', 'glyf', 'kern', 'name', 'post', 'gasp', 'PCLT', 'GDEF',
      'GPOS', 'GSUB', 'JSTF', 'DSIG');
-    
+
     private static $tableNamesOrderedByName = array
     ('DSIG', 'GDEF', 'GPOS', 'GSUB', 'JSTF', 'LTSH', 'OS/2', 'PCLT', 'VDMX', 'cmap',
      'cvt ', 'fpgm', 'gasp', 'glyf', 'hdmx', 'head', 'hhea', 'hmtx', 'kern', 'loca',
@@ -726,7 +726,7 @@ class TTF
                     $off = 8;
                     self::setUlong($data, $off, 0);
                 }
-        
+
             // Calculate checksums, offsets, lengths
                 $checksums[$tableName] = self::calculateTableChecksum($data);
                 $offsets[$tableName] = strlen($sb);
@@ -803,7 +803,7 @@ class TTF
             $idDeltaArray = $encodingTable['idDeltaArray'];
             $idRangeOffsetArray = $encodingTable['idRangeOffsetArray'];
             $glyphIdArray = $encodingTable['glyphIdArray'];
-    
+
             for ($seg = 0; $seg < $segCount; $seg++) {
                 $endCount = $endCountArray[$seg];
                 $startCount = $startCountArray[$seg];
@@ -850,7 +850,7 @@ class TTF
             $idDeltaArray = $encodingTable['idDeltaArray'];
             $idRangeOffsetArray = $encodingTable['idRangeOffsetArray'];
             $glyphIdArray = $encodingTable['glyphIdArray'];
-    
+
             for ($seg = 0; $seg < $segCount; $seg++) {
                 $endCount = $endCountArray[$seg];
                 $startCount = $startCountArray[$seg];
@@ -916,7 +916,7 @@ class TTF
                 $lastEndPoint = self::getUshort($description, $off);
                 $endPointsOfContours[] = $lastEndPoint;
             }
-        
+
             // Collect the instructions
             $instructionLength = self::getUshort($description, $off);
             $instructions = self::getRaw($description, $off, $instructionLength);
@@ -924,10 +924,10 @@ class TTF
             // Collect the flags
             $flags = array();
             while (count($flags) <= $lastEndPoint) {
-                $flag = ord($description{$off});
+                $flag = ord($description[$off]);
                 $off++;
                 if (($flag & 0x08) != 0) {
-                    $num = ord($description{$off}) + 1;
+                    $num = ord($description[$off]) + 1;
                     $off++;
                 } else {
                     $num = 1;
@@ -942,7 +942,7 @@ class TTF
 
             // Collect the y coordinates
             $ys = self::getCoordinates($description, $off, $flags, 0x04, 0x20);
-        
+
             return array('numberOfContours' => $numberOfContours,
              'xMin' => $xMin, 'yMin' => $yMin,
              'xMax' => $xMax, 'yMax' => $yMax,
@@ -951,14 +951,14 @@ class TTF
              'flags' => $flags, 'xs' => $xs, 'ys' => $ys);
         } else {
             $components = array();
-        
+
             do {
                 $flags = self::getUshort($description, $off);
                 $glyphIndex = self::getUshort($description, $off);
-        
+
                 $argument1 = $argument2 = $arg1and2 = '';
                 $scale = $xscale = $yscale = $scale01 = $scale10 = '';
-        
+
                 if (($flags & self::ARG_1_AND_2_ARE_WORDS) != 0) {
                     $argument1 = self::getShort($description, $off);
                     $argument2 = self::getShort($description, $off);
@@ -1103,7 +1103,7 @@ class TTF
 
     private static function setByte(&$b, &$off, $val)
     {
-        $b{$off++} = chr($val);
+        $b[$off++] = chr($val);
     }
 
     private static function getUshort($b, &$off)
@@ -1115,8 +1115,8 @@ class TTF
 
     private static function setUshort(&$b, &$off, $val)
     {
-        $b{$off++} = chr($val / 256);
-        $b{$off++} = chr($val % 256);
+        $b[$off++] = chr($val / 256);
+        $b[$off++] = chr($val % 256);
     }
 
     private static function getShort($b, &$off)
@@ -1127,8 +1127,8 @@ class TTF
 
     private static function setShort(&$b, &$off, $val)
     {
-        $b{$off++} = chr(($val >> 8) & 0xff);
-        $b{$off++} = chr($val & 0xff);
+        $b[$off++] = chr(($val >> 8) & 0xff);
+        $b[$off++] = chr($val & 0xff);
     }
 
     private static function getUlong($b, &$off)
@@ -1143,10 +1143,10 @@ class TTF
 
     private static function setUlong(&$b, &$off, $val)
     {
-        $b{$off++} = chr(bcmod(bcdiv($val, '16777216', 0), '256'));
-        $b{$off++} = chr(bcmod(bcdiv($val, '65536', 0), '256'));
-        $b{$off++} = chr(bcmod(bcdiv($val, '256', 0), '256'));
-        $b{$off++} = chr(bcmod($val, '256'));
+        $b[$off++] = chr(bcmod(bcdiv($val, '16777216', 0), '256'));
+        $b[$off++] = chr(bcmod(bcdiv($val, '65536', 0), '256'));
+        $b[$off++] = chr(bcmod(bcdiv($val, '256', 0), '256'));
+        $b[$off++] = chr(bcmod($val, '256'));
     }
 
     private static function getLong($b, &$off)
@@ -1161,7 +1161,7 @@ class TTF
         $b2 = ord($b[$off++]);
         $b3 = ord($b[$off++]);
         $b4 = ord($b[$off++]);
-    
+
         $mantissa = $b1 * 256 + $b2;
         if ($mantissa >= 32768) {
             $mantissa -= 65536;
@@ -1176,10 +1176,10 @@ class TTF
             return sprintf("%d.%s", $mantissa, $tmp);
         }
     }
-    
+
     private static function setFixed(&$b, &$off, $val)
     {
-        if ($val{0} == '-') {
+        if ($val[0] == '-') {
             $sign = -1;
             $val = substr($val, 1);
         } else {
@@ -1194,10 +1194,10 @@ class TTF
         }
         $mantissa *= $sign;
 
-        $b{$off++} = chr(($mantissa >> 8) & 0xff);
-        $b{$off++} = chr(($mantissa >> 0) & 0xff);
-        $b{$off++} = chr(($fraction >> 8) & 0xff);
-        $b{$off++} = chr(($fraction >> 0) & 0xff);
+        $b[$off++] = chr(($mantissa >> 8) & 0xff);
+        $b[$off++] = chr(($mantissa >> 0) & 0xff);
+        $b[$off++] = chr(($fraction >> 8) & 0xff);
+        $b[$off++] = chr(($fraction >> 0) & 0xff);
     }
 
     private static function getFword($b, &$off)
@@ -1222,8 +1222,8 @@ class TTF
 
     private static function getF2dot14($b, &$off)
     {
-        $val1 = ord($b{$off});
-        $val2 = ord($b{$off + 1});
+        $val1 = ord($b[$off]);
+        $val2 = ord($b[$off + 1]);
         $val = 256 * $val1 + $val2;
 
         $mantissa = ($val >> 14) & 0x03;
@@ -1231,7 +1231,7 @@ class TTF
             $mantissa -= 4;
         }
         $fraction = $val & 0x3fff;
-    
+
         if ($fraction == 0) {
             // Append only one zero
             $ret = sprintf("%d.0", $mantissa);
@@ -1254,7 +1254,7 @@ class TTF
     {
         $i = 0;
         while ($i < $num) {
-            $b{$off++} = $val{$i++};
+            $b[$off++] = $val[$i++];
         }
     }
 
@@ -1264,7 +1264,7 @@ class TTF
         $b2 = ord($val[1]);
         $b3 = ord($val[2]);
         $b4 = ord($val[3]);
-    
+
         $mantissa = $b1 * 256 + $b2;
         if ($mantissa >= 32768) {
             $mantissa -= 65536;
@@ -1289,7 +1289,7 @@ class TTF
             $bit1 = $flag & $mask1;
             $bit4 = $flag & $mask2;
             if ($bit1 != 0) {
-                $b = ord($code{$off++});
+                $b = ord($code[$off++]);
                 if ($bit4 != 0) {
                     // Positive 8-bit
                     $val = $b;
@@ -1303,8 +1303,8 @@ class TTF
                     $val = 0;
                 } else {
                     // Signed 16-bit
-                    $b1 = ord($code{$off++});
-                    $b2 = ord($code{$off++});
+                    $b1 = ord($code[$off++]);
+                    $b2 = ord($code[$off++]);
                     $b = 256 * $b1 + $b2;
                     if ($b >= 32768) {
                         $b -= 65536;

@@ -14,7 +14,7 @@
           <div class="input-group  mr-sm-2">
             <input type="text" class="form-control form-control-sm" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2"  id='buscar' onkeyup='Javascript: if (event.keyCode==13) buscarx()'>
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary btn-sm" type="button" onclick='buscarx()'><i class='fas fa-search'></i></button>
+              <button class="btn btn-outline-primary btn-sm" type="button" onclick='buscarx()'><i class='fas fa-search'></i></button>
             </div>
           </div>
 				</div>
@@ -51,7 +51,43 @@
       }
     });
   }
-
+  function tipo_cambio(){
+    var tipo = $("#tipo").val();
+    if (tipo==0){
+      $("#div_marca").hide();
+      $("#div_modelo").hide();
+      $("#div_color").hide();
+      $("#div_material").hide();
+      $("#div_imei").hide();
+    }
+    if (tipo==2){
+      $("#div_marca").hide();
+      $("#div_modelo").hide();
+      $("#div_color").hide();
+      $("#div_material").hide();
+      $("#div_imei").hide();
+    }
+    if (tipo==3){
+      $("#div_imei").hide();
+      $("#div_material").hide();
+      $("#div_marca").show();
+      $("#div_modelo").show();
+      $("#div_color").show();
+    }
+    if (tipo==4){
+      $("#div_imei").show();
+      $("#div_material").show();
+      $("#div_marca").show();
+      $("#div_modelo").show();
+      $("#div_color").show();
+    }
+  }
+  function clonar_nuevo(){
+    $("#id").val("0");
+    $("#imei").val("");
+    $("#codigo").val("");
+    $("#tipo").prop("disabled", false);
+  }
   function barras_generar(id){
     $.confirm({
       title: 'Código de barras',
@@ -98,8 +134,6 @@
       }
     });
   }
-  function agregar_producto(){
-    
-  }
+
 
 </script>

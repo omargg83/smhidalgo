@@ -20,7 +20,7 @@
 				echo "<tr id='".$pd[$i]['idcliente']."'' class='edit-t'>";
 					echo "<td>";
 					echo "<div class='btn-group'>";
-					echo "<button class='btn btn-outline-secondary btn-sm' id='edit_persona' title='Editar' data-lugar='a_cliente/editar'><i class='fas fa-pencil-alt'></i></button>";
+					echo "<button class='btn btn-outline-primary btn-sm' id='edit_persona' title='Editar' data-lugar='a_cliente/editar'><i class='fas fa-pencil-alt'></i></button>";
 					echo "</div>";
 					echo "</td>";
 					echo "<td>".$pd[$i]["razon_social_prove"]."</td>";

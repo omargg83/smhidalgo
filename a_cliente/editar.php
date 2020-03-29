@@ -2,7 +2,7 @@
 	require_once("db_cliente.php");
 	$bdd = new Cliente();
 	if (isset($_POST['id'])){$id=$_POST['id'];} else{ $id=0;}
-	
+
 	if($id>0){
 		$pd = $bdd->cliente($id);
 		$id=$pd['idcliente'];
@@ -76,110 +76,110 @@
 					<label class="control-label col-sm-2" for="">Razón social:</label>
 					<div class="col-sm-10">
 						<input type="hidden" name="id" id="id" value="<?php echo $id;?>">
-						<input type="text" class="form-control" name="razon" id="razon" value="<?php echo $razon;?>" placeholder="Razón social">
+						<input type="text" class="form-control form-control-sm" name="razon" id="razon" value="<?php echo $razon;?>" placeholder="Razón social">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">R.F.C.</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" name="rfc" id="rfc" value="<?php echo $rfc;?>" placeholder="R.F.C.">
+						<input type="text" class="form-control form-control-sm" name="rfc" id="rfc" value="<?php echo $rfc;?>" placeholder="R.F.C.">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Nombre Contacto</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" name="contacto" id="contacto" value="<?php echo $contacto;?>" placeholder="Nombre Contacto">
+						<input type="text" class="form-control form-control-sm" name="contacto" id="contacto" value="<?php echo $contacto;?>" placeholder="Nombre Contacto">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Dirección</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" name="direccion" id="direccion" value="<?php echo $direccion;?>" placeholder="Dirección">
+						<input type="text" class="form-control form-control-sm" name="direccion" id="direccion" value="<?php echo $direccion;?>" placeholder="Dirección">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Colonia</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" name="colonia" id="colonia" value="<?php echo $colonia;?>" placeholder="Colonia">
+						<input type="text" class="form-control form-control-sm" name="colonia" id="colonia" value="<?php echo $colonia;?>" placeholder="Colonia">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for=""># Exterior</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="no_ext" id="no_ext" value="<?php echo $no_ext;?>" placeholder="# Exterior">
+						<input type="text" class="form-control form-control-sm" name="no_ext" id="no_ext" value="<?php echo $no_ext;?>" placeholder="# Exterior">
 					</div>
 
 
 					<label class="control-label col-sm-2" for=""># Interior</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="no_int" id="no_int" value="<?php echo $no_int;?>" placeholder="# Interior">
+						<input type="text" class="form-control form-control-sm" name="no_int" id="no_int" value="<?php echo $no_int;?>" placeholder="# Interior">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">C.P.</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="cp" id="cp" value="<?php echo $cp;?>" placeholder="C.P.">
+						<input type="text" class="form-control form-control-sm" name="cp" id="cp" value="<?php echo $cp;?>" placeholder="C.P.">
 					</div>
 
 					<label class="control-label col-sm-2" for="">Localidad</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="localidad" id="localidad" value="<?php echo $localidad;?>" placeholder="Localidad">
+						<input type="text" class="form-control form-control-sm" name="localidad" id="localidad" value="<?php echo $localidad;?>" placeholder="Localidad">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Municipio</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="municipio" id="municipio" value="<?php echo $municipio;?>" placeholder="Municipio">
+						<input type="text" class="form-control form-control-sm" name="municipio" id="municipio" value="<?php echo $municipio;?>" placeholder="Municipio">
 					</div>
 
 					<label class="control-label col-sm-2" for="">Estado</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="estado" id="estado" value="<?php echo $estado;?>" placeholder="Estado">
+						<input type="text" class="form-control form-control-sm" name="estado" id="estado" value="<?php echo $estado;?>" placeholder="Estado">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Teléfono</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="tel" id="tel" value="<?php echo $tel;?>" placeholder="Teléfono">
+						<input type="text" class="form-control form-control-sm" name="tel" id="tel" value="<?php echo $tel;?>" placeholder="Teléfono">
 					</div>
 
 					<label class="control-label col-sm-2" for="">Celular 1</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="cel1" id="cel1" value="<?php echo $cel1;?>" placeholder="Celular 1">
+						<input type="text" class="form-control form-control-sm" name="cel1" id="cel1" value="<?php echo $cel1;?>" placeholder="Celular 1">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Celular 2</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="cel2" id="cel2" value="<?php echo $cel2;?>" placeholder="Celular 2">
+						<input type="text" class="form-control form-control-sm" name="cel2" id="cel2" value="<?php echo $cel2;?>" placeholder="Celular 2">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Email</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="email" id="email" value="<?php echo $email;?>" placeholder="Email">
+						<input type="text" class="form-control form-control-sm" name="email" id="email" value="<?php echo $email;?>" placeholder="Email">
 					</div>
 
 					<label class="control-label col-sm-2" for="">Página Web</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="web" id="web" value="<?php echo $web;?>" placeholder="Página Web">
+						<input type="text" class="form-control form-control-sm" name="web" id="web" value="<?php echo $web;?>" placeholder="Página Web">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Giro</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" name="giro" id="giro" value="<?php echo $giro;?>" placeholder="Giro">
+						<input type="text" class="form-control form-control-sm" name="giro" id="giro" value="<?php echo $giro;?>" placeholder="Giro">
 					</div>
 				</div>
 
@@ -193,7 +193,7 @@
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Banco:</label>
 					<div class="col-sm-4">
-						<select class="form-control" name="banco" id="banco">
+						<select class="form-control form-control-sm" name="banco" id="banco">
 						<option value="BBVA BANCOMER" <?php if($banco=="BBVA BANCOMER") echo "selected"; ?> > BBVA BANCOMER</option>
 						<option value="BANAMEX" <?php if($banco=="BANAMEX") echo "selected"; ?> > BANAMEX</option>
 						<option value="SANTANDER" <?php if($banco=="SANTANDER") echo "selected"; ?> > SANTANDER</option>
@@ -255,19 +255,19 @@
 
 					<label class="control-label col-sm-2" for="">Cuenta:</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="cuenta" id="cuenta" value="<?php echo $cuenta;?>" placeholder="Cuenta">
+						<input type="text" class="form-control form-control-sm" name="cuenta" id="cuenta" value="<?php echo $cuenta;?>" placeholder="Cuenta">
 					</div>
 				</div>
 
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Sucursal</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="sucursal" id="sucursal" value="<?php echo $sucursal;?>" placeholder="Sucursal">
+						<input type="text" class="form-control form-control-sm" name="sucursal" id="sucursal" value="<?php echo $sucursal;?>" placeholder="Sucursal">
 					</div>
 
 					<label class="control-label col-sm-2" for="">Clabe</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" name="clabe" id="clabe" value="<?php echo $clabe;?>" placeholder="Clabe">
+						<input type="text" class="form-control form-control-sm" name="clabe" id="clabe" value="<?php echo $clabe;?>" placeholder="Clabe">
 					</div>
 				</div>
 
@@ -281,7 +281,7 @@
 				<div class="form-group row">
 					<label class="control-label col-sm-2" for="">Crédito</label>
 					<div class="col-sm-4">
-						<select class="form-control" name="credito" id="credito">
+						<select class="form-control form-control-sm" name="credito" id="credito">
 						<option value="Si" <?php if($credito=="Si") echo "selected"; ?> > Si</option>
 						<option value="No" <?php if($credito=="No") echo "selected"; ?> >No</option>
 						</select>
@@ -289,15 +289,15 @@
 
 					<label class="control-label col-sm-2" for="">Plazo en días</label>
 					<div class="col-sm-4">
-						<input type="number" class="form-control" name="plazo" id="plazo" value="<?php echo $plazo;?>" placeholder="Plazo en días">
+						<input type="number" class="form-control form-control-sm" name="plazo" id="plazo" value="<?php echo $plazo;?>" placeholder="Plazo en días">
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="btn-group">
-						<button class="btn btn-outline-secondary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
-						<button class='btn btn-outline-secondary btn-sm' id='lista_penarea' data-lugar='a_cliente/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
+						<button class="btn btn-outline-primary btn-sm" type="submit"><i class='far fa-save'></i>Guardar</button>
+						<button class='btn btn-outline-primary btn-sm' id='lista_penarea' data-lugar='a_cliente/lista' title='regresar'><i class='fas fa-undo-alt'></i>Regresar</button>
 						</div>
 					</div>
 				</div>

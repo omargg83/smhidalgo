@@ -12,17 +12,21 @@
 					<div class="input-group  mr-sm-2">
 						<input type="text" class="form-control form-control-sm" placeholder="Buscar" aria-label="Buscar" aria-describedby="basic-addon2"  id='buscar' onkeyup='Javascript: if (event.keyCode==13) buscarx()'>
 						<div class="input-group-append">
-							<button class="btn btn-outline-secondary btn-sm" type="button" onclick='buscarx()'><i class='fas fa-search'></i></button>
+							<button class="btn btn-outline-primary btn-sm" type="button" onclick='buscarx()'><i class='fas fa-search'></i></button>
 						</div>
 					</div>
 				</div>
 
+				<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_ventas/editar'><i class='fas fa-plus'></i><span>Nueva venta</span></a></li>
+				<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_ventas/lista'><i class='fas fa-list-ul'></i><span>Abiertas</span></a></li>
+
 				<li class='nav-item active'><a class='nav-link barranav' title='Mostrar todo' id='lista_comision' data-lugar='a_ventas/lista'><i class='fas fa-list-ul'></i><span>Lista</span></a></li>
-				<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='new_personal' data-lugar='a_ventas/editar'><i class='fas fa-plus'></i><span>Nuevo</span></a></li>
+
+
 				<li class='nav-item active'><a class='nav-link barranav izq' title='Nuevo' id='lista_ventas' data-lugar='a_ventas/ventas'><i class='fas fa-plus'></i><span>Reporte</span></a></li>
 			</ul>
 	  </div>
-	</nav>"
+	</nav>
 
 <div id='trabajo'>
 	<?php
@@ -68,44 +72,6 @@ function sel_prod(idproducto,idventa){
 			$("#resultadosx").html(response);
 		}
 	});
-}
-function borra_venta(id){
-
-	$.confirm({
-		title: 'Guardar',
-		content: '¿Desea borrar el registro seleccionado?',
-		buttons: {
-			Aceptar: function () {
-				var parametros={
-					"id":id,
-					"function":"borrar_venta"
-				};
-				$.ajax({
-					data:  parametros,
-					url: "a_ventas/db_.php",
-					type:  'post',
-					success:  function (response) {
-						var data = JSON.parse(response);
-						$("#sub_x").val(data.subtotal);
-						$("#iva_x").val(data.iva);
-						$("#total_x").val(data.total);
-						$("#div_"+data.id).remove();
-
-						Swal.fire({
-							type: 'success',
-							title: "Se éliminó correctamente",
-							showConfirmButton: false,
-							timer: 500
-						});
-					}
-				});
-			},
-			Cancelar: function () {
-
-			}
-		}
-	});
-
 }
 
 

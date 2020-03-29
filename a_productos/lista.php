@@ -14,6 +14,7 @@
 					<th>Tipo</th>
 					<th>C. barras</th>
 					<th>Busqueda rápida</th>
+					<th>IMEI</th>
 					<th>Nombre</th>
 					<th>Marca</th>
 					<th>Modelo</th>
@@ -35,7 +36,7 @@
 						echo "<td>";
 
 							echo "<div class='btn-group'>";
-								echo "<button class='btn btn-outline-info btn-sm' id='edit_comision' title='Editar' data-lugar='a_productos/editar'><i class='fas fa-pencil-alt'></i></i></button>";
+								echo "<button class='btn btn-outline-primary btn-sm' id='edit_comision' title='Editar' data-lugar='a_productos/editar'><i class='fas fa-pencil-alt'></i></i></button>";
 							echo "</div>";
 						echo "</td>";
 
@@ -49,6 +50,7 @@
 
 						echo "<td>".$key["codigo"]."</td>";
 						echo "<td>".$key["rapido"]."</td>";
+						echo "<td>".$key["imei"]."</td>";
 						echo "<td>".$key["nombre"]."</td>";
 						echo "<td>".$key["marca"]."</td>";
 						echo "<td>".$key["modelo"]."</td>";

@@ -17,7 +17,7 @@ class Productos extends Sagyc{
 				$sql="SELECT * from productos where codigo like '%$texto%' or nombre like '%$texto%' or marca like '%$texto%' or modelo like '%$texto%' or imei like '%$texto%' limit 100";
 			}
 			else{
-				$sql="SELECT * from productos where activo=1 order by tipo asc limit 100";
+				$sql="SELECT * from productos where activo=1 and idventa is null order by tipo asc,id asc limit 100";
 			}
 			$sth = $this->dbh->prepare($sql);
 			$sth->execute();
@@ -47,6 +47,7 @@ class Productos extends Sagyc{
 			$id=$_REQUEST['id'];
 			$arreglo =array();
 			$tipo="";
+			$imei="";
 			if (isset($_REQUEST['codigo'])){
 				$arreglo += array('codigo'=>$_REQUEST['codigo']);
 			}
@@ -68,7 +69,6 @@ class Productos extends Sagyc{
 			if (isset($_REQUEST['descripcion'])){
 				$arreglo += array('descripcion'=>$_REQUEST['descripcion']);
 			}
-
 			if (isset($_REQUEST['activo'])){
 				$arreglo += array('activo'=>$_REQUEST['activo']);
 			}
@@ -82,32 +82,71 @@ class Productos extends Sagyc{
 				$arreglo += array('material'=>$_REQUEST['material']);
 			}
 			if (isset($_REQUEST['imei'])){
-				$arreglo += array('imei'=>$_REQUEST['imei']);
+				$imei=$_REQUEST['imei'];
+				$arreglo += array('imei'=>$imei);
 			}
 			if (isset($_REQUEST['precio'])){
 				$arreglo += array('precio'=>$_REQUEST['precio']);
 			}
-			if (isset($_REQUEST['preciocompra'])){
+			if (isset($_REQUEST['preciocompra']) and strlen($_REQUEST['preciocompra'])>0  ){
 				$arreglo += array('preciocompra'=>$_REQUEST['preciocompra']);
 			}
+			else{
+				$arreglo += array('preciocompra'=>NULL);
+			}
+
 			if (isset($_REQUEST['tipo'])){
 				$tipo=$_REQUEST['tipo'];
 				$arreglo += array('tipo'=>$_REQUEST['tipo']);
 			}
 			$x="";
-			if($id==0){
-				if($tipo==0 or $tipo==1  or $tipo==2){
-						$arreglo += array('cantidad'=>NULL);
+
+			if(strlen($imei)>0){
+				$sql="select * from productos where imei=:id";
+				$sth = $this->dbh->prepare($sql);
+				$sth->bindValue(':id', "$imei");
+				$sth->execute();
+				$resp=$sth->fetch(PDO::FETCH_OBJ);
+				if(!$resp){
+
 				}
-				if($tipo==3){
-					$arreglo += array('cantidad'=>0);
+				else{
+					if($id==$resp->id){
+
+					}
+					else{
+						return "Ya existe un producto con el IMEI";
+					}
 				}
-				if($tipo==4){
+			}
+
+			if($tipo==0 or $tipo==1  or $tipo==2){
 					$arreglo += array('cantidad'=>1);
+			}
+			if($tipo==3){
+				if($id>0){
+					$this->cantidad_update($id);
 				}
+			}
+			if($tipo==4){
+				$arreglo += array('cantidad'=>1);
+			}
+
+
+			if($id==0){
+
 				$arreglo+=array('fechaalta'=>date("Y-m-d H:i:s"));
 				$arreglo+=array('idtienda'=>$_SESSION['idtienda']);
 				$x=$this->insert('productos', $arreglo);
+				$ped=json_decode($x);
+				if($ped->error==0){
+					$id=$ped->id;
+					$codigo="9".str_pad($id, 8, "0", STR_PAD_LEFT);
+					$arreglo =array();
+					$arreglo = array('codigo'=>$codigo);
+					$this->update('productos',array('id'=>$id), $arreglo);
+				}
+				return $x;
 			}
 			else{
 				$arreglo+=array('fechamod'=>date("Y-m-d H:i:s"));
@@ -124,23 +163,17 @@ class Productos extends Sagyc{
 		try{
 			parent::set_names();
 			$id=$_REQUEST['id'];
-
-
-			$codigo="9".str_pad($id, 6, "0", STR_PAD_LEFT);
-
-
+			$codigo="9".str_pad($id, 8, "0", STR_PAD_LEFT);
 			$arreglo =array();
 
 			$arreglo = array('codigo'=>$codigo);
 			$arreglo+=array('fechamod'=>date("Y-m-d H:i:s"));
 			$x=$this->update('productos',array('id'=>$id), $arreglo);
-
 			return $x;
 		}
 		catch(PDOException $e){
 			return "Database access FAILED!".$e->getMessage();
 		}
-
 	}
 	public function existencia_agrega(){
 		try{

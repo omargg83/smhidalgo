@@ -57,7 +57,7 @@
 			<div class='row'>
 				<div class='col-sm-4'>
 					<div class='btn-group'>
-					<button class='btn btn-outline-secondary btn-sm' type='submit' id='acceso'><i class='fas fa-search'></i>Buscar</button>
+					<button class='btn btn-outline-primary btn-sm' type='submit' id='acceso'><i class='fas fa-search'></i>Buscar</button>
 					</div>
 				</div>
 			</div>

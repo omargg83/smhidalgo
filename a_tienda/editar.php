@@ -31,28 +31,28 @@
 				 <div class="form-group row">
 				   <label class="control-label col-sm-2" for="">Numero:</label>
 				   <div class="col-sm-10">
-					 <input type="text" class="form-control" name="id" id="id" value="<?php echo $id ;?>" placeholder="Numero" readonly>
+					 <input type="text" class="form-control form-control-sm" name="id" id="id" value="<?php echo $id ;?>" placeholder="Numero" readonly>
 				   </div>
 				 </div>
 
 				 <div class="form-group row">
 				   <label class="control-label col-sm-2" for="">Nombre:</label>
 				   <div class="col-sm-10">
-					 <input type="text" class="form-control" name="nombre" id="nombre" value="<?php echo $nombre ;?>" placeholder="Nombre" required>
+					 <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" value="<?php echo $nombre ;?>" placeholder="Nombre" required>
 				   </div>
 				 </div>
 
 				 <div class="form-group row">
 				   <label class="control-label col-sm-2" for="">Ubicación:</label>
 				   <div class="col-sm-10">
-					 <input type="text" class="form-control" name="ubicacion" id="ubicacion" value="<?php echo $ubicacion ;?>" placeholder="Ubicación" required>
+					 <input type="text" class="form-control form-control-sm" name="ubicacion" id="ubicacion" value="<?php echo $ubicacion ;?>" placeholder="Ubicación" required>
 				   </div>
 				 </div>
 
 				 <div class="form-group row">
 					<label class="control-label col-sm-2" for="">Activo:</label>
 					<div class="col-sm-10">
-						<select class='form-control' name='activo' id='activo' >
+						<select class='form-control form-control-sm' name='activo' id='activo' >
 						<?php
 							echo "<option value='1'"; if ($activo==1){ echo " selected"; } echo ">Activo</option>";
 							echo "<option value='0'"; if ($activo==0){ echo " selected"; }echo ">Inactivo</option>";
