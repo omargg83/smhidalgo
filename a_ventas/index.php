@@ -133,27 +133,39 @@ function ventraprod(idx,tipo){
 	});
 }
 function imprime(id){
-	$.ajax({
-		data:  {
-			"id":id,
-			"function":"imprimir"
-		},
-		url:   "a_ventas/db_.php",
-		type:  'post',
-		beforeSend: function () {
+	$.confirm({
+		title: 'Producto',
+		content: '¿Desea imprimir la venta seleccionada?',
+		buttons: {
+			Aceptar: function () {
+				$.ajax({
+					data:  {
+						"id":id,
+						"function":"imprimir"
+					},
+					url:   "a_ventas/db_.php",
+					type:  'post',
+					beforeSend: function () {
 
-		},
-		success:  function (response) {
-			if (isNaN(response)){
-				alert(response);
-			}
-			else {
-				Swal.fire({
-					type: 'success',
-					title: "Se mandó imprimir correctamente",
-					showConfirmButton: false,
-					timer: 1000
+					},
+					success:  function (response) {
+						var datos = JSON.parse(response);
+						if (datos.error==0){
+							Swal.fire({
+								type: 'success',
+								title: "Se mandó imprimir correctamente",
+								showConfirmButton: false,
+								timer: 1000
+							});
+						}
+						else{
+							alert(response);
+						}
+					}
 				});
+			},
+			Cancelar: function () {
+
 			}
 		}
 	});

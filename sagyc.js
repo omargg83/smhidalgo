@@ -484,7 +484,6 @@
 						type: "post",
 						timeout:30000,
 						success:  function (response) {
-							console.log(response);
 							if (isJSON(response)){
 								var datos = JSON.parse(response);
 								if (datos.error==0){
