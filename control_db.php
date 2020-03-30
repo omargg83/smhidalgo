@@ -17,7 +17,7 @@
 			date_default_timezone_set("America/Mexico_City");
 			$this->Salud = array();
 			//$this->dbh = new PDO('mysql:host=localhost;dbname=sagycrmr_smhidalgo', "root", "root");
-			
+
 			$this->dbh = new PDO('mysql:host=sagyc.com.mx;dbname=sagycrmr_smhidalgo', "sagyccom_esponda", "esponda123$");
 		}
 		public function set_names(){
